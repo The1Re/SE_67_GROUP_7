@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "start": "node dist/server.js",
+    "start": "ts-node src/server.ts",
     "test": "jest"
   },
   "keywords": [],

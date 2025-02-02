@@ -1,28 +1,22 @@
-import winston from "winston";
+import { createLogger, format, transports } from "winston";
+import path from "path"
 
-const logger = winston.createLogger({
+const logger = createLogger({
     level: "info",
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.printf(({ timestamp, level, message }) => {
-            return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+    format: format.combine(
+        format.colorize(),
+        format.label({ label: path.basename(process.mainModule?.filename || 'unknown') }),
+        format.timestamp({
+            format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        format.printf(info => {
+            return `${info.timestamp} [${info.level}] [${info.label}]:\n> ${info.message}`;
         })
     ),
     transports: [
-        new winston.transports.Console(), // แสดง log ใน console
-        new winston.transports.File({ filename: "logs/error.log", level: "error" }), // บันทึก error ลงไฟล์
+        new transports.Console(), // แสดง log ใน console
+        new transports.File({ filename: "logs/error.log", level: "error" }), // บันทึก error ลงไฟล์
     ],
 });
-
-if (process.env.NODE_ENV !== "production") {
-    logger.add(
-        new winston.transports.Console({
-            format: winston.format.combine(
-                winston.format.colorize(),
-                winston.format.simple()
-            ),
-        })
-    );
-}
 
 export default logger;
