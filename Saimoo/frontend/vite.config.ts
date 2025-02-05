@@ -24,5 +24,9 @@ export default defineConfig({
       '@utils': '/src/utils',
       '@api': '/src/api',
     }
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 8080
   }
 })
