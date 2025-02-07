@@ -1,10 +1,11 @@
 import { prisma } from "../config";
 import { User } from "@prisma/client";
 
-export type UserCredentials = Pick<User, 'username' | 'email' | 'password'>;
+export type UserCredentials = Pick<User, 'username' | 'password'>;
+export type UserSignUp = Pick<User, 'username' | 'password' | 'email' | 'fullName' | 'phone'>;
 
 export const user = {
-    async create(data: UserCredentials) {
+    async create(data: UserSignUp) {
         return prisma.user.create({ data });
     },
     async getAll() {

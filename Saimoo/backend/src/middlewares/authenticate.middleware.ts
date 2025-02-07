@@ -6,7 +6,7 @@ export interface AuthRequest extends Request {
     user?: JwtPayload
 }
 
-const isAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<any> => {
+const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<any> => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -23,4 +23,4 @@ const isAuth = async (req: AuthRequest, res: Response, next: NextFunction): Prom
     }
 };
 
-export default isAuth;
+export default authenticate;

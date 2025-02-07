@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
-import { checkIfUserExists, validateUserCredentials, createUser } from '../services/user.service';
+import { checkIfUserExists, validateUserCredentials, createUser, generateToken } from '../services/user.service';
 import logger from '../utils/logger';
-import { generateToken } from '../utils/token';
 import { User } from '@prisma/client';
-import { AuthRequest } from '../middlewares/isAuth.middleware';
+import { AuthRequest } from '../middlewares/authenticate.middleware';
 
 export const register = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, fullName, phone } = req.body;
 
         // Check if any field is empty
-        if (!username || !email || !password) {
+        if (!username || !email || !password || !fullName || !phone) {
             return res.status(400).json({ message: 'Please fill in all fields' });
         }
 
@@ -21,7 +20,7 @@ export const register = async (req: Request, res: Response): Promise<any> => {
         }
 
         // Create new user
-        const newUser = await createUser({ username, email, password });
+        const newUser = await createUser({ username, email, password, fullName, phone });
         return res.status(201).json({ message: 'User created successfully', username: newUser.username });
     } catch (error) {
         logger.error(error);
@@ -39,14 +38,14 @@ export const login = async (req: Request, res: Response): Promise<any> => {
         }
 
         // Validate user credentials
-        const userValidationResult = await validateUserCredentials(username, password);
+        const userValidationResult = await validateUserCredentials({ username, password });
         if ('message' in userValidationResult) {
             return res.status(401).json(userValidationResult);
         }
 
         const token = generateToken(userValidationResult as User);
 
-        return res.status(200).json({ message: 'Login successful', username: userValidationResult.username, token });
+        return res.status(200).json({ message: 'Login successful', username: userValidationResult.username, role: userValidationResult.role, token });
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Internal server error' });

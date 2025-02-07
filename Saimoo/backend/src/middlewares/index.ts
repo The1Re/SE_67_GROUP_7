@@ -1,5 +1,5 @@
-import isAuth from "./isAuth.middleware"
+import authenticate from "./authenticate.middleware"
 
 export {
-    isAuth,
+    authenticate,
 }
