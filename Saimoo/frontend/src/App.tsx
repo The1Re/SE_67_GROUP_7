@@ -5,6 +5,7 @@ import UserRoutes from "./routes/UserRoutes";
 function App() {
   // const role = getUserRole();
   const role = "user";
+  console.log("Hello world");
 
   return (
     <BrowserRouter>
