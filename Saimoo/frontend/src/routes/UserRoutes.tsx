@@ -3,6 +3,7 @@ import UserLayout from '../layouts/UserLayout'
 import Profile from '../pages/user/Profile'
 
 function UserRoutes() {
+  const x = 1;
   return (
     <Routes>
         <Route element={<UserLayout />} >
