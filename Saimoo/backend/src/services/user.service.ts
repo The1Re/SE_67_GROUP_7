@@ -1,6 +1,9 @@
 import bcrypt from 'bcrypt';
-import { user } from '../models/user';
-import { UserCredentials } from '../models/user';
+import { User } from "@prisma/client";
+import { user } from '@models/user';
+import type { UserCredentials } from '@models/user';
+import jwt from 'jsonwebtoken';
+import { env } from '../config';
 
 export const checkIfUserExists = async (username: string, email: string) => {
     let existingUser = await user.getByEmail(email);
@@ -34,3 +37,11 @@ export const validateUserCredentials = async (username: string, password: string
 
     return existingUser;
 };
+
+export const generateToken = (user: User) => {
+    return jwt.sign({ id: user.id, username: user.username, role: user.role }, env.jwtSecret, { expiresIn: '1d' });
+}
+
+export const verifyToken = (token: string) => {
+    return jwt.verify(token, env.jwtSecret);
+}
