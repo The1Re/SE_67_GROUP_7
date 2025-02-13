@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { User } from "@prisma/client";
-import { user } from '@models/user';
-import type { UserCredentials } from '@models/user';
+import { user } from '../models/user';
+import type { UserCredentials } from '../models/user';
 import jwt from 'jsonwebtoken';
 import { env } from '../config';
 
