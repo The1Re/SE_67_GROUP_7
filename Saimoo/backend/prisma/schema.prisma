@@ -175,7 +175,7 @@ model Trip {
 }
 
 model TripDetail {
-  id                Int                 @id
+  id                Int                 @id @default(autoincrement())
   tripId            Int
   order             Int
   arriveTime        DateTime            @db.Time(0)
