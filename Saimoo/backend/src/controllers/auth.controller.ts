@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { checkIfUserExists, validateUserCredentials, createUser, generateToken } from '../services/user.service';
 import logger from '../utils/logger';
-import { User } from '@prisma/client';
-import { AuthRequest } from '../middlewares/isAuth.middleware';
+import type { User } from '@prisma/client';
+import { AuthRequest } from '../middlewares/authenticateUser.middleware';
 
 export const register = async (req: Request, res: Response): Promise<any> => {
     try {
