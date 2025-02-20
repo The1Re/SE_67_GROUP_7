@@ -1,8 +1,10 @@
 import prisma from '../models/prisma';
 import bcrypt from 'bcrypt';
-import type { User } from "@prisma/client";
 import jwt from 'jsonwebtoken';
 import { env } from '../config';
+import { createWallet } from './wallet.service'
+
+import type { User } from "@prisma/client";
 
 export type UserCredentials = Pick<User, 'username' | 'email' | 'password'>;
 
@@ -22,7 +24,11 @@ export const checkIfUserExists = async (username: string, email: string) => {
 
 export const createUser = async (userData: UserCredentials) => {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-    return await prisma.user.create({ data: { ...userData, password: hashedPassword } });
+    const user = await prisma.user.create({ data: { ...userData, password: hashedPassword } });
+
+    await createWallet(user.id);
+
+    return user;
 };
 
 export const validateUserCredentials = async (username: string, password: string) => {
