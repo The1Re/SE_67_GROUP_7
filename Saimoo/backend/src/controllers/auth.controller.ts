@@ -16,7 +16,7 @@ export const register = async (req: Request, res: Response): Promise<any> => {
         }
 
         // Check if user already exists
-        const userExistsMessage = await UserService.checkIfUserExists(username, email);
+        const userExistsMessage = await UserService.checkIfUserExists({ username, email } );
         if (userExistsMessage) {
             return res.status(400).json(userExistsMessage);
         }

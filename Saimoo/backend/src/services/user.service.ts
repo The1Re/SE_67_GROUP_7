@@ -9,15 +9,21 @@ import { createWallet } from './wallet.service'
 
 export type UserCredentials = Pick<User, 'username' | 'email' | 'password'>;
 
-export const checkIfUserExists = async (username: string, email: string) => {
-    let existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-        return { message: 'Email is already taken' };
+export const checkIfUserExists = async ({ username, email }: { username?: string, email?: string }) => {
+    let existingUser
+
+    if (username) {
+        existingUser = await prisma.user.findUnique({ where: { email } });
+        if (existingUser) {
+            return { message: 'Email is already taken' };
+        }
     }
 
-    existingUser = await prisma.user.findUnique({ where: { username } });
-    if (existingUser) {
-        return { message: 'Username is already taken' };
+    if (email) {
+        existingUser = await prisma.user.findUnique({ where: { username } });
+        if (existingUser) {
+            return { message: 'Username is already taken' };
+        }
     }
 
     return null;
