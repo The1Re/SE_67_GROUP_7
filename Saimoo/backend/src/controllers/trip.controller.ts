@@ -29,6 +29,12 @@ export const getTrip = async (req: Request, res: Response): Promise<any> => {
 export const newTrip = async (req: Request, res: Response): Promise<any> => {
     try {
         const tripData: TripData = req.body;
+        const { title, dateStart, dateEnd, ownerTripId } = tripData;
+        
+        if (!title || !dateStart || !dateEnd || !ownerTripId) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
         const trip = await TripService.createTrip(tripData);
         return res.status(201).json(trip);
     } catch (error) {

@@ -23,7 +23,13 @@ export const register = async (req: Request, res: Response): Promise<any> => {
 
         // Create new user
         const newUser = await UserService.createUser({ username, email, password });
-        return res.status(201).json({ message: 'User created successfully', username: newUser.username });
+        return res.status(201).json({ 
+            message: 'User created successfully', 
+            data: {
+                userId: newUser.id,
+                username: newUser.username
+            }
+        });
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Internal server error' });
@@ -47,7 +53,14 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 
         const token = UserService.generateToken(userValidationResult as User);
 
-        return res.status(200).json({ message: 'Login successful', username: userValidationResult.username, token });
+        return res.status(200).json({ 
+            message: 'Login successful', 
+            data: { 
+                userId: userValidationResult.id, 
+                username: userValidationResult.username,  
+            },
+            token
+        });
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Internal server error' });
