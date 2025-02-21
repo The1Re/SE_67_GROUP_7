@@ -1,19 +1,13 @@
 import { Request, Response } from "express";
-import { 
-    getTripAvailable, 
-    getTripById, 
-    createTrip, 
-    deleteTrip, 
-    updateTrip
-} from "../services/trip.service";
 import logger from "../utils/logger";
 
-import type { Trip, TripDetail } from "@prisma/client";
 import type { TripData } from "../services/trip.service";
+
+import * as TripService from "../services/trip.service";
 
 export const getAllTrips = async (req: Request, res: Response): Promise<any> => {
     try {
-        const trips = await getTripAvailable();
+        const trips = await TripService.getTripAvailable();
         return res.status(200).json(trips);
     } catch (error) {
         logger.error(error);
@@ -24,7 +18,7 @@ export const getAllTrips = async (req: Request, res: Response): Promise<any> => 
 export const getTrip = async (req: Request, res: Response): Promise<any> => {
     try {
         const { id } = req.params;
-        const trip = await getTripById(Number(id));
+        const trip = await TripService.getTripById(Number(id));
         return res.status(200).json(trip);
     } catch (error) {
         logger.error(error);
@@ -35,7 +29,7 @@ export const getTrip = async (req: Request, res: Response): Promise<any> => {
 export const newTrip = async (req: Request, res: Response): Promise<any> => {
     try {
         const tripData: TripData = req.body;
-        const trip = await createTrip(tripData);
+        const trip = await TripService.createTrip(tripData);
         return res.status(201).json(trip);
     } catch (error) {
         logger.error(error);
@@ -46,7 +40,7 @@ export const newTrip = async (req: Request, res: Response): Promise<any> => {
 export const removeTrip = async (req: Request, res: Response): Promise<any> => {
     try {
         const { id } = req.params;
-        await deleteTrip(Number(id));
+        await TripService.deleteTrip(Number(id));
         return res.status(204).json();
     } catch (error) {
         logger.error(error);
