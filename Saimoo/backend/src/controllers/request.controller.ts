@@ -7,10 +7,10 @@ import * as UserService from "../services/user.service";
 
 export const requestGuide = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
-        const { fullName, phone, guideDoc, idCard } = req.body;
+        const { fullName, phone, guide_doc_path, id_card_path } = req.body;
         const userId = req.user?.id;
 
-        if (!fullName || !phone || !guideDoc || !idCard) {
+        if (!fullName || !phone || !guide_doc_path || !id_card_path) {
             return res.status(400).json({ message: "Please fill all fields" });
         }
 
@@ -21,11 +21,11 @@ export const requestGuide = async (req: AuthRequest, res: Response): Promise<any
                     data: [
                         {
                             type: "Guide_Certification",
-                            filePath: guideDoc,
+                            filePath: guide_doc_path,
                         },
                         {
                             type: "Id_verification",
-                            filePath: idCard,
+                            filePath: id_card_path,
                         }
                     ]
                 }
@@ -42,9 +42,9 @@ export const requestGuide = async (req: AuthRequest, res: Response): Promise<any
 
 export const requestTemple = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { fullName, email, templeName, templeDoc, idCard } = req.body;
+        const { fullName, email, templeName, temple_doc_path, id_card_path } = req.body;
 
-        if (!fullName || !email || !templeName || !templeDoc || !idCard) {
+        if (!fullName || !email || !templeName || !temple_doc_path || !id_card_path) {
             return res.status(400).json({ message: "Please fill all fields" });
         }
 
@@ -60,11 +60,11 @@ export const requestTemple = async (req: Request, res: Response): Promise<any> =
                     data: [
                         {
                             type: "Temple_Document",
-                            filePath: templeDoc,
+                            filePath: temple_doc_path,
                         },
                         {
                             type: "Id_verification",
-                            filePath: idCard,
+                            filePath: id_card_path,
                         }
                     ]
                 }
@@ -86,7 +86,38 @@ export const requestTemple = async (req: Request, res: Response): Promise<any> =
 
 export const getRequests = async (req: Request, res: Response): Promise<any> => {
     try {
-        return res.status(200).send("Hello");
+        const requests = await RequestService.getRequests();
+        return res.status(200).json({ requests });
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+}
+
+export const approveRequest = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ message: "Please provide request id" });
+        }
+
+        await RequestService.approveRequest(Number(id));
+        return res.status(200).json({ message: "Request approved" });
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+}
+
+export const rejectRequest = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ message: "Please provide request id" });
+        }
+
+        await RequestService.rejectRequest(Number(id));
+        return res.status(200).json({ message: "Request rejected" });
     } catch (error) {
         return res.status(500).json({ error });
     }

@@ -20,3 +20,25 @@ export const getRequests = async () => {
 
     return requests;
 }
+
+export const approveRequest = (requestId: number) => {
+    return prisma.request.update({
+        where: {
+            id: requestId
+        },
+        data: {
+            status: "Approved"
+        }
+    });
+}
+
+export const rejectRequest = (requestId: number) => {
+    return prisma.request.update({
+        where: {
+            id: requestId
+        },
+        data: {
+            status: "Rejected"
+        }
+    });
+}
