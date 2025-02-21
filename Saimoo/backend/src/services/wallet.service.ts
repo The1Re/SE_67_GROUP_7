@@ -21,7 +21,8 @@ export const topup = async (userId: number, amount: number) => {
         data: {
             amount,
             type: 'topup',
-            walletId: wallet!.id
+            walletId: wallet!.id,
+            status: 'completed'
         }
     });
 
@@ -38,7 +39,8 @@ export const withdraw = async (userId: number, amount: number) => {
         data: {
             amount,
             type: 'withdraw',
-            walletId: wallet!.id
+            walletId: wallet!.id,
+            status: 'completed'
         }
     });
 

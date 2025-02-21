@@ -7,5 +7,5 @@ module.exports = {
         "^@/(.*)$": "<rootDir>/src/$1"
     },
     moduleDirectories: ["node_modules", "src"],
-    roots: ["<rootDir>/tests"]
+    roots: ["<rootDir>/src/__tests__"]
 }

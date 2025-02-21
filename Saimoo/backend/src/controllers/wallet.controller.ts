@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { AuthRequest } from "../middlewares";
 import logger from "../utils/logger";
 
 import * as walletService from '../services/wallet.service'
+import { AuthRequest } from "../middlewares";
 
 export const getWallet = async (req: AuthRequest, res: Response): Promise<any>  =>{
     try {

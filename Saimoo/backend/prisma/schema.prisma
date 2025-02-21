@@ -35,7 +35,7 @@ model Charm {
 }
 
 model IdentityDocument {
-  id           Int                   @id
+  id           Int                   @id @default(autoincrement())
   type         IdentityDocument_type
   filePath     String?               @db.VarChar(255)
   uploadedDate DateTime              @default(now()) @db.DateTime(0)
@@ -143,13 +143,14 @@ model TempleImage {
 }
 
 model Transaction {
-  id        Int              @id @default(autoincrement())
+  id        Int                @id @default(autoincrement())
   walletId  Int
-  amount    Float            @db.Float
+  amount    Float              @db.Float
   type      Transaction_type
-  createdAt DateTime         @default(now()) @db.DateTime(0)
+  status    Transaction_status @default(pending)
+  createdAt DateTime           @default(now()) @db.DateTime(0)
   Payment   Payment[]
-  Wallet    Wallet           @relation(fields: [walletId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_transaction_wallet1")
+  Wallet    Wallet             @relation(fields: [walletId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_transaction_wallet1")
 
   @@index([walletId], map: "fk_transaction_wallet1_idx")
 }
@@ -175,7 +176,7 @@ model Trip {
 }
 
 model TripDetail {
-  id                Int                 @id
+  id                Int                 @id @default(autoincrement())
   tripId            Int
   order             Int
   arriveTime        DateTime            @db.Time(0)
@@ -264,7 +265,7 @@ model Wallet {
   balance     Float         @db.Float
   userId      Int
   Transaction Transaction[]
-  User        User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_wallet_user1")
+  User        User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_wallet_user1")
 
   @@index([userId], map: "fk_wallet_user1_idx")
 }
@@ -308,6 +309,12 @@ enum Location_type {
 enum Payment_method {
   qrcode
   wallet
+}
+
+enum Transaction_status {
+  pending
+  completed
+  fail
 }
 
 enum TripOrder_status {

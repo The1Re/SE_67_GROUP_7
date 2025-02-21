@@ -2,9 +2,10 @@ import prisma from '../models/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { env } from '../config';
-import { createWallet } from './wallet.service'
 
 import type { User } from "@prisma/client";
+
+import { createWallet } from './wallet.service'
 
 export type UserCredentials = Pick<User, 'username' | 'email' | 'password'>;
 
