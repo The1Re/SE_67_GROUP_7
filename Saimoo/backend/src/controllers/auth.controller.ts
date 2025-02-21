@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { checkIfUserExists, validateUserCredentials, createUser, generateToken } from '../services/user.service';
 import logger from '../utils/logger';
+
 import type { User } from '@prisma/client';
-import { AuthRequest } from '../middlewares/authenticateUser.middleware';
+
+import * as UserService from '../services/user.service';
+import { AuthRequest } from '../middlewares';
 
 export const register = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -14,13 +16,13 @@ export const register = async (req: Request, res: Response): Promise<any> => {
         }
 
         // Check if user already exists
-        const userExistsMessage = await checkIfUserExists(username, email);
+        const userExistsMessage = await UserService.checkIfUserExists(username, email);
         if (userExistsMessage) {
             return res.status(400).json(userExistsMessage);
         }
 
         // Create new user
-        const newUser = await createUser({ username, email, password });
+        const newUser = await UserService.createUser({ username, email, password });
         return res.status(201).json({ message: 'User created successfully', username: newUser.username });
     } catch (error) {
         logger.error(error);
@@ -38,12 +40,12 @@ export const login = async (req: Request, res: Response): Promise<any> => {
         }
 
         // Validate user credentials
-        const userValidationResult = await validateUserCredentials(username, password);
+        const userValidationResult = await UserService.validateUserCredentials(username, password);
         if ('message' in userValidationResult) {
             return res.status(401).json(userValidationResult);
         }
 
-        const token = generateToken(userValidationResult as User);
+        const token = UserService.generateToken(userValidationResult as User);
 
         return res.status(200).json({ message: 'Login successful', username: userValidationResult.username, token });
     } catch (error) {
