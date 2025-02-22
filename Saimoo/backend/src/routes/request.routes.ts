@@ -9,7 +9,8 @@ router.post('/guide', authenticateUser, RequestController.requestGuide);
 router.post('/temple', RequestController.requestTemple);
 
 router.get('/', authenticateUser, authorizeRoles('admin'), RequestController.getRequests);
-router.patch('/approve/:id', authenticateUser, authorizeRoles('admin'), RequestController.approveRequest);
+router.patch('/approve/guide/:id', authenticateUser, authorizeRoles('admin'), RequestController.approveRequestGuide);
+router.patch('/approve/temple/:id', authenticateUser, authorizeRoles('admin'), RequestController.approveRequestTemple);
 router.patch('/reject/:id', authenticateUser, authorizeRoles('admin'), RequestController.rejectRequest);
 
 export default router;

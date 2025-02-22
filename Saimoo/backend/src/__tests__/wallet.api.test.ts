@@ -1,8 +1,10 @@
 import supertest from 'supertest';
 import app from '../app';
+import prisma from '../models/prisma';
 
 describe('Endpoints Wallet', () => {
     let token: string;
+    let userId: number;
 
     beforeAll(async () => {
         const res = await supertest(app)
@@ -15,6 +17,17 @@ describe('Endpoints Wallet', () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty('token');
         token = res.body.token;
+        userId = res.body.data.userId
+    });
+
+    afterAll(async () => {
+        await prisma.transaction.deleteMany({
+            where: {
+                Wallet: {
+                    userId: userId
+                }
+            }
+        })
     });
 
     describe('GET /api/wallets', () => {
