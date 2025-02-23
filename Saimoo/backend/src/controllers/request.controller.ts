@@ -75,7 +75,7 @@ export const requestTemple = async (req: Request, res: Response): Promise<any> =
                 }
             }
         })
-        return res.status(200).json({ message: "Success waiting for admin approved" });
+        return res.status(201).json({ message: "Success waiting for admin approved" });
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ error });
