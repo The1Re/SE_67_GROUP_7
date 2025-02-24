@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { createTempleController  } from '../controllers/createTemple.controller';
+import { createTempleController,getTempleController  } from '../controllers/templeCreate.controller';
 
 const router = Router();
 
-router.post('/a', createTempleController);
+router.post('/createTemple', createTempleController);
+router.get('/showTemple', getTempleController);
 
 export default router;

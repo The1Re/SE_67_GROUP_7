@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { newTempleImageController } from '../controllers/newTempleImage.controller';
+import { newTempleImageController,getTempleImageController } from '../controllers/templeImage.controller';
 const router = Router();
 
-router.post('/a', newTempleImageController);
+router.post('/newImgTemple', newTempleImageController);
+router.get('/showImgTemple', getTempleImageController);
 
 export default router;

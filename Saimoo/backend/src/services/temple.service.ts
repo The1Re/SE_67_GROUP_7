@@ -1,5 +1,6 @@
 import prisma from "../models/prisma";
 import * as LocationService from "./location.service";
+import { TempleImage,Charm,Activity } from "@prisma/client";
 
 type TempleCreate = {
     name: string;
@@ -15,7 +16,7 @@ type TempleUpdate = {
 }
 
 
-export const createTemple = async ({ name, latitude=null, longitude=null, provinceId=null, description=null }: TempleCreate) => {
+export const createTempleForNewtemple = async ({ name, latitude=null, longitude=null, provinceId=null, description=null }: TempleCreate) => {
     const location = await LocationService.createLocation({
         name: name,
         latitude: latitude,
@@ -51,3 +52,26 @@ export const updateTempleLike = async (id: number, { like }: TempleUpdate) => {
     });
 };
 
+export const createTempleCharm = async (charmData: Omit<Charm, "charmId">) => {
+    return await prisma.charm.create({ data: charmData });
+};
+
+export const getTempleCharm = async () => {
+    return await prisma.charm.findMany();
+};
+
+export const createTempleImage = async (templeImageData: Omit<TempleImage, "id">) => {
+    return await prisma.templeImage.create({ data: templeImageData });
+};
+
+export const getTempleImages = async () => {
+    return await prisma.templeImage.findMany();
+};
+
+export const createTempleActivity = async (activityData: Omit<Activity, "id">) => {
+    return await prisma.activity.create({ data: activityData });
+};
+
+export const getTempleActivities = async () => {
+    return await prisma.activity.findMany();
+};
