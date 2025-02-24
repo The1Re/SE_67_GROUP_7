@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaSuitcaseRolling, FaUserCircle } from "react-icons/fa";
-import { FiLogOut, FiSettings, FiCreditCard, FiBookmark, FiSmile } from "react-icons/fi";
-import { MdAddCircleOutline, MdDashboard } from "react-icons/md";
+import { FiLogOut, FiCreditCard } from "react-icons/fi";
+import { MdAddCircleOutline } from "react-icons/md";
 
 const UserTopbar: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">("SaiTrip");
