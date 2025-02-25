@@ -98,9 +98,13 @@ model Request {
   type             Request_type
   status           Request_status     @default(Pending)
   createdDate      DateTime           @default(now()) @db.DateTime(0)
-  userId           Int
+  userId           Int?
+  fullName         String?            @db.VarChar(255)
+  email            String?            @db.VarChar(45)
+  phone            String?            @db.VarChar(45)
+  templeName       String?            @db.VarChar(255)
   IdentityDocument IdentityDocument[]
-  User             User               @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_request_user1")
+  User             User?              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_request_user1")
 
   @@index([userId], map: "fk_request_user1_idx")
 }
@@ -150,7 +154,7 @@ model Transaction {
   status    Transaction_status @default(pending)
   createdAt DateTime           @default(now()) @db.DateTime(0)
   Payment   Payment[]
-  Wallet    Wallet             @relation(fields: [walletId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_transaction_wallet1")
+  Wallet    Wallet             @relation(fields: [walletId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_transaction_wallet1")
 
   @@index([walletId], map: "fk_transaction_wallet1_idx")
 }
