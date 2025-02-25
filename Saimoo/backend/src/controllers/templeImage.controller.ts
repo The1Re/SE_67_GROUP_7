@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createTempleImage, getTempleImages } from '../services/temple.service';
+import { createTempleImage, getTempleImages,updateTempleImage,deleteTempleImage } from '../services/temple.service';
 import logger from '../utils/logger';
 import { AuthRequest } from '../middlewares/authenticateUser.middleware';
 
@@ -10,7 +10,7 @@ export const newTempleImageController = async (req: AuthRequest, res: Response):
         return res.status(201).json(templeImage);
     } catch (error) {
         logger.error(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Can not create' });
     }
 };
 
@@ -20,6 +20,29 @@ export const getTempleImageController = async (req: Request , res: Response): Pr
         return res.status(201).json(templeImage);
     } catch (error) {
         logger.error(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Can not get' });
     }
 };
+
+export const updateTempleImageController = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id, imagePath ,description } = req.body;
+        const templeImage = await updateTempleImage(id, { imagePath ,description });
+        return res.status(201).json(templeImage);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: 'Can not update' });
+    }
+};
+
+export const deleteTempleImageController = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id } = req.body;
+        const templeImage = await deleteTempleImage(id);
+        return res.status(201).json(templeImage);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: 'Can not delete' });
+    }
+};
+
