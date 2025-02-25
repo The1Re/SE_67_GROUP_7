@@ -6,6 +6,25 @@ import { Request } from "@prisma/client";
 describe('Endpoints Request', () => {
     let tokenAdmin: string;
 
+    const clearData = async () => {
+        await prisma.request.deleteMany({ 
+            where: { 
+                OR: [
+                    { fullName: 'test temple' },
+                    { fullName: 'test guide' }
+                ]
+            }
+        });
+        await prisma.user.deleteMany({ 
+            where: { 
+                OR : [
+                    { username: 'test_guide' } ,
+                    { username: 'วัดทดสอบ'},
+                ]
+            }
+        });
+    }
+
     beforeAll(async () => {
         const res = await supertest(app)
             .post('/api/auth/login')
@@ -14,7 +33,13 @@ describe('Endpoints Request', () => {
                 password: '1234'
             });
         tokenAdmin = res.body.token;
+
+        await clearData();
     });
+
+    afterAll(async () => {
+        await clearData();
+    })
 
     describe('GET /api/requests', () => {
         it('should return 200', async () => {
@@ -156,8 +181,9 @@ describe('Endpoints Request', () => {
 
         it('should return 200', async () => {
             const res = await supertest(app)
-                .patch(`/api/requests/approve/temple/${request.id}`)
-                .set('Authorization', `Bearer ${tokenAdmin}`);
+                .patch(`/api/requests/approve/temple/`)
+                .set('Authorization', `Bearer ${tokenAdmin}`)
+                .send({ requestId: request.id });
 
             expect(res.statusCode).toEqual(200);
             expect(res.body.message).toBe('Request approved');
@@ -169,12 +195,13 @@ describe('Endpoints Request', () => {
                 .set('Authorization', `Bearer ${tokenAdmin}`)
 
             expect(res.statusCode).toEqual(400);
-            expect(res.body.message).toBe('Please fill all fields');
+            expect(res.body.message).toBe('Please provide request id');
         });
 
         it('should return 401 if no token is provided', async () => {
             const res = await supertest(app)
-                .patch(`/api/requests/approve/temple/${request.id}`);
+                .patch(`/api/requests/approve/temple/`)
+                .send({ requestId: request.id });
 
             expect(res.statusCode).toEqual(401);
         });
@@ -199,8 +226,9 @@ describe('Endpoints Request', () => {
 
         it('should return 200', async () => {
             const res = await supertest(app)
-                .patch(`/api/requests/approve/guide/${request.id}`)
-                .set('Authorization', `Bearer ${tokenAdmin}`);
+                .patch(`/api/requests/approve/guide/`)
+                .set('Authorization', `Bearer ${tokenAdmin}`)
+                .send({ requestId: request.id });
 
             expect(res.statusCode).toEqual(200);
             expect(res.body.message).toBe('Request approved');
@@ -212,16 +240,78 @@ describe('Endpoints Request', () => {
                 .set('Authorization', `Bearer ${tokenAdmin}`)
 
             expect(res.statusCode).toEqual(400);
-            expect(res.body.message).toBe('Please fill all fields');
+            expect(res.body.message).toBe('Please provide request id');
         });
 
         it('should return 401 if no token is provided', async () => {
             const res = await supertest(app)
-                .patch(`/api/requests/approve/guide/${request.id}`);
+                .patch(`/api/requests/approve/guide/`)
+                .send({ requestId: request.id });
 
             expect(res.statusCode).toEqual(401);
         });
 
+    });
+
+    describe('PATCH /api/requests/reject', () => {
+        let request: Request;
+
+        beforeAll(async () => {
+            const res = await supertest(app)
+                .post('/api/requests/temple')
+                .send({
+                    "fullName": "test temple2",
+                    "email": "test_temple2@gmail.com",
+                    "templeName": "วัดทดสอบ2",
+                    "temple_doc_path": "uploads\\pdf\\test.pdf",
+                    "id_card_path": "uploads\\pdf\\test.pdf"
+                });
+            
+            expect(res.statusCode).toEqual(201);
+
+            const req = await prisma.request.findFirst({
+                where: {
+                    templeName: 'วัดทดสอบ2',
+                    type: 'Register_as_Temple'
+                }
+            })
+
+            if (!req) {
+                throw new Error('Request not found');
+            }
+            request = req;
+        });
+
+        afterAll(async () => {
+            await prisma.request.delete({ where: { id: request.id } });
+        });
+
+        it('should return 200', async () => {
+            const res = await supertest(app)
+                .patch(`/api/requests/reject/`)
+                .set('Authorization', `Bearer ${tokenAdmin}`)
+                .send({ requestId: request.id });
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.message).toBe('Request rejected');
+        });
+
+        it('should return 400 if missing fields', async () => {
+            const res = await supertest(app)
+                .patch(`/api/requests/reject`)
+                .set('Authorization', `Bearer ${tokenAdmin}`)
+
+            expect(res.statusCode).toEqual(400);
+            expect(res.body.message).toBe('Please provide request id');
+        });
+
+        it('should return 401 if no token is provided', async () => {
+            const res = await supertest(app)
+                .patch(`/api/requests/reject/`)
+                .send({ requestId: request.id });
+
+            expect(res.statusCode).toEqual(401);
+        });
     });
 
 });

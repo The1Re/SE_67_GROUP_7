@@ -94,13 +94,13 @@ export const getRequests = async (req: Request, res: Response): Promise<any> => 
 
 export const approveRequestGuide = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.params;
+        const { requestId } = req.body;
 
-        if (!id) {
+        if (!requestId) {
             return res.status(400).json({ message: "Please provide request id" });
         }
 
-        const result = await RequestService.approveRequestGuide(Number(id));
+        const result = await RequestService.approveRequestGuide(Number(requestId));
 
         return res.status(200).json(result);
     } catch (error) {
@@ -111,13 +111,13 @@ export const approveRequestGuide = async (req: Request, res: Response): Promise<
 
 export const approveRequestTemple = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.params;
+        const { requestId } = req.body;
 
-        if (!id) {
+        if (!requestId) {
             return res.status(400).json({ message: "Please provide request id" });
         }
         
-        const result = await RequestService.approveRequestTemple(Number(id));
+        const result = await RequestService.approveRequestTemple(Number(requestId));
 
         return res.status(200).json(result);
     } catch (error) {
@@ -128,13 +128,13 @@ export const approveRequestTemple = async (req: Request, res: Response): Promise
 
 export const rejectRequest = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.params;
+        const { requestId } = req.body;
 
-        if (!id) {
+        if (!requestId) {
             return res.status(400).json({ message: "Please provide request id" });
         }
 
-        await RequestService.rejectRequest(Number(id));
+        await RequestService.rejectRequest(Number(requestId));
         
         return res.status(200).json({ message: "Request rejected" });
     } catch (error) {
