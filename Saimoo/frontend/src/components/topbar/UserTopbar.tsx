@@ -5,7 +5,6 @@ import { FiLogOut, FiCreditCard } from "react-icons/fi";
 import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { TbFlag3 } from "react-icons/tb";
-import { FaClipboardCheck } from "react-icons/fa";
 
 const UserTopbar: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
@@ -138,10 +137,6 @@ const UserTopbar: React.FC = () => {
               <SidebarItem
                 title="ลงทะเบียนเป็นตัวแทนวัด"
                 icon={<MdOutlineTempleBuddhist />}
-              />
-              <SidebarItem
-                title="ตรวจสอบคำข้อเข้าร่วมทริป"
-                icon={<FaClipboardCheck  />}
               />
               <SidebarItem
                 title="ออกจากระบบ"
