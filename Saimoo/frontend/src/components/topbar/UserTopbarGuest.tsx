@@ -22,7 +22,7 @@ export const UserTopbarGuest: React.FC = () => {
         </button>
 
         {/* Logo */}
-        <h2 className="text-sm md:text-lg font-semibold text-black">
+        <h2 className="text-sm md:text-lg font-semibold text-black ml-3">
           SAIM<span className="text-red-500">O</span>
           <span className="text-blue-500">O</span>
         </h2>
