@@ -1,10 +1,10 @@
-import UserTopbarGuest from "@/components/topbar/UserTopbarGuest";
+import { GuestTopbar } from "@/components/topbar/GuestTopbar";
 import { Outlet } from "react-router-dom";
 
 function GuestLayout() {
     return (
         <>
-         <UserTopbarGuest />
+         <GuestTopbar />
             <main className="flex-1 p-6">
                 <Outlet />
             </main>

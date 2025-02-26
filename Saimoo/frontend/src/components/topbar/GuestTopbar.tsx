@@ -45,7 +45,7 @@ export const GuestTopbar: React.FC = () => {
 
         {/* Login Button */}
         <button
-          className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all"
+          className="px-4 py-1 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all"
           onClick={handleLoginClick}
         >
           เข้าสู่ระบบ
