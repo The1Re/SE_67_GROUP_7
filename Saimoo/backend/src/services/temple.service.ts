@@ -68,9 +68,9 @@ export const getTempleCharm = async () => {
     return await prisma.charm.findMany();
 };
 
-export const getTempleCharmById = async (id: number) => {
+export const getTempleCharmById = async (charmId: number) => {
     return await prisma.charm.findUnique({
-      where: { charmId : id },
+      where: { charmId },
     });
 };
   
@@ -95,9 +95,9 @@ export const getTempleImages = async () => {
     return await prisma.templeImage.findMany();
 };
 
-export const getTempleImagesById = async (templeId: number) => {
-    return await prisma.templeImage.findMany({
-      where: { templeId: templeId },
+export const getTempleImagesById = async (id: number) => {
+    return await prisma.templeImage.findUnique({
+      where: { id },
     });
 };
   
@@ -122,9 +122,9 @@ export const getTempleActivities = async () => {
     return await prisma.activity.findMany();
 };
 
-export const getTempleActivitiesById = async (templeId: number) => {
-    return await prisma.activity.findMany({
-      where: { templeId: templeId },
+export const getTempleActivitiesById = async (id: number) => {
+    return await prisma.activity.findUnique({
+      where: { id: id },
     });
   };
   

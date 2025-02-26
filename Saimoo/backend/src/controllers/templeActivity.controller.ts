@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createTempleActivity,getTempleActivities,updateTempleActivity,deleteTempleActivity } from '../services/temple.service';
+import { createTempleActivity,getTempleActivities,updateTempleActivity,deleteTempleActivity,getTempleActivitiesById } from '../services/temple.service';
 import logger from '../utils/logger';
 import { AuthRequest } from '../middlewares/authenticateUser.middleware';
 import { getLocationsTemple } from '../services/location.service';
@@ -20,6 +20,17 @@ export const createTempleActivityController = async (req: AuthRequest, res: Resp
 export const getTempleActivityController = async (req: Request, res: Response): Promise<any> => {
     try {
         const templeActivity = await getTempleActivities();
+        return res.status(201).json(templeActivity);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: 'Can not get' });
+    }
+};
+
+export const getTempleActivityByIdController = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id } = req.params;
+        const templeActivity = await getTempleActivitiesById(Number(id));
         return res.status(201).json(templeActivity);
     } catch (error) {
         logger.error(error);

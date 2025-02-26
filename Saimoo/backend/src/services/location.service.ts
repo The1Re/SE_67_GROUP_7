@@ -35,6 +35,15 @@ export const getLocationTempleById = async (id: number) => {
   });
 };
 
+export const getLocationTempleByProvinceId = async (provinceId: number) => {
+  return await prisma.location.findMany({
+    where: {
+      provinceId: provinceId,
+      type: 'temple',
+    },
+  });
+};
+
 export const deleteLocation = async (id: number) => {
   return await prisma.location.delete({ where: { id } });
 };

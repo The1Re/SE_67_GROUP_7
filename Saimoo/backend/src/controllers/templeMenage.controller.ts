@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { createTempleForNewtemple,deleteTemple,updateTempleDescription } from '../services/temple.service';
 import logger from '../utils/logger';
 import { AuthRequest } from '../middlewares/authenticateUser.middleware';
-import { getLocationsTemple,getLocationTempleById } from '../services/location.service';
+import { getLocationsTemple,getLocationTempleById,getLocationTempleByProvinceId} from '../services/location.service';
 
 export const createTempleController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
@@ -29,6 +29,17 @@ export const getTempleByIdController = async (req: Request, res: Response): Prom
     try {
         const { locationId } = req.body;
         const temple = await getLocationTempleById(locationId);
+        return res.status(200).json(temple);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: 'Can not get' });
+    }
+};
+
+export const getTempleByProvinceIdController = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { provinceId } = req.body;
+        const temple = await getLocationTempleByProvinceId(provinceId);
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);
