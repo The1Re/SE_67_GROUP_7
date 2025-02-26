@@ -100,7 +100,7 @@ const UserTopbar: React.FC = () => {
                 <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
               </div>
               <div className="px-2 py-2">
-                <button className="w-full text-red-500 font-semibold py-2 flex items-center justify-center space-x-2 hover:bg-gray-100">
+                <button className="w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100">
                   <FiLogOut />
                   <span>ออกจากระบบ</span>
                 </button>
