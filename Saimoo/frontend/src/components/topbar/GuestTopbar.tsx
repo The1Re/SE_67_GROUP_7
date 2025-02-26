@@ -1,15 +1,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
 
-export const TempleTopbar: React.FC = () => {
+export const GuestTopbar: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleLoginClick = () => {
+    console.log("เข้าสู่ระบบถูกคลิก");
+  };
 
   return (
     <>
@@ -40,10 +42,14 @@ export const TempleTopbar: React.FC = () => {
         </div>
 
         <div className="border-l border-gray-300 h-8 mx-2"></div>
-        <h3 className="text-sm md:text-lg font-semibold text-black ml-3.5">
-          วัดพระแก้ว
-        </h3>
+
         {/* Login Button */}
+        <button
+          className="px-4 py-1 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all"
+          onClick={handleLoginClick}
+        >
+          เข้าสู่ระบบ
+        </button>
       </div>
 
       {/* Sidebar (ใช้ Framer Motion + AnimatePresence) */}
@@ -70,17 +76,9 @@ export const TempleTopbar: React.FC = () => {
                 </h2>
               </div>
               <SidebarItem
-                title="โปรไฟล์"
+                title="ลงทะเบียนเป็นตัวแทนวัด"
                 icon={<MdOutlineTempleBuddhist />}
               />
-              <SidebarItem
-                title="แก้ไขโปรไฟล์"
-                icon={<FaRegEdit  />}
-              />
-               <SidebarItem className="text-red-500"
-                title="ออกจากระบบ"
-                icon={<FiLogOut />}
-                />
             </motion.div>
 
             {/* Overlay Effect */}
@@ -116,15 +114,14 @@ const MenuItem: React.FC<{
   </h1>
 );
 
-const SidebarItem: React.FC<{ title: string; icon: JSX.Element; className?: string }> = ({
+const SidebarItem: React.FC<{ title: string; icon: JSX.Element }> = ({
   title,
   icon,
-  className,
 }) => (
-  <div className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className}`}>
+  <div className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200">
     <span className="mr-3 text-lg">{icon}</span>
     <span className="text-sm">{title}</span>
   </div>
 );
 
-export default TempleTopbar;
+export default GuestTopbar;

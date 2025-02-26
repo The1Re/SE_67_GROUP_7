@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
 import Profile from '../pages/user/Profile'
 import { Trips } from '@/pages/Trips'
-import UserLayout from '@/layouts/UserLayout'
+import TempleLayout from '@/layouts/TempleLayout';
 
 function UserRoutes() {
   return (
     <Routes>
-        <Route element={<UserLayout />} >
+        <Route element={<TempleLayout />} >
             <Route path='/profile' element={<Profile />}></Route>
             <Route path='/trips' element={<Trips />}></Route>
         </Route>
