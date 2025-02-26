@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
 
-export const UserTopbarGuest: React.FC = () => {
+export const GuestTopbar: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
@@ -124,4 +124,4 @@ const SidebarItem: React.FC<{ title: string; icon: JSX.Element }> = ({
   </div>
 );
 
-export default UserTopbarGuest;
+export default GuestTopbar;
