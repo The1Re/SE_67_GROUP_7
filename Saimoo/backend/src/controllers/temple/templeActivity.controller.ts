@@ -20,7 +20,7 @@ export const createTempleActivityController = async (req: AuthRequest, res: Resp
 export const getTempleActivityController = async (req: Request, res: Response): Promise<any> => {
     try {
         const templeActivity = await getTempleActivities();
-        return res.status(201).json(templeActivity);
+        return res.status(200).json(templeActivity);
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Can not get' });
@@ -31,7 +31,7 @@ export const getTempleActivityByIdController = async (req: Request, res: Respons
     try {
         const { id } = req.params;
         const templeActivity = await getTempleActivitiesById(Number(id));
-        return res.status(201).json(templeActivity);
+        return res.status(200).json(templeActivity);
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Can not get' });
@@ -53,8 +53,8 @@ export const updateTempleActivityController = async (req: Request, res: Response
 
 export const deleteTempleActivityController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.body;
-        const templeActivity = await deleteTempleActivity(id);
+        const { id } = req.params;
+        const templeActivity = await deleteTempleActivity(Number(id));
         return res.status(201).json(templeActivity);
     } catch (error) {
         logger.error(error);

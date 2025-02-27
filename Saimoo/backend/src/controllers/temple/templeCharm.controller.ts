@@ -18,7 +18,7 @@ export const newTempleCharmController = async (req: AuthRequest, res: Response):
 export const getTempleCharmController = async (req: Request, res: Response): Promise<any> => {
     try {
         const templeCharm = await getTempleCharm();
-        return res.status(201).json(templeCharm);
+        return res.status(200).json(templeCharm);
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Can not get' });
@@ -29,7 +29,7 @@ export const getTempleCharmByIdController = async (req: Request, res: Response):
     try {
         const {id } = req.params;
         const templeCharm = await getTempleCharmById(Number(id));
-        return res.status(201).json(templeCharm);
+        return res.status(200).json(templeCharm);
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Can not get' });
@@ -49,8 +49,8 @@ export const updateTempleCharmController = async (req: Request, res: Response): 
 
 export const deleteTempleCharmController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.body;
-        const templeCharm = await deleteTempleCharm(id);
+        const { id } = req.params;
+        const templeCharm = await deleteTempleCharm(Number(id));
         return res.status(201).json(templeCharm);
     } catch (error) {
         logger.error(error);
