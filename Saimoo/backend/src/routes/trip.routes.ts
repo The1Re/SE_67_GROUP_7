@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { getAllTrips, getTrip, newTrip, removeTrip } from '../controllers/trip.controller';
+import * as TripController from '../controllers/trip.controller';
 
 const router = Router();
 
-router.get('/', getAllTrips);
-router.get('/:id', getTrip);
-router.post('/', newTrip);
+router.get('/', TripController.getAllTrips);
+router.get('/:id', TripController.getTrip);
+router.post('/', TripController.newTrip);
 router.put('/');
-router.delete('/', removeTrip);
+router.delete('/', TripController.removeTrip);
 
 export default router;
