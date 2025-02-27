@@ -3,11 +3,11 @@ import { createTempleActivityController,getTempleActivityController,updateTemple
 
 const router = Router();
 
-router.post('/createTempleActivity', createTempleActivityController);
-router.get('/showTempleActivity', getTempleActivityController);
-router.get('/getOneTempleActivity/:id',getTempleActivityByIdController);
-router.put('/updateTempleActivity', updateTempleActivityController);
-router.delete('/deleteTempleActivity', deleteTempleActivityController);
+router.post('/create', createTempleActivityController);
+router.get('/show', getTempleActivityController);
+router.get('/:id',getTempleActivityByIdController);
+router.put('/update', updateTempleActivityController);
+router.delete('/delete', deleteTempleActivityController);
 
 export default router;
 

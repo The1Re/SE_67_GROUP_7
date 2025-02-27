@@ -3,11 +3,11 @@ import { createTempleController,getTempleController,updateTempleController,delet
 
 const router = Router();
 
-router.post('/createTemple', createTempleController);
-router.get('/showTemple', getTempleController);
-router.get('/getOneTemple/:id',getTempleByIdController);
-router.get('/getTempleByProvinceId/:provinceId', getTempleByProvinceIdController);
-router.put('/updateTemple', updateTempleController);
-router.delete('/deleteTemple', deleteTempleController);
+router.post('/create', createTempleController);
+router.get('/show', getTempleController);
+router.get('/:id',getTempleByIdController);
+router.get('/:provinceId', getTempleByProvinceIdController);
+router.put('/update', updateTempleController);
+router.delete('/delete', deleteTempleController);
 
 export default router;

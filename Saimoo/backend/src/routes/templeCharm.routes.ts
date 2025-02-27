@@ -3,11 +3,11 @@ import { newTempleCharmController ,getTempleCharmController,updateTempleCharmCon
 
 const router = Router();
 
-router.post('/newCharmTemple', newTempleCharmController);
-router.get('/showCharmTemple', getTempleCharmController);
-router.get('/getOneCharmTemple/:id',getTempleCharmByIdController);
-router.put('/updateCharmTemple', updateTempleCharmController);
-router.delete('/deleteCharmTemple', deleteTempleCharmController);
+router.post('/create', newTempleCharmController);
+router.get('/show', getTempleCharmController);
+router.get('/getOne/:id',getTempleCharmByIdController);
+router.put('/update', updateTempleCharmController);
+router.delete('/delete', deleteTempleCharmController);
 
 
 export default router;
