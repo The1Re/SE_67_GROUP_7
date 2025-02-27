@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { createTempleImage, getTempleImages,updateTempleImage,deleteTempleImage,getTempleImagesById} from '../services/temple.service';
-import logger from '../utils/logger';
-import { AuthRequest } from '../middlewares/authenticateUser.middleware';
+import { createTempleImage, getTempleImages,updateTempleImage,deleteTempleImage,getTempleImagesById} from '../../services/temple.service';
+import logger from '../../utils/logger';
+import { AuthRequest } from '../../middlewares/authenticateUser.middleware';
 
 export const newTempleImageController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {

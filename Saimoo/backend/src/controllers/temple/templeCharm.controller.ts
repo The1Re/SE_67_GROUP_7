@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { createTempleCharm,getTempleCharm,updateTempleCharm,deleteTempleCharm,getTempleCharmById} from '../services/temple.service';
-import logger from '../utils/logger';
-import { AuthRequest } from '../middlewares/authenticateUser.middleware';
+import { createTempleCharm,getTempleCharm,updateTempleCharm,deleteTempleCharm,getTempleCharmById} from '../../services/temple.service';
+import logger from '../../utils/logger';
+import { AuthRequest } from '../../middlewares/authenticateUser.middleware';
 
 export const newTempleCharmController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {

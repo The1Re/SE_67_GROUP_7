@@ -24,7 +24,7 @@ export const createTempleForNewtemple = async ({ name, latitude=null, longitude=
         type: "temple"
     });
 
-    await prisma.temple.create({
+    return await prisma.temple.create({
         data: {
             likes: 0,
             description: description, // Ensure description is passed as a parameter

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { createTempleActivity,getTempleActivities,updateTempleActivity,deleteTempleActivity,getTempleActivitiesById } from '../services/temple.service';
-import logger from '../utils/logger';
-import { AuthRequest } from '../middlewares/authenticateUser.middleware';
-import { getLocationsTemple } from '../services/location.service';
+import { createTempleActivity,getTempleActivities,updateTempleActivity,deleteTempleActivity,getTempleActivitiesById } from '../../services/temple.service';
+import logger from '../../utils/logger';
+import { AuthRequest } from '../../middlewares/authenticateUser.middleware';
+import { getLocationsTemple } from '../../services/location.service';
 
 export const createTempleActivityController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
