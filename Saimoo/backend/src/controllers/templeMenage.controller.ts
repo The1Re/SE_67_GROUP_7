@@ -38,8 +38,8 @@ export const getTempleByIdController = async (req: Request, res: Response): Prom
 
 export const getTempleByProvinceIdController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { provinceId } = req.body;
-        const temple = await getLocationTempleByProvinceId(provinceId);
+        const { provinceId } = req.params;
+        const temple = await getLocationTempleByProvinceId(Number(provinceId));
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);
@@ -60,8 +60,8 @@ export const updateTempleController = async (req: Request, res: Response): Promi
 
 export const deleteTempleController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { locationId } = req.body;
-        const temple = await deleteTemple(locationId);
+        const { locationId } = req.params;
+        const temple = await deleteTemple(Number(locationId));
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);

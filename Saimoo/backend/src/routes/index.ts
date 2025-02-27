@@ -16,9 +16,9 @@ const routes = Router();
 
 routes.use('/auth', authRoutes)
 routes.use('/temple', templeRoutes)
-routes.use('/templeCharm', templeCharmRoutes)
-routes.use('/templeActivity', templeActivityRoutes)
-routes.use('/templeImage', TempleImageRoutes)
+routes.use('/templeCh', templeCharmRoutes)
+routes.use('/templeAc', templeActivityRoutes)
+routes.use('/templeImg', TempleImageRoutes)
 routes.use('/auth', authRoutes);
 routes.use('/wallets', authenticateUser, walletRoutes);
 routes.use('/trips', tripRoutes);
