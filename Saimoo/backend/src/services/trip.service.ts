@@ -70,9 +70,69 @@ export const createTrip = async (tripData: TripData) => {
 }
 
 export const updateTrip = async (id: number, tripData: Trip) => {
-    return await prisma.trip.update({ where: { id }, data: tripData });
+    return await prisma.trip.update({ 
+        where: { id }, 
+        data: tripData 
+    });
 }
 
 export const deleteTrip = async (id: number) => {
     return await prisma.trip.delete({ where: { id } });
+}
+
+export const getImages = async (tripId: number) => {
+    return await prisma.tripPicture.findMany({
+        where: { tripId }
+    })
+}
+
+export const uploadImage = async (tripId: number, imagePath: string) => {
+    return await prisma.tripPicture.create({
+        data: {
+            tripId,
+            imagePath
+        }
+    })
+}
+
+export const updateImage = async (id: number, imagePath: string) => {
+    return await prisma.tripPicture.update({
+        where: { id },
+        data: { imagePath }
+    })
+}
+
+export const deleteImage = async (id: number) => {
+    return await prisma.tripPicture.delete({ where: { id } });
+}
+
+export const getTripDetails = async (tripId: number) => {
+    return await prisma.tripDetail.findMany({
+        where: { tripId }
+    })
+}
+
+export const newTripDetail = async (tripId: number, tripDetail: TripDetail) => {
+    const [hours, minutes] = String(tripDetail.arriveTime).split(":");
+    const date = new Date()
+    date.setHours(Number(hours), Number(minutes));
+
+    return await prisma.tripDetail.create({
+        data: {
+            ...tripDetail,
+            arriveTime: date,
+            tripId
+        }
+    })
+}
+
+export const updateTripDetail = async (id: number, tripDetail: TripDetail) => {
+    return await prisma.tripDetail.update({
+        where: { id },
+        data: tripDetail
+    })
+}
+
+export const removeTripDetail = async (id: number) => {
+    return await prisma.tripDetail.delete({ where: { id } });
 }
