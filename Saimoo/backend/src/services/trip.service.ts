@@ -136,3 +136,29 @@ export const updateTripDetail = async (id: number, tripDetail: TripDetail) => {
 export const removeTripDetail = async (id: number) => {
     return await prisma.tripDetail.delete({ where: { id } });
 }
+
+export const getTripDetailImages = async (tripDetailId: number) => {
+    return await prisma.tripDetailPicture.findMany({
+        where: { tripDetailId }
+    })
+}
+
+export const uploadTripDetailImage = async (tripDetailId: number, imagePath: string) => {
+    return await prisma.tripDetailPicture.create({
+        data: {
+            tripDetailId,
+            imagePath
+        }
+    })
+}
+
+export const updateTripDetailImage = async (id: number, imagePath: string) => {
+    return await prisma.tripDetailPicture.update({
+        where: { id },
+        data: { imagePath }
+    })
+}
+
+export const removeTripDetailImage = async (id: number) => {
+    return await prisma.tripDetailPicture.delete({ where: { id } });
+}

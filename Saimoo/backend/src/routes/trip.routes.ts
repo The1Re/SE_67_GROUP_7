@@ -22,6 +22,13 @@ router.use('/:tripId/details', Router({ mergeParams: true })
     .post('/', TripController.newTripDetail)
     .put('/', TripController.updateTripDetail)
     .delete('/', TripController.removeTripDetail)
+
+    .use('/:tripDetailId/images', Router({ mergeParams: true })
+        .get('/', TripController.getTripDetailImages)
+        .post('/', TripController.uploadTripDetailImage)
+        .put('/', TripController.updateTripDetailImage)
+        .delete('/', TripController.removeTripDetailImage)
+    )
 )
 
 

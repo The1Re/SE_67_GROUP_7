@@ -167,3 +167,48 @@ export const removeTripDetail = async (req: Request, res: Response): Promise<any
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
+export const getTripDetailImages = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { tripDetailId } = req.params;
+        const images = await TripService.getTripDetailImages(Number(tripDetailId));
+        return res.status(200).json(images);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const uploadTripDetailImage = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { tripDetailId } = req.params;
+        const { imagePath } = req.body;
+        const image = await TripService.uploadTripDetailImage(Number(tripDetailId), imagePath);
+        return res.status(201).json(image);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const updateTripDetailImage = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id, imagePath } = req.body;
+        const image = await TripService.updateTripDetailImage(Number(id), imagePath);
+        return res.status(200).json(image);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const removeTripDetailImage = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id } = req.body;
+        await TripService.removeTripDetailImage(Number(id));
+        return res.status(204).json({ message: "Trip detail image removed" });
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
