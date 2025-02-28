@@ -3,12 +3,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import UserRoutes from "./routes/UserRoutes";
 import TempleRoutes from "./routes/TempleRoutes";
 import GuestRoutes from "./routes/GuestRoutes";
+import AdminPage from "../src/pages/user/adminMain"
 
-type Role = "user" | "guest" | "temple"
+type Role = "user" | "guest" | "temple" | "admin"
 
 function App() {
 //   const role = getUserRole();
-const role : Role = "guest" as Role;
+const role : Role = "user" as Role;
   return (
     <>
     <BrowserRouter>
@@ -16,6 +17,7 @@ const role : Role = "guest" as Role;
         {role === "user" && <Route path="/*" element={<UserRoutes />} />}
         {role === "temple" && <Route path="/*" element={<TempleRoutes />} />}
         {role === "guest" && <Route path="/*" element={<GuestRoutes />} />} 
+        {role === "admin" && <Route path="/*" element={<AdminPage />} />}
       </Routes>
     </BrowserRouter>
       </>
