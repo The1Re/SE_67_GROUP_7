@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AdminSidebar from "../../components/sidebar/AdminSidebar";
 import UserTable from "../../components/table/UserTable";
-import TempleTable from "../../components/table/TempleTable";
+import TempleTable from "../../components/table/templeTable";
 import TemplePetitionTable from "../../components/table/templePetition";
 import GuidePetitionTable from "../../components/table/guidePetition";
 import ClaimTable from "../../components/table/ClaimTable";
