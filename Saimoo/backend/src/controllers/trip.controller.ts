@@ -7,7 +7,11 @@ import * as TripService from "../services/trip.service";
 
 export const getAllTrips = async (req: Request, res: Response): Promise<any> => {
     try {
-        const trips = await TripService.getTripAvailable();
+        const { page = '1', pageSize = '10', sortBy = 'id', sortOrder = 'desc' } = req.query;
+        const pageNumber = parseInt(page as string) || 1;
+        const size = parseInt(pageSize as string) || 10;
+
+        const trips = await TripService.getTripAvailable(pageNumber, size, sortBy as string, sortOrder as 'asc' | 'desc');
         return res.status(200).json(trips);
     } catch (error) {
         logger.error(error);
