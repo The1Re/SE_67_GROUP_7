@@ -94,3 +94,15 @@ export const changePassword = async (username: string, oldPassword: string, newP
 
     return newUser;
 }
+
+export const getAllUsers = async () => {
+    return await prisma.user.findMany();
+}
+
+export const getUserById = async (userId: number) => {
+    return await prisma.user.findUnique({ where: { id: userId } });
+}
+
+export const deleteUser = async (userId: number) => {
+    return await prisma.user.delete({ where: { id: userId } });
+}
