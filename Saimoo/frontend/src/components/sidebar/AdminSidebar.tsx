@@ -1,22 +1,30 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
     title: "จัดการข้อมูล",
-    subItems: ["ผู้ใช้", "วัด"],
+    subItems: [
+      { name: "ผู้ใช้", path: "/admin/manage-users" },
+      { name: "วัด", path: "/admin/manage-temples" }
+    ],
   },
   {
     title: "ตรวจสอบการลงทะเบียน",
-    subItems: ["ตัวแทนวัด", "ไกด์"],
+    subItems: [
+      { name: "ตัวแทนวัด", path: "/admin/registrations/temple" },
+      { name: "ไกด์", path: "/admin/registrations/guide" }
+    ],
   },
   {
     title: "ตรวจสอบการเงิน",
-    subItems: ["การขอเคลม"],
+    subItems: [{ name: "การขอเคลม", path: "/admin/transactions" }],
   },
 ];
 
 export default function AdminSidebar({ onSelectMenu }) {
   const [openMenus, setOpenMenus] = useState({});
+  const navigate = useNavigate();
 
   const toggleMenu = (index) => {
     setOpenMenus((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -44,9 +52,12 @@ export default function AdminSidebar({ onSelectMenu }) {
                   <button
                     key={subIndex}
                     className="w-full text-left py-1 text-gray-700 hover:bg-gray-100 px-2 rounded"
-                    onClick={() => onSelectMenu(subItem)}
+                    onClick={() => {
+                      navigate(subItem.path); // ✅ เปลี่ยนหน้า
+                      onSelectMenu(); // ✅ ปิด Sidebar
+                    }}
                   >
-                    {subItem}
+                    {subItem.name}
                   </button>
                 ))}
               </div>
