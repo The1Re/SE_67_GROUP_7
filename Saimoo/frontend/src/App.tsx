@@ -8,7 +8,7 @@ type Role = "user" | "guest" | "temple"
 
 function App() {
 //   const role = getUserRole();
-const role : Role = "guest" as Role;
+const role : Role = "user" as Role;
   return (
     <>
     <BrowserRouter>
