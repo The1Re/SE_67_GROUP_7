@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateUser } from '../middlewares'
+import { authenticateUser, authorizeRoles } from '../middlewares'
 import { uploads } from '../middlewares'
 
 
@@ -8,10 +8,12 @@ import tripRoutes from './trip.routes';
 import requestRoutes from './request.routes';
 import authRoutes from './auth.routes';
 import templeRoutes from './temple/temple.routes'; 
+import userRoutes from './user.routes';
 
 const routes = Router();
 
 routes.use('/auth', authRoutes)
+routes.use('/users', authenticateUser, authorizeRoles('admin'), userRoutes);
 routes.use('/temples', templeRoutes)
 routes.use('/auth', authRoutes);
 routes.use('/wallets', authenticateUser, walletRoutes);
