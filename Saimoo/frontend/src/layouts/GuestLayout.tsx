@@ -5,7 +5,7 @@ function GuestLayout() {
     return (
         <>
          <GuestTopbar />
-            <main className="h-dvh pt-[75px] overflow-hidden">
+            <main className="h-dvh pt-[75px] overflow-atuo">
                 <Outlet />
             </main>
         </>
