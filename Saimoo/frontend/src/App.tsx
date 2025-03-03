@@ -11,7 +11,8 @@ function App() {
 
   useEffect(() => {
     getUserRole().then((role) => setRole(role));
-  }, [])
+  }, [role])
+
 
   return (
     <>

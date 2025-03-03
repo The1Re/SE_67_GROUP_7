@@ -12,7 +12,7 @@ export const getUserRole = async (): Promise<UserRole> => {
         });
 
         if (res.status === 200) {
-            return res.data.role;
+            return res.data.message.role;
         } else {
             return "guest";
         }

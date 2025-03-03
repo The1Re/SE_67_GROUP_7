@@ -10,7 +10,10 @@ export type SignInData = {
 
 function SignInForm({ setIsModalOpen }) {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState<SignInData>();
+    const [formData, setFormData] = useState<SignInData>({
+        username: "",
+        password: ""
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,6 +23,7 @@ function SignInForm({ setIsModalOpen }) {
 
             if (res.status === 200) {
                 localStorage.setItem("token", res.data.token);
+                setIsModalOpen(null);
                 navigate("/");
             } else {
                 console.log(res);
@@ -30,19 +34,23 @@ function SignInForm({ setIsModalOpen }) {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <Input 
                 label="Username" 
+                name="username"
                 placeholder="Enter your username or email" 
+                value={formData.username}
                 onChange={handleChange} />
             <Input 
                 label="Password" 
+                name="password"
                 placeholder="Enter your password" 
                 type="password" 
+                value={formData.password}
                 onChange={handleChange} />
             <p className="text-right text-sm text-gray-500 cursor-pointer hover:text-gray-700" onClick={() => setIsModalOpen("forgot")}>
                 Forgot password?
