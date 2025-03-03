@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Input from "./Input";
+import api from "@/api";
 
 export type SignInData = {
     username: string
@@ -7,12 +9,24 @@ export type SignInData = {
 }
 
 function SignInForm({ setIsModalOpen }) {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<SignInData>();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Login Data:", formData);
-        // Prepare to send data to API
+        
+        try {
+            const res = await api.post("/auth/login", formData);
+
+            if (res.status === 200) {
+                localStorage.setItem("token", res.data.token);
+                navigate("/");
+            } else {
+                console.log(res);
+            }
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
