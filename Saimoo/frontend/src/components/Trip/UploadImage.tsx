@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const UploadBox = () => {
+const UploadImage = () => {
     const [image, setImage] = useState(null);
     const [imageURL, setImageURL] = useState(null);
 
@@ -24,7 +24,7 @@ const UploadBox = () => {
 
             {/* ถ้ายังไม่มีภาพ ให้แสดงปุ่ม + */}
             {!imageURL ? (
-                <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer relative z-10">
+                <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer relative">
                     <span className="text-4xl text-gray-500">+</span>
                     <input 
                         type="file" 
@@ -34,7 +34,7 @@ const UploadBox = () => {
                     />
                 </label>
             ) : (
-                <div className="w-full h-full flex items-center justify-center relative z-10">
+                <div className="w-full h-full flex items-center justify-center relative">
                     <img 
                         src={imageURL} 
                         alt="preview" 
@@ -56,4 +56,4 @@ const UploadBox = () => {
     );
 };
 
-export default UploadBox;
+export default UploadImage;
