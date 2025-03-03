@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const claims = [
-  { id: 1, name: "นาย ก ไม่ได้", tripName: "ไหว้พระอยุธยา", price: 750 },
-  { id: 2, name: "นายชาสิน สุโพธิ์", tripName: "ธนยอพาทเที่ยววัดใจ", price: 9999 },
+  { id: 1, name: "นาย ก ไม่ได้", tripName: "ไหว้พระอยุธยา", price: 750, reason: "ไม่ได้ไปจริง", evidenceImages: ["/path-to-image.jpg"] },
+  { id: 2, name: "นายชาสิน สุโพธิ์", tripName: "ธนยอพาทเที่ยววัดใจ", price: 9999, reason: "มีปัญหาทางสุขภาพ", evidenceImages: ["/path-to-image.jpg"] },
 ];
 
-export default function ClaimTable({ onSelectClaim }) {
+export default function ClaimTable() {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const filteredClaims = claims.filter(claim =>
     claim.name.includes(search) || claim.tripName.includes(search)
@@ -39,7 +41,7 @@ export default function ClaimTable({ onSelectClaim }) {
               <td className="border p-2">
                 <button
                   className="bg-blue-500 text-white px-2 py-1 rounded"
-                  onClick={() => onSelectClaim(claim)}
+                  onClick={() => navigate(`/admin/petitions/claim/${claim.id}`, { state: { claim } })}
                 >
                   ดูรายละเอียด
                 </button>
