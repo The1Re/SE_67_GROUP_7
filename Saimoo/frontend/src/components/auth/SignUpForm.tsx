@@ -1,0 +1,64 @@
+import { useState } from "react";
+import Input from "./Input";
+
+export type SignUpData = {
+	username: string;
+	email: string;
+	password: string;
+	firstname?: string;
+	surname?: string;
+	phone?: string;
+}
+
+function SignupForm() {
+	const [formData, setFormData] = useState<SignUpData>();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		console.log("Signup Data:", formData);
+		// Prepare to send data to API
+	};
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	}
+
+	return (
+		<form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 relative">
+			<div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-300 transform -translate-x-1/2"></div>
+			<Input
+				label="Email"
+				placeholder="Enter your email"
+				onChange={handleChange} />
+			<Input
+				label="Firstname"
+				placeholder="Enter your firstname"
+				onChange={handleChange} />
+			<Input
+				label="Username"
+				placeholder="Enter your username"
+				onChange={handleChange} />
+			<Input
+				label="Surname"
+				placeholder="Enter your surname"
+				onChange={handleChange} />
+			<Input
+				label="Password"
+				placeholder="Enter your password"
+				type="password"
+				onChange={handleChange} />
+			<Input
+				label="Phone"
+				placeholder="Enter your phone number"
+				onChange={handleChange} />
+			<button
+				type="submit"
+				className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 col-span-2"
+			>
+				Sign Up
+			</button>
+		</form>
+	);
+};
+
+export default SignupForm;

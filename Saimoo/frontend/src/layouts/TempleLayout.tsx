@@ -5,7 +5,7 @@ function TempleLayout() {
     return (
         <>
          <TempleTopbar />
-            <main className="flex-1 p-6">
+            <main className="h-dvh pt-[75px] overflow-hidden">
                 <Outlet />
             </main>
         </>

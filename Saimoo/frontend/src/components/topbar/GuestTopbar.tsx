@@ -2,15 +2,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
+import AuthModal from "@/components/auth/AuthModal";
+import type { AuthType } from "@/components/auth/AuthModal";
 
 export const GuestTopbar: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState<AuthType | null>(null);
 
   const handleLoginClick = () => {
-    console.log("เข้าสู่ระบบถูกคลิก");
+    setIsModalOpen("login");
   };
 
   return (
@@ -45,7 +48,7 @@ export const GuestTopbar: React.FC = () => {
 
         {/* Login Button */}
         <button
-          className="px-4 py-1 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all"
+          className="px-4 py-1 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all cursor-pointer"
           onClick={handleLoginClick}
         >
           เข้าสู่ระบบ
@@ -93,6 +96,8 @@ export const GuestTopbar: React.FC = () => {
           </>
         )}
       </AnimatePresence>
+
+      { isModalOpen && <AuthModal type={isModalOpen} setIsModalOpen={setIsModalOpen} /> }
     </>
   );
 };
