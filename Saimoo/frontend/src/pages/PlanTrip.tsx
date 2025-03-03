@@ -1,4 +1,5 @@
 import MapView from "@/components/Trip/MapView";
+import TripDay from "@/components/Trip/TripDay";
 import TripDetails from "@/components/Trip/TripDetails";
 import UploadImage from "@/components/Trip/UploadImage";
 
@@ -8,6 +9,7 @@ function PlanTrip() {
       <div className="w-full h-screen md:w-4/6 md:h-auto flex flex-col">
           <UploadImage />
           <TripDetails />
+          <TripDay totalDays={2} />
       </div>
 
 
