@@ -18,14 +18,19 @@ function AuthModal({ type, setIsModalOpen }) {
     };
 
     return (
-        <div 
-            className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50"
+        <motion.div 
+            className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setIsModalOpen(null)}
         >
             <motion.div
                 className="bg-white p-6 rounded-lg shadow-lg w-[600px]"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="text-3xl font-bold text-center mb-4" style={{ color: "#44AFB6" }}>
@@ -36,16 +41,16 @@ function AuthModal({ type, setIsModalOpen }) {
                 {type === "login" && <SignInForm setIsModalOpen={setIsModalOpen} />}
                 {type === "forgot" && <ForgotPasswordForm />}
 
-                <p className="text-center mt-2 text-gray-500">
+                <div className="text-center mt-2 text-gray-500">
                     {type === "login" ? (
                         <>Don't have an account? <span className="text-teal-500 cursor-pointer" onClick={() => setIsModalOpen("signup")}>Sign up</span></>
                     ) : type === "signup" ? (
                         <>Already have an account? <span className="text-teal-500 cursor-pointer" onClick={() => setIsModalOpen("login")}>Sign in</span></>
                     ) : null}
-                </p>
+                </div>
 
             </motion.div>
-        </div>
+        </motion.div>
     );
 };
 

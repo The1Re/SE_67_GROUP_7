@@ -24,36 +24,38 @@ function SignupForm() {
 	}
 
 	return (
-		<form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 relative">
-			<div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-300 transform -translate-x-1/2"></div>
-			<Input
-				label="Email"
-				placeholder="Enter your email"
-				onChange={handleChange} />
-			<Input
-				label="Firstname"
-				placeholder="Enter your firstname"
-				onChange={handleChange} />
-			<Input
-				label="Username"
-				placeholder="Enter your username"
-				onChange={handleChange} />
-			<Input
-				label="Surname"
-				placeholder="Enter your surname"
-				onChange={handleChange} />
-			<Input
-				label="Password"
-				placeholder="Enter your password"
-				type="password"
-				onChange={handleChange} />
-			<Input
-				label="Phone"
-				placeholder="Enter your phone number"
-				onChange={handleChange} />
+		<form onSubmit={handleSubmit}>
+			<div className="grid grid-cols-2 gap-6 relative">
+				<div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-300 transform -translate-x-1/2"></div>
+				<Input
+					label="Email"
+					placeholder="Enter your email"
+					onChange={handleChange} />
+				<Input
+					label="Firstname"
+					placeholder="Enter your firstname"
+					onChange={handleChange} />
+				<Input
+					label="Username"
+					placeholder="Enter your username"
+					onChange={handleChange} />
+				<Input
+					label="Surname"
+					placeholder="Enter your surname"
+					onChange={handleChange} />
+				<Input
+					label="Password"
+					placeholder="Enter your password"
+					type="password"
+					onChange={handleChange} />
+				<Input
+					label="Phone"
+					placeholder="Enter your phone number"
+					onChange={handleChange} />
+			</div>
 			<button
 				type="submit"
-				className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 col-span-2"
+				className="mt-2 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 col-span-2"
 			>
 				Sign Up
 			</button>
