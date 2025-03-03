@@ -1,5 +1,10 @@
-import isAuth from "./isAuth.middleware"
+import authenticateUser, { AuthRequest } from "./authenticateUser.middleware"
+import authorizeRoles from "./authorizeRoles.middleware"
+import { uploads } from "./upload.middleware"
 
 export {
-    isAuth,
+    authenticateUser,
+    authorizeRoles,
+    AuthRequest,
+    uploads,
 }
