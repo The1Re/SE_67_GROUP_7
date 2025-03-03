@@ -1,15 +1,14 @@
-import { Routes, Route } from 'react-router-dom'
-import UserLayout from '../layouts/UserLayout'
-import Profile from '../pages/user/Profile'
+import { Routes, Route } from "react-router-dom";
+import BrowseTempleWithGuest from "../pages/user/BrowseTempleWithGuest";
+import Profile from "../pages/user/Profile";
 
-function UserRoutes() {
+const UserRoutes = () => {
   return (
     <Routes>
-        <Route element={<UserLayout />} >
-            <Route path='/profile' element={<Profile />}></Route>
-        </Route>
+      <Route path="/user/browse" element={<BrowseTempleWithGuest/>} />
+      <Route path="/user/profile" element={<Profile />} />
     </Routes>
-  )
-}
+  );
+};
 
-export default UserRoutes
+export default UserRoutes;
