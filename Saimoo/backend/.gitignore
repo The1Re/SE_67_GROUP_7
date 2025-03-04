@@ -2,5 +2,6 @@
 /dist
 /logs
 /.vscode
+/uploads
 
 .env

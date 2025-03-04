@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../utils/token';
+import { verifyToken } from '../services/user.service';
 import { JwtPayload } from 'jsonwebtoken';
 
 export interface AuthRequest extends Request {
     user?: JwtPayload
 }
 
-const isAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<any> => {
+const authenticateUser = async (req: AuthRequest, res: Response, next: NextFunction): Promise<any> => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -23,4 +23,4 @@ const isAuth = async (req: AuthRequest, res: Response, next: NextFunction): Prom
     }
 };
 
-export default isAuth;
+export default authenticateUser;
