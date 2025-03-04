@@ -1,14 +1,12 @@
 import { useState } from "react";
 
 const UploadImage = () => {
-    const [image, setImage] = useState(null);
-    const [imageURL, setImageURL] = useState(null);
+    const [imageURL, setImageURL] = useState<string | null>(null); // ใช้เฉพาะ URL
 
-    function onImageChange(e) {
-        if (e.target.files.length > 0) {
+    function onImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
-            setImage(file);
-            setImageURL(URL.createObjectURL(file));
+            setImageURL(URL.createObjectURL(file)); // ใช้ URL เท่านั้น
         }
     }
 

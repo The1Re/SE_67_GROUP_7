@@ -7,7 +7,7 @@ interface TripScheduleProps {
     setStartDate: (date: Date | null) => void;
     endDate: Date | null;
     setEndDate: (date: Date | null) => void;
-    setDays: (days: { id: number; locations: {}[] }[]) => void;
+    setDays: (days: { id: number; locations: object[] }[]) => void;
 }
 
 const TripSchedule: React.FC<TripScheduleProps> = ({ startDate, setStartDate, endDate, setEndDate, setDays }) => {
@@ -15,7 +15,7 @@ const TripSchedule: React.FC<TripScheduleProps> = ({ startDate, setStartDate, en
         if (startDate && endDate) {
             const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            setDays(Array.from({ length: diffDays }, (_, i) => ({ id: i + 1, locations: [{}] })));
+            setDays(Array.from({ length: diffDays }, (_, i) => ({ id: i + 1, locations: [{} as object] })));
         }
     }, [startDate, endDate, setDays]);
 
@@ -29,7 +29,7 @@ const TripSchedule: React.FC<TripScheduleProps> = ({ startDate, setStartDate, en
                     <span>📅</span>
                     <DatePicker 
                         selected={startDate} 
-                        onChange={(date) => setStartDate(date)}
+                        onChange={(date: Date | null) => setStartDate(date)}
                         selectsStart
                         startDate={startDate}
                         endDate={endDate}
@@ -43,7 +43,7 @@ const TripSchedule: React.FC<TripScheduleProps> = ({ startDate, setStartDate, en
                     <span>📅</span>
                     <DatePicker 
                         selected={endDate} 
-                        onChange={(date) => setEndDate(date)}
+                        onChange={(date: Date | null) => setEndDate(date)}
                         selectsEnd
                         startDate={startDate}
                         endDate={endDate}

@@ -7,7 +7,9 @@ import { useState } from "react";
 function PlanTrip() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [days, setDays] = useState([]);
+  const setDays = useState([])[1];
+
+
 
   return (
     <div className="mt-9 flex flex-col md:flex-row">
@@ -21,7 +23,8 @@ function PlanTrip() {
               setEndDate={setEndDate} 
               setDays={setDays} 
           />
-          <TripDay days={days} setDays={setDays} startDate={startDate} endDate={endDate} />
+          <TripDay startDate={startDate} endDate={endDate} />
+
       </div>
 
       {/* คอลัมน์ขวา (แผนที่) ✅ ใช้ sticky ทำให้ไม่เลื่อนตาม */}
