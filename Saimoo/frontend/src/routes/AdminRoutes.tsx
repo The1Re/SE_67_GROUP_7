@@ -1,4 +1,4 @@
-import { Route, Navigate, RouteProps, Routes } from "react-router-dom";
+import { Route, Navigate, Routes } from "react-router-dom";
 import AdminLayout from "@/layouts/AdminLayout";
 import Profile from "@/pages/user/Profile"; 
 import UserTable from "@/components/table/UserTable";
@@ -10,8 +10,7 @@ import TemplePetitionDetail from "@/components/petitions/temple";
 import GuidePetitionDetail from "@/components/petitions/guide";
 import ClaimDetail from "@/components/petitions/claim";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function AdminRoutes(_: RouteProps): React.ReactElement | null {
+function AdminRoutes() {
   return (
     <Routes>
       <Route element={<AdminLayout />}>

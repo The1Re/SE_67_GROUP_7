@@ -6,9 +6,11 @@ import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { TbFlag3 } from "react-icons/tb";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const UserTopbar: React.FC = () => {
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
@@ -53,6 +55,7 @@ const UserTopbar: React.FC = () => {
             title="SaiTrip"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            onClick={() => navigate("/trips")}
           />
           <MenuItem
             title="SaiWat"
@@ -98,6 +101,7 @@ const UserTopbar: React.FC = () => {
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
+                  onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
                 />
                 <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
               </div>
@@ -172,24 +176,29 @@ const MenuItem: React.FC<{
   title: "SaiTrip" | "SaiWat";
   selectedTab: string;
   setSelectedTab: (tab: "SaiTrip" | "SaiWat") => void;
-}> = ({ title, selectedTab, setSelectedTab }) => (
+  onClick?: () => void;
+}> = ({ title, selectedTab, setSelectedTab, onClick }) => (
   <h1
     className={`text-sm md:text-lg font-semibold cursor-pointer transition-colors duration-300 ${
       selectedTab === title
         ? "text-teal-500 border-b-2 border-teal-500"
         : "text-black"
     } hover:text-teal-500`}
-    onClick={() => setSelectedTab(title)}
+    onClick={() => {setSelectedTab(title); onClick()}}
   >
     {title}
   </h1>
 );
 
-const DropdownItem: React.FC<{ icon: JSX.Element; text: string }> = ({
+const DropdownItem: React.FC<{ icon: JSX.Element; text: string, onClick?: () => void }> = ({
   icon,
   text,
+  onClick
 }) => (
-  <div className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200">
+  <div 
+    className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200"
+    onClick={onClick}
+  >
     <span className="mr-3 text-lg">{icon}</span>
     <span className="text-sm">{text}</span>
   </div>

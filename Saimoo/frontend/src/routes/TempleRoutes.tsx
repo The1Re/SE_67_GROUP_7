@@ -1,9 +1,8 @@
-import { Navigate, Route, RouteProps, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Trips } from '@/pages/Trips'
 import TempleLayout from '@/layouts/TempleLayout';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function TempleRoutes(_: RouteProps): React.ReactElement | null {
+function TempleRoutes() {
   return (
     <Routes>
       <Route element={<TempleLayout />} >

@@ -89,25 +89,26 @@ function Directions(
     if (!leg) return null;
 
     return (
-        <div className="directions">
-            {/* <h2>{selected.summary}</h2> */}
-            <h2>
-                {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
-            </h2>
-            <p>Distance: {leg.distance?.text}</p>
-            <p>Duration: {leg.duration?.text}</p>
+        // <div className="directions">
+        //     <h2>{selected.summary}</h2>
+        //     <h2>
+        //         {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
+        //     </h2>
+        //     <p>Distance: {leg.distance?.text}</p>
+        //     <p>Duration: {leg.duration?.text}</p>
 
-            <h2>Other Routes</h2>
-            <ul>
-                {selected.legs.map((route, index) => (
-                    <li key={index}>
-                        <button onClick={() => setLeg(route)}>
-                            <p className='text-sm'>{route.start_address.split(',')[0]} to {route.end_address.split(',')[0]}</p>
-                        </button>
-                    </li>
-                ))}
-            </ul>
-        </div>
+        //     <h2>Other Routes</h2>
+        //     <ul>
+        //         {selected.legs.map((route, index) => (
+        //             <li key={index}>
+        //                 <button onClick={() => setLeg(route)}>
+        //                     <p className='text-sm'>{route.start_address.split(',')[0]} to {route.end_address.split(',')[0]}</p>
+        //                 </button>
+        //             </li>
+        //         ))}
+        //     </ul>
+        // </div>
+        <></>
     );
 }
 
