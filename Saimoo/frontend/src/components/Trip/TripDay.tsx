@@ -8,14 +8,17 @@ const TripDay = ({ startDate, endDate }) => {
         if (startDate && endDate) {
             const diffTime = Math.abs(endDate - startDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            setDays(Array.from({ length: diffDays }, (_, i) => ({ id: i + 1, locations: [{}] })));
+            setDays(Array.from({ length: diffDays }, (_, i) => ({ 
+                id: i + 1, 
+                locations: i === 0 ? [{ type: "meeting_point" }] : [{ type: "location" }] 
+            })));
         }
     }, [startDate, endDate]);
 
     const addLocation = (dayId) => {
         setDays(days.map(day => {
             if (day.id === dayId) {
-                return { ...day, locations: [...day.locations, {}] };
+                return { ...day, locations: [...day.locations, { type: "location" }] };
             }
             return day;
         }));
@@ -34,12 +37,15 @@ const TripDay = ({ startDate, endDate }) => {
                     </button>
                 ))}
             </div>
+
             {days.map((day) => (
                 activeTab === day.id && (
                     <div key={day.id} className="space-y-4">
-                        {day.locations.map((_, index) => (
+                        {day.locations.map((location, index) => (
                             <div key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
-                                <p className="font-bold">เพิ่มสถานที่</p>
+                                <p className="font-bold">
+                                    {location.type === "meeting_point" ? "จุดนัดพบ" : "เพิ่มสถานที่"}
+                                </p>
                                 <button className="w-full h-12 bg-gray-300 flex items-center justify-center rounded-lg mb-2">
                                     +
                                 </button>
