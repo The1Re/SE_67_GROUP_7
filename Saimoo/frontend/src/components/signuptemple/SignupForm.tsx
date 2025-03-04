@@ -14,12 +14,8 @@ const SignupForm: React.FC = () => {
 
   return (
     <form className="space-y-6 w-full"> 
-      {/* ✅ ใช้ w-full เพื่อให้ฟอร์มขยายเต็มพื้นที่ที่มี */}
-      
       {["name", "email", "temple"].map((field, index) => (
         <div key={index} className="grid grid-cols-3 gap-4 items-center">
-          {/* ✅ ใช้ grid เพื่อจัด label กับ input ให้อยู่ในระนาบเดียวกัน */}
-
           <label className="text-gray-700 text-lg font-medium">
             {field === "name" ? "ชื่อ - นามสกุล" : field === "email" ? "อีเมล" : "ชื่อวัด"}
           </label>
@@ -42,12 +38,12 @@ const SignupForm: React.FC = () => {
       </div>
 
       <div className="flex space-x-4 mt-6">
-        <button type="submit" className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-lg text-lg w-32">
+        <button type="submit" className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-lg text-lg w-32 cursor-pointer">
           ส่ง
         </button>
         <button
           type="reset"
-          className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg text-lg w-32"
+          className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg text-lg w-32 cursor-pointer"
           onClick={() => setFormData({ name: "", email: "", temple: "" })}
         >
           ยกเลิก

@@ -7,13 +7,13 @@ interface FileUploadProps {
 const FileUpload: React.FC<FileUploadProps> = ({ label }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>("");
-  const [fileUrl, setFileUrl] = useState<string | null>(null); // ✅ เก็บ URL ของไฟล์
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       setFileName(file.name);
-      setFileUrl(URL.createObjectURL(file)); // ✅ สร้าง URL ไว้สำหรับกดดูไฟล์
+      setFileUrl(URL.createObjectURL(file));
     }
   };
 
@@ -31,7 +31,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label }) => {
         />
         <button
           type="button"
-          className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-1 rounded shadow-md text-sm"
+          className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-1 rounded shadow-md text-sm cursor-pointer"
           onClick={() => fileInputRef.current?.click()}
         >
           choose file
@@ -44,7 +44,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label }) => {
                 href={fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 underline text-sm"
+                className="text-blue-500 underline text-sm hover:underline cursor-pointer"
               >
                 ดูไฟล์
               </a>
