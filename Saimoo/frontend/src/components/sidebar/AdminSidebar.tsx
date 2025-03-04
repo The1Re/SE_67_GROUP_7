@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -23,6 +24,7 @@ const menuItems = [
 ];
 
 export default function AdminSidebar({ onSelectMenu }) {
+  const { logout } = useAuth();
   const [openMenus, setOpenMenus] = useState({});
   const navigate = useNavigate();
 
@@ -65,7 +67,9 @@ export default function AdminSidebar({ onSelectMenu }) {
           </div>
         ))}
       </div>
-      <button className="mt-auto border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-100 w-full">
+      <button 
+        className="cursor-pointer mt-auto border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-100 w-full"
+        onClick={logout}>
         ออกจากระบบ
       </button>
     </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "./Input";
 import api from "@/api";
+import { useAuth } from "@/context/AuthContext";
 
 export type SignInData = {
     username: string
@@ -9,6 +10,7 @@ export type SignInData = {
 }
 
 function SignInForm({ setIsModalOpen }) {
+    const { login } = useAuth();
     const navigate = useNavigate();
     const [formData, setFormData] = useState<SignInData>({
         username: "",
@@ -22,15 +24,13 @@ function SignInForm({ setIsModalOpen }) {
             const res = await api.post("/auth/login", formData);
 
             if (res.status === 200) {
-                const role = res.data.user.role;
+                console.log(res.data.token);
                 localStorage.setItem("token", res.data.token);
-                localStorage.setItem("role", role);
-                
-                if (role == "admin" || role == "temple") {
-                    navigate("/", { replace: true });
-                }
-                // window.location.reload();
                 setIsModalOpen(null);
+                
+                console.log(res.data.user);
+                login(res.data.user);
+                navigate("/");
             } else {
                 console.log(res);
             }

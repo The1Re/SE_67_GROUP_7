@@ -5,8 +5,10 @@ import { FiLogOut, FiCreditCard } from "react-icons/fi";
 import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { TbFlag3 } from "react-icons/tb";
+import { useAuth } from "@/context/AuthContext";
 
 const UserTopbar: React.FC = () => {
+  const { logout } = useAuth();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
@@ -31,12 +33,6 @@ const UserTopbar: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    window.location.reload();
-  };
 
   return (
     <>
@@ -108,7 +104,7 @@ const UserTopbar: React.FC = () => {
               <div className="px-2 py-2">
                 <button 
                   className="w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100"
-                  onClick={handleLogout}
+                  onClick={logout}
                 >
                   <FiLogOut />
                   <span>ออกจากระบบ</span>
@@ -151,6 +147,7 @@ const UserTopbar: React.FC = () => {
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
                 className="text-red-500"
+                onClick={logout}
               />
             </motion.div>
 
@@ -202,9 +199,11 @@ const SidebarItem: React.FC<{
   title: string;
   icon: JSX.Element;
   className?: string;
-}> = ({ title, icon, className }) => (
+  onClick?: () => void;
+}> = ({ title, icon, className, onClick }) => (
   <div
     className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className}`}
+    onClick={onClick}
   >
     <span className="mr-3 text-lg">{icon}</span>
     <span className="text-sm">{title}</span>

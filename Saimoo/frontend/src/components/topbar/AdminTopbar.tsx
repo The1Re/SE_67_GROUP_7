@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { FaUserCircle } from "react-icons/fa";
 import { IoIosMenu } from "react-icons/io";
 
