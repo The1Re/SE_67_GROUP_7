@@ -20,7 +20,7 @@ export const GuestTopbar: React.FC = () => {
     <>
       <div className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
         {/* Sidebar Toggle Button */}
-        <button className="text-2xl" onClick={() => setIsSidebarOpen(true)}>
+        <button className="cursor-pointer text-2xl" onClick={() => setIsSidebarOpen(true)}>
           <IoIosMenu />
         </button>
 
@@ -69,7 +69,7 @@ export const GuestTopbar: React.FC = () => {
               <div className="flex justify-between items-center mb-4">
                 <button
                   onClick={() => setIsSidebarOpen(false)}
-                  className="text-2xl"
+                  className="cursor-pointer text-2xl"
                 >
                   <IoMdClose />
                 </button>

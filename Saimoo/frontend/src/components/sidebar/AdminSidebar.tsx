@@ -1,6 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
@@ -23,10 +22,9 @@ const menuItems = [
   },
 ];
 
-export default function AdminSidebar({ onSelectMenu }) {
+export default function AdminSidebar() {
   const { logout } = useAuth();
   const [openMenus, setOpenMenus] = useState({});
-  const navigate = useNavigate();
 
   const toggleMenu = (index) => {
     setOpenMenus((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -43,7 +41,7 @@ export default function AdminSidebar({ onSelectMenu }) {
         {menuItems.map((menu, index) => (
           <div key={index}>
             <button
-              className="w-full text-left py-2 font-semibold hover:bg-gray-100 px-2 rounded"
+              className="cursor-pointer w-full text-left py-2 font-semibold hover:bg-gray-100 px-2 rounded"
               onClick={() => toggleMenu(index)}
             >
               {menu.title}
@@ -53,11 +51,7 @@ export default function AdminSidebar({ onSelectMenu }) {
                 {menu.subItems.map((subItem, subIndex) => (
                   <button
                     key={subIndex}
-                    className="w-full text-left py-1 text-gray-700 hover:bg-gray-100 px-2 rounded"
-                    onClick={() => {
-                      navigate(subItem.path); // ✅ เปลี่ยนหน้า
-                      onSelectMenu(); // ✅ ปิด Sidebar
-                    }}
+                    className="cursor-pointer w-full text-left py-1 text-gray-700 hover:bg-gray-100 px-2 rounded"
                   >
                     {subItem.name}
                   </button>

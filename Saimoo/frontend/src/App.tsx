@@ -3,7 +3,6 @@ import { AuthProvider } from "./context/AuthContext";
 import ManageRoutes from "./routes/MangeRoutes";
 
 function App() {
-
   return (
     <AuthProvider>
       <Router>

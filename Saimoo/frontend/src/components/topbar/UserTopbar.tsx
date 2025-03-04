@@ -38,7 +38,7 @@ const UserTopbar: React.FC = () => {
     <>
       {/* Topbar */}
       <div className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
-        <button className="text-2xl" onClick={() => setIsSidebarOpen(true)}>
+        <button className="cursor-pointer text-2xl" onClick={() => setIsSidebarOpen(true)}>
           <IoIosMenu />
         </button>
 
@@ -103,7 +103,7 @@ const UserTopbar: React.FC = () => {
               </div>
               <div className="px-2 py-2">
                 <button 
-                  className="w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100"
+                  className="cursor-pointer w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100"
                   onClick={logout}
                 >
                   <FiLogOut />
@@ -129,7 +129,7 @@ const UserTopbar: React.FC = () => {
               <div className="flex justify-between items-center mb-4">
                 <button
                   onClick={() => setIsSidebarOpen(false)}
-                  className="text-2xl"
+                  className="cursor-pointer text-2xl"
                 >
                   <IoMdClose />
                 </button>
@@ -146,7 +146,7 @@ const UserTopbar: React.FC = () => {
               <SidebarItem
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
-                className="text-red-500"
+                className="cursor-pointer text-red-500"
                 onClick={logout}
               />
             </motion.div>

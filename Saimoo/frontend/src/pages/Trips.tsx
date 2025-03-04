@@ -1,14 +1,15 @@
-import MyMap from "@/components/map/MyMap";
+import MasonryGallery from "@/components/Trips/MasonryGallery";
+import SearchBar from "@/components/Trips/SearchBar";
+import { useState } from "react";
 
 export const Trips = () => {
+  const [search, setSearch] = useState("");
+  const [selectedSort, setSelectedSort] = useState("recommended");
+
   return (
-    <div className="h-full w-full flex flex-row">
-      <div className="flex-1/2">
-        <h1 className="mt-16">Trips</h1>
-      </div>
-      <div className="flex-1/2">
-        <MyMap />
-      </div>
+    <div >
+      <SearchBar search={search} setSearch={setSearch} selectedSort={selectedSort} setSelectedSort={setSelectedSort} />
+      <MasonryGallery/>
     </div>
-  )
-}
+  );
+};
