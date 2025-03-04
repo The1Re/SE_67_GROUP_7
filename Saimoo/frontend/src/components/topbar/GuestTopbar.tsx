@@ -4,8 +4,10 @@ import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
 import AuthModal from "@/components/auth/AuthModal";
 import type { AuthType } from "@/components/auth/AuthModal";
+import { useNavigate } from "react-router-dom";
 
 export const GuestTopbar: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
@@ -36,11 +38,13 @@ export const GuestTopbar: React.FC = () => {
             title="SaiTrip"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            onClick={() => navigate("/trips")}
           />
           <MenuItem
             title="SaiWat"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            onClick={() => navigate("/temples")}
           />
         </div>
 
@@ -81,6 +85,7 @@ export const GuestTopbar: React.FC = () => {
               <SidebarItem
                 title="ลงทะเบียนเป็นตัวแทนวัด"
                 icon={<MdOutlineTempleBuddhist />}
+                onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
               />
             </motion.div>
 
@@ -106,24 +111,29 @@ const MenuItem: React.FC<{
   title: "SaiTrip" | "SaiWat";
   selectedTab: string;
   setSelectedTab: (tab: "SaiTrip" | "SaiWat") => void;
-}> = ({ title, selectedTab, setSelectedTab }) => (
+  onClick?: () => void;
+}> = ({ title, selectedTab, setSelectedTab, onClick }) => (
   <h1
     className={`text-sm md:text-lg font-semibold cursor-pointer transition-colors duration-300 ${
       selectedTab === title
         ? "text-teal-500 border-b-2 border-teal-500"
         : "text-black"
     } hover:text-teal-500`}
-    onClick={() => setSelectedTab(title)}
+    onClick={() => {setSelectedTab(title); onClick()}}
   >
     {title}
   </h1>
 );
 
-const SidebarItem: React.FC<{ title: string; icon: JSX.Element }> = ({
+const SidebarItem: React.FC<{ title: string; icon: JSX.Element, onClick?: () => void }> = ({
   title,
   icon,
+  onClick
 }) => (
-  <div className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200">
+  <div 
+    className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200"
+    onClick={onClick}
+  >
     <span className="mr-3 text-lg">{icon}</span>
     <span className="text-sm">{title}</span>
   </div>

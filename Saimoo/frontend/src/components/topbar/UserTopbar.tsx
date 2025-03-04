@@ -61,6 +61,7 @@ const UserTopbar: React.FC = () => {
             title="SaiWat"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            onClick={() => navigate("/temples")}
           />
         </div>
 
@@ -146,6 +147,7 @@ const UserTopbar: React.FC = () => {
               <SidebarItem
                 title="ลงทะเบียนเป็นตัวแทนวัด"
                 icon={<MdOutlineTempleBuddhist />}
+                onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
               />
               <SidebarItem
                 title="ออกจากระบบ"
