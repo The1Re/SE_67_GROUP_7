@@ -1,15 +1,14 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import TempleRoutes from "./routes/TempleRoutes";
-import UserRoutes from "./routes/UserRoutes";
+import { BrowserRouter as Router } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ManageRoutes from "./routes/MangeRoutes";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/temple/*" element={<TempleRoutes />} />
-        <Route path="/*" element={<UserRoutes />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ManageRoutes />
+      </Router>
+    </AuthProvider>
   );
 }
 

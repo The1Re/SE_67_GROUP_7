@@ -1,16 +1,16 @@
-import { Routes, Route } from "react-router-dom";
-import SignupTemple from "../pages/temple/SignupTemple";
-import AddPictureTemple from "../pages/temple/TempleDateilPage";
-import BrowseTempleWithGuest from "../pages/temple/BrowseTempleWithGuest";
-const TempleRoutes = () => {
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { Trips } from '@/pages/Trips'
+import TempleLayout from '@/layouts/TempleLayout';
+
+function TempleRoutes() {
   return (
     <Routes>
-      <Route path="signup" element={<SignupTemple />} />
-      <Route path="AddPicture" element={<AddPictureTemple />} />
-      <Route path="browse" element={<BrowseTempleWithGuest/>} />
+      <Route element={<TempleLayout />} >
+          <Route path='/' element={<Navigate to="/trips" replace />}></Route>
+          <Route path='/trips' element={<Trips />}></Route>
+      </Route>
     </Routes>
   );
 };
 
 export default TempleRoutes;
-

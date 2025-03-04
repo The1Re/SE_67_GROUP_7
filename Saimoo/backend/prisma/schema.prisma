@@ -7,12 +7,354 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Activity {
+  id          Int      @id @default(autoincrement())
+  name        String?  @db.VarChar(45)
+  description String?  @db.VarChar(45)
+  startDate   DateTime @db.DateTime(0)
+  endDate     DateTime @db.DateTime(0)
+  imagePath   String?  @db.VarChar(255)
+  templeId    Int
+  Temple      Temple   @relation(fields: [templeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_templeActivity_temple1")
+
+  @@index([templeId], map: "fk_templeActivity_temple1_idx")
+}
+
+model Charm {
+  charmId      Int       @id @default(autoincrement())
+  name         String?   @db.VarChar(45)
+  imagePath    String?   @db.VarChar(255)
+  price        Float?    @db.Float
+  avalibleDate DateTime? @db.DateTime(0)
+  status       Int       @default(1) @db.TinyInt
+  detail       String?   @db.VarChar(45)
+  templeId     Int
+  Temple       Temple    @relation(fields: [templeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_templeCharm_temple1")
+
+  @@index([templeId], map: "fk_templeCharm_temple1_idx")
+}
+
+model IdentityDocument {
+  id           Int                   @id @default(autoincrement())
+  type         IdentityDocument_type
+  filePath     String?               @db.VarChar(255)
+  uploadedDate DateTime              @default(now()) @db.DateTime(0)
+  requestId    Int
+  Request      Request               @relation(fields: [requestId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_identityDocument_request1")
+
+  @@index([requestId], map: "fk_identityDocument_request1_idx")
+}
+
+model Location {
+  id         Int           @id @default(autoincrement())
+  name       String        @db.VarChar(45)
+  latitude   Float?
+  longitude  Float?
+  type       Location_type @default(place)
+  provinceId Int?
+  Province   Province?     @relation(fields: [provinceId], references: [id], map: "fk_Location_Province1")
+  Temple     Temple[]
+  TripDetail TripDetail[]
+
+  @@index([provinceId], map: "fk_Location_Province1_idx")
+}
+
+model Payment {
+  id            Int            @id @default(autoincrement())
+  orderId       Int
+  status        Payment_status @default(pending)
+  amount        Float?         @db.Float
+  method        Payment_method @default(wallet)
+  createdAt     DateTime       @default(now()) @db.DateTime(0)
+  transactionId Int
+  Transaction   Transaction    @relation(fields: [transactionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Payment_Transaction1")
+  TripOrder     TripOrder      @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Payment_TripOrder1")
+
+  @@index([transactionId], map: "fk_Payment_Transaction1_idx")
+  @@index([orderId], map: "fk_Payment_TripOrder1_idx")
+}
+
+model Province {
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(255)
+  Location Location[]
+}
+
+model Refund {
+  id                Int           @id @default(autoincrement())
+  reason            String        @db.VarChar(255)
+  identityImagePath String?       @db.VarChar(255)
+  createdAt         DateTime      @default(now()) @db.DateTime(0)
+  orderId           Int
+  status            Refund_status @default(pending)
+  reasonOwner       String?       @db.VarChar(255)
+  TripOrder         TripOrder     @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Refund_TripOrder1")
+
+  @@index([orderId], map: "fk_Refund_TripOrder1_idx")
+}
+
+model Request {
+  id               Int                @id @default(autoincrement())
+  type             Request_type
+  status           Request_status     @default(Pending)
+  createdDate      DateTime           @default(now()) @db.DateTime(0)
+  userId           Int?
+  fullName         String?            @db.VarChar(255)
+  email            String?            @db.VarChar(45)
+  phone            String?            @db.VarChar(45)
+  templeName       String?            @db.VarChar(255)
+  IdentityDocument IdentityDocument[]
+  User             User?              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_request_user1")
+
+  @@index([userId], map: "fk_request_user1_idx")
+}
+
+model ReviewGuide {
+  id                             Int      @id @default(autoincrement())
+  rating                         Float?   @db.Float
+  comment                        String?  @db.Text
+  reviewDate                     DateTime @default(now()) @db.DateTime(0)
+  userId                         Int
+  guideId                        Int
+  User_ReviewGuide_userIdToUser  User     @relation("ReviewGuide_userIdToUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reviewGuide_user1")
+  User_ReviewGuide_guideIdToUser User     @relation("ReviewGuide_guideIdToUser", fields: [guideId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reviewGuide_user2")
+
+  @@index([userId], map: "fk_reviewGuide_user1_idx")
+  @@index([guideId], map: "fk_reviewGuide_user2_idx")
+}
+
+model Temple {
+  id          Int           @id @default(autoincrement())
+  description String?       @db.VarChar(45)
+  likes       Int?
+  locationId  Int
+  Activity    Activity[]
+  Charm       Charm[]
+  Location    Location      @relation(fields: [locationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_Temple_Location1")
+  TempleImage TempleImage[]
+
+  @@index([locationId], map: "fk_Temple_Location1_idx")
+}
+
+model TempleImage {
+  id          Int     @id @default(autoincrement())
+  imagePath   String? @db.VarChar(255)
+  description String? @db.VarChar(45)
+  templeId    Int
+  Temple      Temple  @relation(fields: [templeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_templeAlbum_temple1")
+
+  @@index([templeId], map: "fk_templeAlbum_temple1_idx")
+}
+
+model Transaction {
+  id        Int                @id @default(autoincrement())
+  walletId  Int
+  amount    Float              @db.Float
+  type      Transaction_type
+  status    Transaction_status @default(pending)
+  createdAt DateTime           @default(now()) @db.DateTime(0)
+  Payment   Payment[]
+  Wallet    Wallet             @relation(fields: [walletId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_transaction_wallet1")
+
+  @@index([walletId], map: "fk_transaction_wallet1_idx")
+}
+
+model Trip {
+  id          Int           @id @default(autoincrement())
+  title       String        @db.VarChar(64)
+  description String?       @db.Text
+  dateStart   DateTime      @db.DateTime(0)
+  dateEnd     DateTime      @db.DateTime(0)
+  vehicle     Trip_vehicle  @default(van)
+  maxPerson   Int           @default(1)
+  status      Trip_status   @default(waiting)
+  ownerTripId Int
+  type        Trip_type     @default(free)
+  price       Float         @default(0) @db.Float
+  User        User          @relation(fields: [ownerTripId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Trip_User1")
+  TripDetail  TripDetail[]
+  TripOrder   TripOrder[]
+  TripPicture TripPicture[]
+
+  @@index([ownerTripId], map: "fk_Trip_User1_idx")
+}
+
+model TripDetail {
+  id                Int                 @id @default(autoincrement())
+  tripId            Int
+  order             Int
+  arriveTime        DateTime            @db.Time(0)
+  day               Int
+  description       String?             @db.Text
+  locationId        Int
+  Location          Location            @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_TripDetail_Location1")
+  Trip              Trip                @relation(fields: [tripId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tripDetail_trip2")
+  TripDetailPicture TripDetailPicture[]
+
+  @@index([locationId], map: "fk_TripDetail_Location1_idx")
+  @@index([tripId], map: "fk_tripDetail_trip2_idx")
+}
+
+model TripDetailPicture {
+  id           Int        @id @default(autoincrement())
+  imagePath    String?    @db.VarChar(255)
+  tripDetailId Int
+  TripDetail   TripDetail @relation(fields: [tripDetailId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tripDetailPicture_tripDetail1")
+
+  @@index([tripDetailId], map: "fk_tripDetailPicture_tripDetail1_idx")
+}
+
+model TripOrder {
+  id              Int               @id @default(autoincrement())
+  userId          Int
+  tripId          Int
+  amountPerson    Int               @default(1)
+  status          TripOrder_status  @default(pending)
+  totalPrice      Float?            @db.Float
+  createdAt       DateTime          @default(now()) @db.DateTime(0)
+  Payment         Payment[]
+  Refund          Refund[]
+  Trip            Trip              @relation(fields: [tripId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_userInTrip_trip1")
+  User            User              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_userInTrip_user1")
+  TripOrderDetail TripOrderDetail[]
+
+  @@index([tripId], map: "fk_userInTrip_trip1_idx")
+  @@index([userId], map: "fk_userInTrip_user1_idx")
+}
+
+model TripOrderDetail {
+  id           Int       @id @default(autoincrement())
+  orderId      Int
+  order        Int
+  fullName     String    @db.VarChar(255)
+  phone        String?   @db.VarChar(45)
+  requirement  String?   @db.VarChar(255)
+  isChild      Int       @default(0) @db.TinyInt
+  identityCode String    @db.VarChar(4)
+  isJoined     Int       @default(0) @db.TinyInt
+  TripOrder    TripOrder @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_UserInTripDetail_UserInTrip1")
+
+  @@index([orderId], map: "fk_UserInTripDetail_UserInTrip1_idx")
+}
+
+model TripPicture {
+  id        Int     @id @default(autoincrement())
+  imagePath String? @db.VarChar(255)
+  tripId    Int
+  Trip      Trip    @relation(fields: [tripId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tripPicture_trip1")
+
+  @@index([tripId], map: "fk_tripPicture_trip1_idx")
+}
+
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  username String   @unique
-  password String
-  role     String   @default("user")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                                    Int           @id @default(autoincrement())
+  username                              String        @unique(map: "username_UNIQUE") @db.VarChar(45)
+  email                                 String        @unique(map: "email_UNIQUE") @db.VarChar(45)
+  password                              String        @db.VarChar(255)
+  fullName                              String?       @db.VarChar(64)
+  phone                                 String?       @db.VarChar(45)
+  role                                  User_role     @default(user)
+  createdAt                             DateTime      @default(now()) @db.DateTime(0)
+  updatedAt                             DateTime      @default(now()) @db.DateTime(0)
+  Request                               Request[]
+  ReviewGuide_ReviewGuide_userIdToUser  ReviewGuide[] @relation("ReviewGuide_userIdToUser")
+  ReviewGuide_ReviewGuide_guideIdToUser ReviewGuide[] @relation("ReviewGuide_guideIdToUser")
+  Trip                                  Trip[]
+  TripOrder                             TripOrder[]
+  Wallet                                Wallet[]
+}
+
+model Wallet {
+  id          Int           @id @default(autoincrement())
+  balance     Float         @db.Float
+  userId      Int
+  Transaction Transaction[]
+  User        User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_wallet_user1")
+
+  @@index([userId], map: "fk_wallet_user1_idx")
+}
+
+enum IdentityDocument_type {
+  Id_verification     @map("Id verification")
+  Guide_Certification @map("Guide Certification")
+  Temple_Document     @map("Temple Document")
+}
+
+enum Request_type {
+  Become_Guide       @map("Become Guide")
+  Register_as_Temple @map("Register as Temple")
+}
+
+enum Payment_status {
+  pending
+  successful
+  failed
+  refund
+}
+
+enum Request_status {
+  Pending
+  Approved
+  Rejected
+}
+
+enum Transaction_type {
+  topup
+  payment
+  refund
+  withdraw
+}
+
+enum Location_type {
+  temple
+  place
+}
+
+enum Payment_method {
+  qrcode
+  wallet
+}
+
+enum Transaction_status {
+  pending
+  completed
+  fail
+}
+
+enum TripOrder_status {
+  pending
+  paid
+  cancel
+  claims
+}
+
+enum Refund_status {
+  pending
+  reject
+  appoved
+}
+
+enum Trip_vehicle {
+  van
+  bus
+}
+
+enum User_role {
+  admin
+  user
+  guide
+  temple
+}
+
+enum Trip_status {
+  waiting
+  incoming
+  ongoing
+  complete
+  cancel
+}
+
+enum Trip_type {
+  paid
+  free
 }
