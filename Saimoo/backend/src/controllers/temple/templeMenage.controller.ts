@@ -17,7 +17,11 @@ export const createTempleController = async (req: AuthRequest, res: Response): P
 
 export const getTempleController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const temples = await getLocationsTemple();
+        const { page = '1', pageSize = '10', sortBy = 'id', sortOrder = 'desc' } = req.query;
+        const pageNumber = parseInt(page as string) || 1;
+        const size = parseInt(pageSize as string) || 10;
+
+        const temples = await getLocationsTemple(pageNumber, size, sortBy as string, sortOrder as 'asc' | 'desc');
         return res.status(200).json(temples);
     } catch (error) {
         logger.error(error);
@@ -60,8 +64,8 @@ export const updateTempleController = async (req: Request, res: Response): Promi
 
 export const deleteTempleController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { locationId } = req.params;
-        const temple = await deleteTemple(Number(locationId));
+        const { id } = req.params;
+        const temple = await deleteTemple(Number(id));
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);

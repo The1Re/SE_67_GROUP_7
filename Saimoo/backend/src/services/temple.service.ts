@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 import prisma from "../models/prisma";
 import * as LocationService from "./location.service";
 import { Temple,TempleImage,Charm,Activity } from "@prisma/client";
@@ -54,6 +55,7 @@ export const updateTempleLike = async (id: number) => {
 };
 
 export const deleteTemple = async (id : number) => {
+    logger.info("Deleting temple with id: ", id);
     await prisma.temple.deleteMany({
         where: { locationId : id}
     });

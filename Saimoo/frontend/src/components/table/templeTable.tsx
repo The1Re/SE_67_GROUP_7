@@ -1,19 +1,53 @@
-import { useState } from "react";
+import api from "@/api";
+import { useEffect, useState } from "react";
 
-const initialTemples = [
-  { id: 1, username: "monk1", name: "วัดพระแก้ว", location: "กรุงเทพฯ", phone: "081-111-1111", email: "wat1@example.com" },
-  { id: 2, username: "monk2", name: "วัดโพธิ์", location: "กรุงเทพฯ", phone: "082-222-2222", email: "wat2@example.com" },
-];
+export type Temple = {
+  id?: number;
+  name: string;
+  latitude?: number;
+  longtitude?: number;
+  province: string;
+  description?: string;
+  like: number;
+}
 
 const TempleTable = () => {
-  const [temples, setTemples] = useState(initialTemples);
+  const [temples, setTemples] = useState<Temple[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [newTemple, setNewTemple] = useState({ name: "", location: "", phone: "", email: "" });
-  const [editTemple, setEditTemple] = useState(null); // ✅ เก็บข้อมูลวัดที่กำลังแก้ไข
+  const [newTemple, setNewTemple] = useState<Temple>({ name: "", province: "", description: "", like: 0 });
+  const [editTemple, setEditTemple] = useState<Temple>(null); // ✅ เก็บข้อมูลวัดที่กำลังแก้ไข
+
+  const fetchData = async () => {
+    const res = await api.get("/temples?sortOrder=asc");
+    const data = res.data.data;
+    setTemples(data.map((v) => {
+      return {
+        id: v.id,
+        name: v.name,
+        latitude: v.latitude,
+        longtitude: v.longtitude,
+        province: v.Province.name,
+        description: v.Temple.description,
+        like: v.Temple.like
+      }
+    }));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // ✅ ลบวัด
-  const handleDelete = (id) => {
-    setTemples(temples.filter((temple) => temple.id !== id));
+  const handleDelete = (id: number) => {
+    (async () => {
+      await api
+      .delete(`/temples/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+    })();
+    fetchData();
   };
 
   // ✅ เพิ่มวัดใหม่
@@ -45,7 +79,7 @@ const TempleTable = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">จัดการข้อมูลวัด</h2>
-        <button onClick={() => setShowForm(true)} className="bg-blue-500 text-white px-3 py-1 rounded">
+        <button onClick={() => setShowForm(true)} className="cursor-pointer bg-blue-500 text-white px-3 py-1 rounded">
           + เพิ่มวัด
         </button>
       </div>
@@ -55,15 +89,17 @@ const TempleTable = () => {
         <div className="border p-4 bg-gray-200 rounded-md">
           <label>ชื่อวัด</label>
           <input type="text" value={newTemple.name} onChange={(e) => setNewTemple({ ...newTemple, name: e.target.value })} className="w-full p-2 border rounded mb-2" />
-          <label>ที่อยู่</label>
-          <input type="text" value={newTemple.location} onChange={(e) => setNewTemple({ ...newTemple, location: e.target.value })} className="w-full p-2 border rounded mb-2" />
-          <label>โทรศัพท์</label>
-          <input type="text" value={newTemple.phone} onChange={(e) => setNewTemple({ ...newTemple, phone: e.target.value })} className="w-full p-2 border rounded mb-2" />
-          <label>อีเมล</label>
-          <input type="email" value={newTemple.email} onChange={(e) => setNewTemple({ ...newTemple, email: e.target.value })} className="w-full p-2 border rounded mb-2" />
+          <label>พิกัด latitude</label>
+          <input type="text" value={newTemple.latitude} onChange={(e) => setNewTemple({ ...newTemple, latitude: Number(e.target.value) })} className="w-full p-2 border rounded mb-2" />
+          <label>พิกัด longtitude</label>
+          <input type="text" value={newTemple.longtitude} onChange={(e) => setNewTemple({ ...newTemple, longtitude: Number(e.target.value) })} className="w-full p-2 border rounded mb-2" />
+          <label>จังหวัด</label>
+          <input type="text" value={newTemple.province} onChange={(e) => setNewTemple({ ...newTemple, province: e.target.value })} className="w-full p-2 border rounded mb-2" />
+          <label>คำอธิบาย</label>
+          <input type="text" value={newTemple.description} onChange={(e) => setNewTemple({ ...newTemple, description: e.target.value })} className="w-full p-2 border rounded mb-2" />
           <div className="flex justify-center mt-2">
-            <button onClick={handleAddTemple} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">เพิ่มวัด</button>
-            <button onClick={() => setShowForm(false)} className="bg-red-500 text-white px-4 py-2 rounded">ยกเลิก</button>
+            <button onClick={handleAddTemple} className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded mr-2">เพิ่มวัด</button>
+            <button onClick={() => setShowForm(false)} className="cursor-pointer bg-red-500 text-white px-4 py-2 rounded">ยกเลิก</button>
           </div>
         </div>
       ) : (
@@ -71,11 +107,12 @@ const TempleTable = () => {
           <thead>
             <tr className="bg-gray-200">
               <th className="border p-2">ID</th>
-              <th className="border p-2">USERNAME</th>
-              <th className="border p-2">ชื่อวัด</th>
-              <th className="border p-2">ที่อยู่</th>
-              <th className="border p-2">โทรศัพท์</th>
-              <th className="border p-2">อีเมล</th>
+              <th className="border p-2">Name</th>
+              <th className="border p-2">Latitude</th>
+              <th className="border p-2">Longtitude</th>
+              <th className="border p-2">Province</th>
+              <th className="border p-2">Discription</th>
+              <th className="border p-2">Like</th>
               <th className="border p-2">Actions</th>
             </tr>
           </thead>
@@ -83,14 +120,15 @@ const TempleTable = () => {
             {temples.map((temple) => (
               <tr key={temple.id} className="text-center">
                 <td className="border p-2">{temple.id}</td>
-                <td className="border p-2">{temple.username}</td>
                 <td className="border p-2">{temple.name}</td>
-                <td className="border p-2">{temple.location}</td>
-                <td className="border p-2">{temple.phone}</td>
-                <td className="border p-2">{temple.email}</td>
+                <td className="border p-2">{temple.latitude}</td>
+                <td className="border p-2">{temple.longtitude}</td>
+                <td className="border p-2">{temple.province}</td>
+                <td className="border p-2">{temple.description}</td>
+                <td className="border p-2">{temple.like}</td>
                 <td className="border p-2">
-                  <button className="bg-yellow-400 px-3 py-1 rounded mr-2" onClick={() => handleEdit(temple)}>Edit</button>
-                  <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={() => handleDelete(temple.id)}>Delete</button>
+                  <button className="cursor-pointer bg-yellow-400 px-3 py-1 rounded mr-2" onClick={() => handleEdit(temple)}>Edit</button>
+                  <button className="cursor-pointer bg-red-500 text-white px-3 py-1 rounded" onClick={() => handleDelete(temple.id)}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -111,20 +149,24 @@ const TempleTable = () => {
               <input type="text" className="w-full p-2 border rounded" value={editTemple.name} onChange={(e) => setEditTemple({ ...editTemple, name: e.target.value })} />
             </label>
             <label className="block mb-2">
-              ที่อยู่:
-              <input type="text" className="w-full p-2 border rounded" value={editTemple.location} onChange={(e) => setEditTemple({ ...editTemple, location: e.target.value })} />
+              พิกัด latitude:
+              <input type="number" className="w-full p-2 border rounded" value={editTemple.latitude} onChange={(e) => setEditTemple({ ...editTemple, latitude: Number(e.target.value) })} />
             </label>
             <label className="block mb-2">
-              โทรศัพท์:
-              <input type="text" className="w-full p-2 border rounded" value={editTemple.phone} onChange={(e) => setEditTemple({ ...editTemple, phone: e.target.value })} />
+              พิกัด longtitude:
+              <input type="number" className="w-full p-2 border rounded" value={editTemple.longtitude} onChange={(e) => setEditTemple({ ...editTemple, longtitude: Number(e.target.value) })} />
             </label>
             <label className="block mb-2">
-              อีเมล:
-              <input type="email" className="w-full p-2 border rounded" value={editTemple.email} onChange={(e) => setEditTemple({ ...editTemple, email: e.target.value })} />
+              จังหวัด:
+              <input type="text" className="w-full p-2 border rounded" value={editTemple.province} onChange={(e) => setEditTemple({ ...editTemple, province: e.target.value })} />
             </label>
-            <div className="mt-4 flex gap-2">
-              <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleSave}>Save</button>
-              <button className="border border-red-500 text-red-500 px-4 py-2 rounded" onClick={handleClose}>Cancel</button>
+            <label className="block mb-2">
+              คำอธิบาย:
+              <input type="text" className="w-full p-2 border rounded" value={editTemple.description} onChange={(e) => setEditTemple({ ...editTemple, description: e.target.value })} />
+            </label>
+            <div className="mt-4 flex justify-end gap-2">
+              <button className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded" onClick={handleSave}>Save</button>
+              <button className="cursor-pointer border border-red-500 text-red-500 px-4 py-2 rounded" onClick={handleClose}>Cancel</button>
             </div>
           </div>
         </div>
