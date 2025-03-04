@@ -1,28 +1,57 @@
+import prisma from '../models/prisma';
 import bcrypt from 'bcrypt';
-import { user } from '../models/user';
-import { UserCredentials } from '../models/user';
+import jwt from 'jsonwebtoken';
+import { env } from '../config';
 
-export const checkIfUserExists = async (username: string, email: string) => {
-    let existingUser = await user.getByEmail(email);
-    if (existingUser) {
-        return { message: 'Email is already taken' };
+import type { Prisma, User, User_role } from "@prisma/client";
+
+import { createWallet } from './wallet.service'
+import logger from '../utils/logger';
+
+export const getUserByUsername = async (username: string) => {
+    return await prisma.user.findUnique({ where: { username } });
+}
+
+export const getUserByEmail = async (email: string) => {
+    return await prisma.user.findUnique({ where: { email } });
+}
+
+export const checkIfUserExists = async ({ username, email }: { username?: string, email?: string }) => {
+    let existingUser;
+
+    if (username) {
+        existingUser = await getUserByUsername(username);
+        if (existingUser) {
+            return { message: 'Username is already taken' };
+        }
     }
 
-    existingUser = await user.getByUsername(username);
-    if (existingUser) {
-        return { message: 'Username is already taken' };
+    if (email) {
+        existingUser = await getUserByEmail(email);
+        if (existingUser) {
+            return { message: 'Email is already taken' };
+        }
     }
 
     return null;
 };
 
-export const createUser = async (userData: UserCredentials) => {
+export const updateUser = async (userId: number, userData: Prisma.UserUpdateInput) => {
+    return await prisma.user.update({ where: { id: userId }, data: userData });
+}
+
+export const createUser = async (userData: Prisma.UserCreateInput, isCreateWallet: boolean = true) => {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-    return await user.create({ ...userData, password: hashedPassword });
+    const user = await prisma.user.create({ data: { ...userData, password: hashedPassword } });
+
+    if (isCreateWallet)
+        await createWallet(user.id);
+
+    return user;
 };
 
 export const validateUserCredentials = async (username: string, password: string) => {
-    const existingUser = await user.getByUsername(username);
+    const existingUser = await prisma.user.findUnique({ where: { username } });
     if (!existingUser) {
         return { message: 'Invalid credentials' };
     }
@@ -34,3 +63,46 @@ export const validateUserCredentials = async (username: string, password: string
 
     return existingUser;
 };
+
+export const generateToken = (user: User) => {
+    return jwt.sign({ id: user.id, username: user.username, role: user.role }, env.jwtSecret, { expiresIn: '1d' });
+}
+
+export const verifyToken = (token: string) => {
+    return jwt.verify(token, env.jwtSecret);
+}
+
+export const changeRole = async (userId: number, role: User_role) => {
+    return await prisma.user.update({ where: { id: userId }, data: { role } });
+}
+
+export const changePassword = async (username: string, oldPassword: string, newPassword: string, checkhash: boolean = true) => {
+    const existingUser = await prisma.user.findUnique({ where: { username } });
+    if (!existingUser) {
+        logger.error('User not found');
+        return null;
+    }
+
+    const comparePassword = checkhash ? await bcrypt.compare(oldPassword, existingUser.password) : oldPassword === existingUser.password;
+    if (!comparePassword) {
+        logger.error('Password does not match');
+        return null;
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const newUser = await prisma.user.update({ where: { username }, data: { password: hashedPassword } });
+
+    return newUser;
+}
+
+export const getAllUsers = async () => {
+    return await prisma.user.findMany();
+}
+
+export const getUserById = async (userId: number) => {
+    return await prisma.user.findUnique({ where: { id: userId } });
+}
+
+export const deleteUser = async (userId: number) => {
+    return await prisma.user.delete({ where: { id: userId } });
+}

@@ -1,0 +1,42 @@
+h1 {
+    padding: 0.25rem 0px;
+    font-size: 1.5rem;
+}
+
+h2 {
+    padding: 0.25rem 0px;
+    font-size: 1.25rem;
+}
+
+p {
+    font-size: 0.8rem;
+    padding: 0px;
+    padding-bottom: 0.25rem;
+    margin: 0px;
+}
+
+.directions {
+    position: absolute;
+    width: 275px;
+    top: 0px;
+    right: 0px;
+    padding: 1.25rem;
+    padding-top: 0px;
+    margin: 0.25rem;
+    color: white;
+    background-color: #2d3748;
+    border-radius: 0.25rem;
+}
+
+ul {
+    padding: 0px;
+    padding-left: 1.5rem;
+    margin: 0px;
+}
+
+li button {
+    color: #f6e05e;
+    background: none;
+    border: none;
+    cursor: pointer;
+}

@@ -1,18 +1,15 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import { getUserRole } from "./utils/auth"
-import UserRoutes from "./routes/UserRoutes";
+import { BrowserRouter as Router } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ManageRoutes from "./routes/MangeRoutes";
 
 function App() {
-  // const role = getUserRole();
-  const role = "user";
-
   return (
-    <BrowserRouter>
-      <Routes>
-        {role === "user" && <Route path="/*" element={<UserRoutes />} />}
-      </Routes>
-    </BrowserRouter>
-  )
+    <AuthProvider>
+      <Router>
+        <ManageRoutes />
+      </Router>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
