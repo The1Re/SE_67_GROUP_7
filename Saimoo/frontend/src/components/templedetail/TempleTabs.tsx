@@ -5,11 +5,15 @@ const TempleTabs = ({ selectedTab, setSelectedTab }) => {
 
   return (
     <div className="mt-6 border-b">
-      <div className="flex justify-center space-x-12 text-gray-600">
+      <div className="flex justify-center space-x-16 text-gray-600 text-xl"> {/* ✅ เพิ่มขนาดตัวอักษรและระยะห่าง */}
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`pb-2 ${selectedTab === tab ? "border-b-2 border-black font-bold text-black" : ""}`}
+            className={`py-3 pb-2 px-6 transition-all duration-300 ${
+              selectedTab === tab
+                ? "border-b-4 border-black font-bold text-black"
+                : "hover:text-black"
+            }`}
             onClick={() => setSelectedTab(tab)}
           >
             {tab}

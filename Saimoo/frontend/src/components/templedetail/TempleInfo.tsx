@@ -14,7 +14,7 @@ const TempleInfo = ({ templeData, setTempleData, descImage, setDescImage }) => {
         
         <div className="flex justify-center mb-6">
         <div className="inline-flex items-center"> {/* ❌ ลบ gap-2 ออก */}
-        <FaRegEdit className="text-3xl text-black mr-1" /> {/* ✅ ลดช่องว่างแบบกำหนดเอง */}
+         {/* ✅ ลดช่องว่างแบบกำหนดเอง */}
         <input
           type="text"
           name="name"
@@ -23,6 +23,7 @@ const TempleInfo = ({ templeData, setTempleData, descImage, setDescImage }) => {
           className="text-4xl font-bold text-black border-none focus:outline-none w-auto text-center leading-none"
         />
         </div>
+        
         </div>
 
 
