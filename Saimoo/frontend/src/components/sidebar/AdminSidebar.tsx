@@ -1,22 +1,32 @@
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
     title: "จัดการข้อมูล",
-    subItems: ["ผู้ใช้", "วัด"],
+    subItems: [
+      { name: "ผู้ใช้", path: "/admin/manage-users" },
+      { name: "วัด", path: "/admin/manage-temples" }
+    ],
   },
   {
     title: "ตรวจสอบการลงทะเบียน",
-    subItems: ["ตัวแทนวัด", "ไกด์"],
+    subItems: [
+      { name: "ตัวแทนวัด", path: "/admin/registrations/temple" },
+      { name: "ไกด์", path: "/admin/registrations/guide" }
+    ],
   },
   {
     title: "ตรวจสอบการเงิน",
-    subItems: ["การขอเคลม"],
+    subItems: [{ name: "การขอเคลม", path: "/admin/transactions" }],
   },
 ];
 
-export default function AdminSidebar({ onSelectMenu }) {
+export default function AdminSidebar() {
+  const { logout } = useAuth();
   const [openMenus, setOpenMenus] = useState({});
+  const navigate = useNavigate();
 
   const toggleMenu = (index) => {
     setOpenMenus((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -33,7 +43,7 @@ export default function AdminSidebar({ onSelectMenu }) {
         {menuItems.map((menu, index) => (
           <div key={index}>
             <button
-              className="w-full text-left py-2 font-semibold hover:bg-gray-100 px-2 rounded"
+              className="cursor-pointer w-full text-left py-2 font-semibold hover:bg-gray-100 px-2 rounded"
               onClick={() => toggleMenu(index)}
             >
               {menu.title}
@@ -43,10 +53,10 @@ export default function AdminSidebar({ onSelectMenu }) {
                 {menu.subItems.map((subItem, subIndex) => (
                   <button
                     key={subIndex}
-                    className="w-full text-left py-1 text-gray-700 hover:bg-gray-100 px-2 rounded"
-                    onClick={() => onSelectMenu(subItem)}
+                    className="cursor-pointer w-full text-left py-1 text-gray-700 hover:bg-gray-100 px-2 rounded"
+                    onClick={() => navigate(subItem.path)}
                   >
-                    {subItem}
+                    {subItem.name}
                   </button>
                 ))}
               </div>
@@ -54,7 +64,9 @@ export default function AdminSidebar({ onSelectMenu }) {
           </div>
         ))}
       </div>
-      <button className="mt-auto border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-100 w-full">
+      <button 
+        className="cursor-pointer mt-auto border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-100 w-full"
+        onClick={logout}>
         ออกจากระบบ
       </button>
     </div>

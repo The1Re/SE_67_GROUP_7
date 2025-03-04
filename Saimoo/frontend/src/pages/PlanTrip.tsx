@@ -1,4 +1,4 @@
-import MapView from "@/components/Trip/MapView";
+import MyMap from "@/components/map/MyMap";
 import TripDay from "@/components/Trip/TripDay";
 import TripDetails from "@/components/Trip/TripDetails";
 import UploadImage from "@/components/Trip/UploadImage";
@@ -12,7 +12,7 @@ function PlanTrip() {
 
 
   return (
-    <div className="mt-9 flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row">
       {/* คอลัมน์ซ้าย (เนื้อหาหลัก) */}
       <div className="w-full md:w-4/6 flex flex-col">
           <UploadImage />
@@ -29,7 +29,7 @@ function PlanTrip() {
 
       {/* คอลัมน์ขวา (แผนที่) ✅ ใช้ sticky ทำให้ไม่เลื่อนตาม */}
       <div className="hidden md:flex w-2/6 h-screen bg-green-500 items-center justify-center sticky top-0">
-          <MapView />
+          <MyMap />
       </div>
     </div>
   );

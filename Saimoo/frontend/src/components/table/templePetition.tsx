@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const representatives = [
-  { id: 1, username: "john_doe", phone: "0812345678", email: "john@example.com", status: "รออนุมัติ" },
-  { id: 2, username: "jane_smith", phone: "0898765432", email: "jane@example.com", status: "รออนุมัติ" },
+  { id: 1, username: "john_doe", phone: "0812345678", email: "john@example.com", status: "รออนุมัติ", templeName: "วัดพระแก้ว", templeAddress: "กรุงเทพฯ", certificateImage: "/path-to-image.jpg" },
+  { id: 2, username: "jane_smith", phone: "0898765432", email: "jane@example.com", status: "รออนุมัติ", templeName: "วัดโพธิ์", templeAddress: "กรุงเทพฯ", certificateImage: "/path-to-image.jpg" },
 ];
 
-export default function TemplePetitionTable({ onSelectRepresentative }) {
+export default function TemplePetitionTable() {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const filteredRepresentatives = representatives.filter(rep =>
     rep.username.includes(search) || rep.email.includes(search)
@@ -43,7 +45,7 @@ export default function TemplePetitionTable({ onSelectRepresentative }) {
               <td className="border p-2">
                 <button
                   className="bg-blue-500 text-white px-2 py-1 rounded"
-                  onClick={() => onSelectRepresentative(rep)}
+                  onClick={() => navigate(`/admin/petitions/temple/${rep.id}`, { state: { representative: rep } })}
                 >
                   ดูรายละเอียด
                 </button>

@@ -1,5 +1,6 @@
 import app from './app';
-import { env, prisma } from './config';
+import { env } from './config';
+import prisma from './models/prisma';
 import logger from './utils/logger';
 
 prisma.$connect()

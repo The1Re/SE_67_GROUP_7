@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
@@ -6,6 +7,7 @@ import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
 
 export const TempleTopbar: React.FC = () => {
+  const { logout } = useAuth();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
@@ -15,7 +17,7 @@ export const TempleTopbar: React.FC = () => {
     <>
       <div className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
         {/* Sidebar Toggle Button */}
-        <button className="text-2xl" onClick={() => setIsSidebarOpen(true)}>
+        <button className="cursor-pointer text-2xl" onClick={() => setIsSidebarOpen(true)}>
           <IoIosMenu />
         </button>
 
@@ -60,7 +62,7 @@ export const TempleTopbar: React.FC = () => {
               <div className="flex justify-between items-center mb-4">
                 <button
                   onClick={() => setIsSidebarOpen(false)}
-                  className="text-2xl"
+                  className="cursor-pointer text-2xl"
                 >
                   <IoMdClose />
                 </button>
@@ -77,9 +79,10 @@ export const TempleTopbar: React.FC = () => {
                 title="แก้ไขโปรไฟล์"
                 icon={<FaRegEdit  />}
               />
-               <SidebarItem className="text-red-500"
+              <SidebarItem className="text-red-500"
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
+                onClick={logout}
                 />
             </motion.div>
 
@@ -116,12 +119,16 @@ const MenuItem: React.FC<{
   </h1>
 );
 
-const SidebarItem: React.FC<{ title: string; icon: JSX.Element; className?: string }> = ({
+const SidebarItem: React.FC<{ title: string; icon: JSX.Element; className?: string, onClick?: () => void }> = ({
   title,
   icon,
   className,
+  onClick
 }) => (
-  <div className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className}`}>
+  <div 
+    className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className} cursor-pointer`}
+    onClick={onClick}
+  >
     <span className="mr-3 text-lg">{icon}</span>
     <span className="text-sm">{title}</span>
   </div>

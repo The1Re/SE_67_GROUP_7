@@ -30,7 +30,7 @@ const TripDay = ({ startDate, endDate }) => {
                 {days.map((day) => (
                     <button 
                         key={day.id} 
-                        className={`px-4 py-2 rounded-lg ${activeTab === day.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} 
+                        className={`cursor-pointer px-4 py-2 rounded-lg ${activeTab === day.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} 
                         onClick={() => setActiveTab(day.id)}
                     >
                         Day {day.id}

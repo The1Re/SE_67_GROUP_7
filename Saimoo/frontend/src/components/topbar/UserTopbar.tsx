@@ -5,8 +5,12 @@ import { FiLogOut, FiCreditCard } from "react-icons/fi";
 import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { TbFlag3 } from "react-icons/tb";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const UserTopbar: React.FC = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
@@ -36,7 +40,7 @@ const UserTopbar: React.FC = () => {
     <>
       {/* Topbar */}
       <div className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
-        <button className="text-2xl" onClick={() => setIsSidebarOpen(true)}>
+        <button className="cursor-pointer text-2xl" onClick={() => setIsSidebarOpen(true)}>
           <IoIosMenu />
         </button>
 
@@ -51,6 +55,7 @@ const UserTopbar: React.FC = () => {
             title="SaiTrip"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            onClick={() => navigate("/trips")}
           />
           <MenuItem
             title="SaiWat"
@@ -96,11 +101,15 @@ const UserTopbar: React.FC = () => {
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
+                  onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
                 />
                 <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
               </div>
               <div className="px-2 py-2">
-                <button className="w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100">
+                <button 
+                  className="cursor-pointer w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100"
+                  onClick={logout}
+                >
                   <FiLogOut />
                   <span>ออกจากระบบ</span>
                 </button>
@@ -124,7 +133,7 @@ const UserTopbar: React.FC = () => {
               <div className="flex justify-between items-center mb-4">
                 <button
                   onClick={() => setIsSidebarOpen(false)}
-                  className="text-2xl"
+                  className="cursor-pointer text-2xl"
                 >
                   <IoMdClose />
                 </button>
@@ -141,7 +150,8 @@ const UserTopbar: React.FC = () => {
               <SidebarItem
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
-                className="text-red-500"
+                className="cursor-pointer text-red-500"
+                onClick={logout}
               />
             </motion.div>
 
@@ -166,24 +176,29 @@ const MenuItem: React.FC<{
   title: "SaiTrip" | "SaiWat";
   selectedTab: string;
   setSelectedTab: (tab: "SaiTrip" | "SaiWat") => void;
-}> = ({ title, selectedTab, setSelectedTab }) => (
+  onClick?: () => void;
+}> = ({ title, selectedTab, setSelectedTab, onClick }) => (
   <h1
     className={`text-sm md:text-lg font-semibold cursor-pointer transition-colors duration-300 ${
       selectedTab === title
         ? "text-teal-500 border-b-2 border-teal-500"
         : "text-black"
     } hover:text-teal-500`}
-    onClick={() => setSelectedTab(title)}
+    onClick={() => {setSelectedTab(title); onClick()}}
   >
     {title}
   </h1>
 );
 
-const DropdownItem: React.FC<{ icon: JSX.Element; text: string }> = ({
+const DropdownItem: React.FC<{ icon: JSX.Element; text: string, onClick?: () => void }> = ({
   icon,
   text,
+  onClick
 }) => (
-  <div className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200">
+  <div 
+    className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200"
+    onClick={onClick}
+  >
     <span className="mr-3 text-lg">{icon}</span>
     <span className="text-sm">{text}</span>
   </div>
@@ -193,9 +208,11 @@ const SidebarItem: React.FC<{
   title: string;
   icon: JSX.Element;
   className?: string;
-}> = ({ title, icon, className }) => (
+  onClick?: () => void;
+}> = ({ title, icon, className, onClick }) => (
   <div
     className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className}`}
+    onClick={onClick}
   >
     <span className="mr-3 text-lg">{icon}</span>
     <span className="text-sm">{title}</span>

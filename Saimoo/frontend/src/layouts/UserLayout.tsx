@@ -5,7 +5,7 @@ function UserLayout() {
     return (
         <>
          <UserTopbar />
-            <main className="flex-1">
+            <main className="h-dvh pt-[75px] overflow-auto">
                 <Outlet />
             </main>
         </>

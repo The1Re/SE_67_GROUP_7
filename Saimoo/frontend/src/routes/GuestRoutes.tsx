@@ -1,15 +1,16 @@
-import { Routes, Route } from 'react-router-dom'
+import { Route, Navigate, Routes } from 'react-router-dom'
 import { Trips } from '@/pages/Trips'
 import GuestLayout from '@/layouts/GuestLayout';
 
-function UserRoutes() {
+function GuestRoutes() {
   return (
     <Routes>
-        <Route element={<GuestLayout />} >
-            <Route path='/trips' element={<Trips />}></Route>
-        </Route>
+      <Route element={<GuestLayout />} >
+          <Route path='/' element={<Navigate to="/trips" replace />} />
+          <Route path='/trips' element={<Trips />}></Route>
+      </Route>
     </Routes>
   );
 };
 
-export default UserRoutes
+export default GuestRoutes
