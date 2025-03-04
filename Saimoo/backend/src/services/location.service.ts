@@ -10,8 +10,33 @@ export const createLocation = async (locationData: Omit<Location, "id">) => {
     return await prisma.location.create({ data: locationData });
 };
 
-export const getLocationsTemple = async () => {
-    return await prisma.location.findMany({where: { type: "temple" }});
+export const getLocationsTemple = async (
+  page: number = 1,
+  pageSize: number = 10,
+  sortBy: string = 'id',
+  sortOrder: 'asc' | 'desc' = 'desc'
+) => {
+  const skip = (page - 1) * pageSize;
+
+  const temples = await prisma.location.findMany({
+    where: { type: "temple" },
+    orderBy: { [sortBy]: sortOrder },
+    skip,
+    take: pageSize,
+    include: { Province: true, Temple: true },
+  });
+
+  const totalItems = await prisma.location.count({ where: { type: "temple" } });
+
+  return {
+    data: temples,
+    pagination: {
+      totalItems,
+      totalPages: Math.ceil(totalItems / pageSize),
+      currentPage: page,
+      pageSize,
+    },
+  };
 };
 
 export const checkIfTempleExistsInProvince = async (name: string, provinceId: number) => {

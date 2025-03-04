@@ -42,11 +42,7 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
 
 export const deleteUser = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.body;
-
-        if (!id) {
-            return res.status(400).json({ message: "Missing required fields" });
-        }
+        const { id } = req.params;
 
         await UserService.deleteUser(Number(id));
         return res.status(204).json();

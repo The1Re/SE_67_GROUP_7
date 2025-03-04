@@ -11,7 +11,7 @@ router.post('/', TempleController.createTempleController);
 router.get('/', TempleController.getTempleController);
 router.get('/:id',TempleController.getTempleByIdController);
 router.put('/', TempleController.updateTempleController);
-router.delete('/', TempleController.deleteTempleController);
+router.delete('/:id', TempleController.deleteTempleController);
 
 router.use('/:id/charms', TempleCharmRoutes);
 router.use('/:id/activity', TempleActivityRoutes);
