@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const UserTopbar: React.FC = () => {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
@@ -93,7 +93,7 @@ const UserTopbar: React.FC = () => {
             >
               <div className="px-2 py-4 text-center">
                 <FaUserCircle className="text-4xl text-gray-500 mx-auto mb-3" />
-                <p className="text-sm font-semibold">user_8347elf0uux9</p>
+                <p className="text-sm font-semibold">{user.username}</p>
                 <div className="w-3/4 mx-auto border-b border-gray-300 mt-2 py-1"></div>
               </div>
               <div className="py-2">

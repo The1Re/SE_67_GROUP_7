@@ -9,7 +9,7 @@ const TripDetails = ({ startDate, setStartDate, endDate, setEndDate, setDays }) 
     const [description, setDescription] = useState("");
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-md space-y-4">
+        <div className="bg-white rounded-lg  space-y-4">
             <UserInfo />
             <input 
                 type="text" 

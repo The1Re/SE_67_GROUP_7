@@ -1,6 +1,8 @@
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 
 const UserInfo = () => {
+    const { user } = useAuth();
     const [maxPeople, setMaxPeople] = useState(""); // ช่องให้พิมพ์จำนวนคน
 
     // ฟังก์ชันเมื่อกดปุ่มสร้าง
@@ -14,7 +16,7 @@ const UserInfo = () => {
             <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gray-300 rounded-full" /> {/* Mockup User Avatar */}
                 <div>
-                    <p className="font-bold">cristina.alice</p>
+                    <p className="font-bold">{user.username}</p>
                     <p className="text-gray-500 text-sm">สร้างเมื่อ 28 ต.ค. 2566</p>
                 </div>
             </div>
