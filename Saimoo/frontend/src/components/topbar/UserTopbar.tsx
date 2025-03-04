@@ -32,6 +32,12 @@ const UserTopbar: React.FC = () => {
     };
   }, [isDropdownOpen]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.reload();
+  };
+
   return (
     <>
       {/* Topbar */}
@@ -100,7 +106,10 @@ const UserTopbar: React.FC = () => {
                 <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
               </div>
               <div className="px-2 py-2">
-                <button className="w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100">
+                <button 
+                  className="w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100"
+                  onClick={handleLogout}
+                >
                   <FiLogOut />
                   <span>ออกจากระบบ</span>
                 </button>

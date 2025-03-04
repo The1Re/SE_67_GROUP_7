@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "@/layouts/AdminLayout";
 import Profile from "@/pages/user/Profile"; 
 import UserTable from "@/components/table/UserTable";
@@ -14,7 +14,8 @@ function AdminRoutes() {
   return (
     <Routes>
       <Route element={<AdminLayout />}>
-        <Route index path="/admin/dashboard" element={<h1 className="text-2xl font-bold">Admin Dashboard</h1>} />
+        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/admin/dashboard" element={<h1 className="text-2xl font-bold">Admin Dashboard</h1>} />
         <Route path="/profile" element={<Profile />} />
 
         <Route path="/admin/manage-users" element={<UserTable />} />

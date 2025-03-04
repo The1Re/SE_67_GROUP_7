@@ -16,6 +16,7 @@ function ForgotForm() {
                 label="Email" 
                 placeholder="Enter your email" 
                 value={email} 
+                name="email"
                 onChange={(e) => setEmail(e.target.value)} 
             />
             <p className="text-sm text-gray-500">We will send you a reset link.</p>

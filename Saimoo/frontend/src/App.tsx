@@ -10,9 +10,10 @@ function App() {
   const [role, setRole] = useState<UserRole>("guest");
 
   useEffect(() => {
-    getUserRole().then((role) => setRole(role));
-  }, [role])
+    setRole(getUserRole())
+  }, [])
 
+  console.log(role);
 
   return (
     <>

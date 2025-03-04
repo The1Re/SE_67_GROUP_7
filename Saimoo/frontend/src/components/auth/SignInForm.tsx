@@ -22,9 +22,15 @@ function SignInForm({ setIsModalOpen }) {
             const res = await api.post("/auth/login", formData);
 
             if (res.status === 200) {
+                const role = res.data.user.role;
                 localStorage.setItem("token", res.data.token);
+                localStorage.setItem("role", role);
+                
+                if (role == "admin" || role == "temple") {
+                    navigate("/", { replace: true });
+                }
+                // window.location.reload();
                 setIsModalOpen(null);
-                navigate("/");
             } else {
                 console.log(res);
             }
@@ -55,7 +61,7 @@ function SignInForm({ setIsModalOpen }) {
             <p className="text-right text-sm text-gray-500 cursor-pointer hover:text-gray-700" onClick={() => setIsModalOpen("forgot")}>
                 Forgot password?
             </p>
-            <button type="submit" className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 mt-2">Sign In</button>
+            <button type="submit" className="cursor-pointer w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 mt-2">Sign In</button>
         </form>
     );
 };

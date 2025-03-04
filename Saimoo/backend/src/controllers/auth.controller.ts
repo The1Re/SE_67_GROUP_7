@@ -55,9 +55,10 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 
         return res.status(200).json({ 
             message: 'Login successful', 
-            data: { 
-                userId: userValidationResult.id, 
-                username: userValidationResult.username,  
+            user: { 
+                id: userValidationResult.id, 
+                username: userValidationResult.username,
+                role: userValidationResult.role  
             },
             token
         });
