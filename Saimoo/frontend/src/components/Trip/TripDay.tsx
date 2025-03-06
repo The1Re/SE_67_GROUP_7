@@ -25,7 +25,7 @@ const TripDay = ({ startDate, endDate }) => {
     };
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-md">
+        <div className=" bg-white rounded-lg">
             <div className="flex space-x-2 mb-4">
                 {days.map((day) => (
                     <button 

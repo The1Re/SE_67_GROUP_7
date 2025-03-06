@@ -23,7 +23,7 @@ const TripSchedule: React.FC<TripScheduleProps> = ({ startDate, setStartDate, en
     }, [startDate, endDate, setDays]);
 
     return (
-        <div className="p-4 rounded-lg">
+        <div className="rounded-lg">
             <p className="font-bold">
                 กำหนดการ {startDate && endDate ? `${startDate.toLocaleDateString()} ถึง ${endDate.toLocaleDateString()}` : "เลือกวันที่"} 
                 {numDays > 0 && ` | Day ${numDays}`}

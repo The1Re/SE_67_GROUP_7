@@ -25,10 +25,10 @@ const TempleTable = () => {
         id: v.id,
         name: v.name,
         latitude: v.latitude,
-        longtitude: v.longtitude,
+        longtitude: v.longitude,
         province: v.Province.name,
         description: v.Temple.description,
-        like: v.Temple.like
+        like: v.Temple.likes
       }
     }));
   };

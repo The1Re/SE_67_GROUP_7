@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "./Input";
 import api from "@/api";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 export type SignInData = {
     username: string
@@ -24,17 +25,18 @@ function SignInForm({ setIsModalOpen }) {
             const res = await api.post("/auth/login", formData);
 
             if (res.status === 200) {
-                console.log(res.data.token);
+                toast.success("Login successful!");
                 localStorage.setItem("token", res.data.token);
                 setIsModalOpen(null);
                 
-                console.log(res.data.user);
                 login(res.data.user);
                 navigate("/");
             } else {
+                toast.error("Login failed!");
                 console.log(res);
             }
         } catch (err) {
+            toast.error("Login failed!");
             console.log(err);
         }
     };

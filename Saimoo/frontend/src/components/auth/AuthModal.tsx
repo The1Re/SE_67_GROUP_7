@@ -37,7 +37,7 @@ function AuthModal({ type, setIsModalOpen }) {
                     {titles[type]}
                 </h2>
 
-                {type === "signup" && <SignUpForm />}
+                {type === "signup" && <SignUpForm setIsModalOpen={setIsModalOpen}/>}
                 {type === "login" && <SignInForm setIsModalOpen={setIsModalOpen} />}
                 {type === "forgot" && <ForgotPasswordForm />}
 

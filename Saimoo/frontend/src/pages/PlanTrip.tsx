@@ -16,14 +16,16 @@ function PlanTrip() {
       {/* คอลัมน์ซ้าย (เนื้อหาหลัก) */}
       <div className="w-full md:w-4/6 flex flex-col">
           <UploadImage />
-          <TripDetails 
-              startDate={startDate} 
-              setStartDate={setStartDate} 
-              endDate={endDate} 
-              setEndDate={setEndDate} 
-              setDays={setDays} 
-          />
-          <TripDay startDate={startDate} endDate={endDate} />
+          <div className="p-4 px-32 bg-white">
+            <TripDetails 
+                startDate={startDate} 
+                setStartDate={setStartDate} 
+                endDate={endDate} 
+                setEndDate={setEndDate} 
+                setDays={setDays} 
+            />
+            <TripDay startDate={startDate} endDate={endDate} />
+          </div>
 
       </div>
 
