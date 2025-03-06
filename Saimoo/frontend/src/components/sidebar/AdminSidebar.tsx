@@ -24,7 +24,7 @@ const menuItems = [
 ];
 
 export default function AdminSidebar() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [openMenus, setOpenMenus] = useState({});
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export default function AdminSidebar() {
     <div className="w-64 h-screen bg-white p-4 border-r border-gray-300 flex flex-col">
       <div className="flex justify-between items-center text-lg font-bold mb-4">
         <span className="text-blue-600">SAIMOO</span>
-        <span className="text-gray-500 text-sm">admin123@Admin</span>
+        <span className="text-gray-500 text-sm">{user.username}@Admin</span>
       </div>
       <p className="text-gray-500 font-semibold mb-2">แถบเมนู</p>
       <div className="flex-1">

@@ -1,12 +1,22 @@
 import { useAuth } from "@/context/AuthContext";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import GuestRoutes from "./GuestRoutes";
 import AdminRoutes from "./AdminRoutes";
 import UserRoutes from "./UserRoutes";
 import TempleRoutes from "./TempleRoutes";
+import { useEffect } from "react";
 
 function ManageRoutes() {
+  const navigate = useNavigate();
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (localStorage.getItem("token") && !user) {
+      console.log("fetching user data");
+    }
+    navigate('/')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   return (
     <Routes>

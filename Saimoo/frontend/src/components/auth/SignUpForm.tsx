@@ -1,5 +1,8 @@
 import { useState } from "react";
 import Input from "./Input";
+import api from "@/api";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export type SignUpData = {
 	username: string;
@@ -10,7 +13,9 @@ export type SignUpData = {
 	phone?: string;
 }
 
-function SignupForm() {
+function SignupForm({ setIsModalOpen }) {
+	const { login } = useAuth();
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState<SignUpData>({
 		username: "",
 		email: "",
@@ -22,8 +27,24 @@ function SignupForm() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Signup Data:", formData);
-		// Prepare to send data to API
+
+		const postData = async () => {
+			const res = await api.post("/auth/register", { ...formData, fullname: `${formData.firstname} ${formData.surname}` });
+			if (res.status === 201) {
+				const loginRes = await api.post("/auth/login", { username: formData.username, password: formData.password });
+				if (loginRes.status === 200) {
+					console.log(loginRes.data.token);
+					localStorage.setItem("token", loginRes.data.token);
+					setIsModalOpen(null);
+					
+					console.log(loginRes.data.user);
+					login(loginRes.data.user);
+					navigate("/");
+				}
+			}
+		}
+
+		await postData();
 	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +95,7 @@ function SignupForm() {
 			</div>
 			<button
 				type="submit"
-				className="mt-2 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 col-span-2"
+				className="cursor-pointer mt-2 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 col-span-2"
 			>
 				Sign Up
 			</button>
