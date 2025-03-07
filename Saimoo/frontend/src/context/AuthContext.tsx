@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
         toast.success("Login successful!");
         localStorage.setItem("token", userData.token);
         setUser(userData.user);
+        navigate('/', { replace: true });
     };
 
     const logout = () => {
