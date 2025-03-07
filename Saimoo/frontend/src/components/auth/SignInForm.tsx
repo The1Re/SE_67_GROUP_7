@@ -25,11 +25,9 @@ function SignInForm({ setIsModalOpen }) {
             const res = await api.post("/auth/login", formData);
 
             if (res.status === 200) {
-                toast.success("Login successful!");
-                localStorage.setItem("token", res.data.token);
                 setIsModalOpen(null);
                 
-                login(res.data.user);
+                login(res.data);
                 navigate("/");
             } else {
                 toast.error("Login failed!");
