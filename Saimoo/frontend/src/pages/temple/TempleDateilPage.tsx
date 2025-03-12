@@ -81,7 +81,7 @@ function TempleDetailPage() {
   };
 
   return (
-    <div className="flex justify-center items-center bg-white p-6">
+    <div className="flex flex-row justify-center items-center bg-white p-6 overflow-auto h-screen">
       <div className="w-full max-w-5xl p-6 absolute top-0 left-0 right-0 mx-auto">
         {/* ✅ แสดงข้อมูลวัด */}
         <TempleInfo
@@ -114,6 +114,12 @@ function TempleDetailPage() {
                     <p><strong>กิจกรรม:</strong> {activity.name}</p>
                     <p><strong>วันที่:</strong> {activity.startDate.toLocaleDateString()} - {activity.endDate.toLocaleDateString()}</p>
                   </div>
+                 {/* ✅ จัดคำอธิบายให้มีความสูงเท่ากัน */}
+        {activity.description && (
+          <p className="text-black mt-2 min-h-[50px] flex items-center">
+            <strong>รายละเอียด:</strong> {activity.description}
+          </p>
+        )}
 
                   {/* ✅ ปุ่มฟันเฟือง (แก้ไขกิจกรรม) */}
                   <button

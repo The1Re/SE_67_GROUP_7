@@ -5,7 +5,7 @@ const AddCharmPopup = ({ show, onClose, onSave, onDelete, editingCharm }) => {
     editingCharm || { name: "", material: "", model: "", price: "", image: null }
   );
 
-  const [confirmDelete, setConfirmDelete] = useState(false); // ✅ ใช้สำหรับ Popup ยืนยันการลบ
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   // ✅ ตั้งค่าข้อมูลเมื่อมีการแก้ไข
   useEffect(() => {
@@ -38,7 +38,7 @@ const AddCharmPopup = ({ show, onClose, onSave, onDelete, editingCharm }) => {
   const handleDelete = () => {
     if (editingCharm) {
       onDelete(editingCharm.id);
-      setConfirmDelete(false); // ✅ ปิด Popup ยืนยันหลังลบ
+      setConfirmDelete(false);
       onClose();
     }
   };
@@ -47,56 +47,69 @@ const AddCharmPopup = ({ show, onClose, onSave, onDelete, editingCharm }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50" onClick={onClose}>
-      <div className="bg-white p-8 rounded-lg shadow-lg relative max-w-lg w-full text-center" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-3xl font-bold text-[#44AFB6] mb-6">
-          {editingCharm ? "Edit Charm" : "Add Charm"}
-        </h2>
-
-        {/* ✅ อัปโหลดรูป Charm */}
-        <label className="w-full flex justify-center items-center bg-gray-300 rounded-lg cursor-pointer overflow-hidden mb-4 p-2">
-          <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-          {charmData.image ? (
-            <img 
-              src={charmData.image} 
-              alt="Charm Upload" 
-              className="w-full h-auto max-h-[500px] object-contain rounded-lg"
-            />
-          ) : (
-            <span className="text-3xl text-gray-600">+</span>
-          )}
-        </label>
-
-        {/* ✅ ฟิลด์ข้อมูล Charm */}
-        <div className="space-y-2">
-          {[
-            { name: "name", label: "ชื่อ" },
-            { name: "material", label: "เนื้อพระ" },
-            { name: "model", label: "รุ่นพระ" },
-            { name: "price", label: "ราคา" }
-          ].map((field) => (
-            <div key={field.name} className="text-left">
-              <input
-                type="text"
-                name={field.name}
-                value={charmData[field.name]}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                placeholder={field.label}
-              />
-            </div>
-          ))}
+      <div 
+        className="bg-white p-6 rounded-2xl shadow-lg w-[700px] flex gap-6" 
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* ✅ รูปภาพอยู่ด้านซ้าย */}
+        <div className="w-1/3 flex flex-col items-center">
+          <label className="w-full h-40 bg-gray-200 flex items-center justify-center rounded-lg cursor-pointer overflow-hidden border-dashed border-2 border-gray-400">
+            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+            {charmData.image ? (
+              <div className="relative w-full h-full">
+                <img src={charmData.image} alt="Charm Upload" className="w-full h-full object-cover rounded-lg" />
+                <button
+                  className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700"
+                  onClick={() => setCharmData({ ...charmData, image: null })}
+                >
+                  Delete
+                </button>
+              </div>
+            ) : (
+              <span className="text-3xl text-gray-500">+</span>
+            )}
+          </label>
         </div>
 
-        {/* ✅ ปุ่ม Save & Delete */}
-        <div className="flex justify-between mt-6">
-          {editingCharm && (
-            <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700" onClick={handleDeleteConfirm}>
-              Delete
+        {/* ✅ ฟอร์มอยู่ด้านขวา */}
+        <div className="w-2/3">
+          <h2 className="text-2xl font-bold text-[#44AFB6] text-center mb-4">
+            {editingCharm ? "Edit Charm" : "Add Charm"}
+          </h2>
+
+          {/* ✅ ฟิลด์ข้อมูล Charm */}
+          <div className="space-y-2">
+            {[
+              { name: "name", label: "ชื่อพระ" },
+              { name: "material", label: "เนื้อพระ" },
+              { name: "model", label: "รุ่นพระ" },
+              { name: "price", label: "ราคา (บาท)" }
+            ].map((field) => (
+              <div key={field.name} className="text-left">
+                <label className="block text-gray-700 font-semibold">{field.label}</label>
+                <input
+                  type="text"
+                  name={field.name}
+                  value={charmData[field.name]}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  placeholder={`กรอก${field.label}`}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* ✅ ปุ่ม Save & Delete */}
+          <div className="flex justify-between mt-6">
+            {editingCharm && (
+              <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700" onClick={handleDeleteConfirm}>
+                Delete
+              </button>
+            )}
+            <button className="bg-[#44AFB6] text-white px-6 py-2 rounded-lg shadow-md hover:bg-teal-600" onClick={handleSave}>
+              {editingCharm ? "Save Changes" : "Add Charm"}
             </button>
-          )}
-          <button className="bg-[#44AFB6] text-white px-6 py-2 rounded-lg shadow-md hover:bg-teal-600" onClick={handleSave}>
-            {editingCharm ? "Save Changes" : "Add"}
-          </button>
+          </div>
         </div>
       </div>
 
