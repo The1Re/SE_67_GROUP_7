@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 
 import * as PaymentService from '../services/payment.service';
 import * as OrderService from '../services/order.service';
+import * as WalletService from '../services/wallet.service';
 import logger from "../utils/logger";
 
 export const createPayment = async (req: AuthRequest, res: Response): Promise<any> => {
@@ -71,6 +72,44 @@ export const updatePayment = async (req: AuthRequest, res: Response): Promise<an
 
         await PaymentService.updatePayment(id, { status });
         return res.status(200).json({ message: "Payment updated" });
+    } catch (error) {
+        logger.error(error);
+        return res.status(400).json({ error: "Internal server error" });
+    }
+}
+
+// not finished
+export const pay = async (req: AuthRequest, res: Response): Promise<any> => {
+    try {
+        const { id } = req.params;
+        if (!id ) {
+            return res.status(400).json({ error: "id is required" });
+        }
+
+        const payment = await PaymentService.getPaymentById(Number(id));
+        if (!payment) {
+            return res.status(404).json({ error: "Payment not found" });
+        }
+
+        if (payment.status !== 'pending') {
+            return res.status(400).json({ error: "Payment is already paid" });
+        }
+
+        if (payment.method === 'wallet') {
+            const user = await WalletService.getWallet(req.user?.id);
+            if (user!.balance < payment.amount!) {
+                return res.status(400).json({ error: "Not enough money in wallet" });
+            }
+
+            // add transaction
+            await PaymentService.updatePayment(Number(id), { status: 'successful' });
+            await OrderService.updateOrder(payment.orderId, { status: 'paid' });
+            return res.status(200).json({ message: "Payment successful" });
+        } else {
+            // qrcode method
+        }
+        
+        return res.status(201).json(payment);
     } catch (error) {
         logger.error(error);
         return res.status(400).json({ error: "Internal server error" });
