@@ -1,5 +1,5 @@
 import prisma from '../models/prisma';
-import type { Location } from "@prisma/client";
+import type { Temple,Location } from "@prisma/client";
 
 
 export const createLocation = async (locationData: Omit<Location, "id">) => {
@@ -56,7 +56,7 @@ export const getLocationTempleById = async (id: number) => {
     where: {
       id: id,
       type: 'temple',
-    },
+    },include: { Temple: true },
   });
 };
 
@@ -73,5 +73,16 @@ export const deleteLocation = async (id: number) => {
   return await prisma.location.delete({ where: { id } });
 };
 
+export const getTempleIdFromLocationId = async (locationId: number) => {
+  //console.log("Searching for locationId:", locationId); // Debugging
+
+  const temple = await prisma.location.findFirst({
+    where: { id: locationId },
+    include: { Temple: true },
+  });
+
+  const templeId = temple?.Temple?.[0]?.id;
+  return templeId !== undefined ? Number(templeId) : null;
+};
 
 
