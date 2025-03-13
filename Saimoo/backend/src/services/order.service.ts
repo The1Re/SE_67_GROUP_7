@@ -38,3 +38,7 @@ export const getAllOrders = async (filters: Prisma.TripOrderWhereInput) => {
 export const getOrderById = async (orderId: number) => {
     return await prisma.tripOrder.findUnique({ where: { id: orderId }, include: { TripOrderDetail: true } });
 }
+
+export const updateOrder = async (orderId: number, data: Prisma.TripOrderUpdateInput) => {
+    return await prisma.tripOrder.update({ where: { id: orderId }, data });
+}

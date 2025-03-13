@@ -93,3 +93,27 @@ export const getAllOrderDetail = async (req: AuthRequest, res: Response): Promis
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
+export const updateOrder = async (req: AuthRequest, res: Response): Promise<any> => {
+    try {
+        const { id, status } = req.body;
+        if (!id || !status) {
+            return res.status(400).json({ message: "id and status is required" });
+        }
+
+        const order = await OrderService.getOrderById(id);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        const data: Prisma.TripOrderUpdateInput = {
+            status
+        }
+
+        await OrderService.updateOrder(id, data);
+        return res.status(200).json({ message: "Order updated" });
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
