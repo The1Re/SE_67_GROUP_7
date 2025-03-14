@@ -4,6 +4,7 @@ import { AuthRequest } from "../middlewares";
 import { PaymentService, OrderService } from "../services";
 
 import logger from "../utils/logger";
+import { Prisma } from "@prisma/client";
 
 export const createPayment = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
@@ -21,16 +22,16 @@ export const createPayment = async (req: AuthRequest, res: Response): Promise<an
             return res.status(400).json({ error: "Order is already paid" });
         }
 
-        // const data: Prisma.PaymentCreateInput = {
-        //     method,
-        //     amount: order.totalPrice,
-        //     status: 'pending',
-        //     TripOrder: {
-        //         connect: { id: orderId }
-        //     },
-        // }
+        const data: Prisma.PaymentCreateInput = {
+            method,
+            amount: order.totalPrice,
+            status: 'pending',
+            TripOrder: {
+                connect: { id: orderId }
+            }
+        }
 
-        const payment = await PaymentService.createPayment(req.body);
+        const payment = await PaymentService.createPayment(data);
         return res.status(201).json(payment);
     } catch (error) {
         logger.error(error);

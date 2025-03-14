@@ -1,14 +1,12 @@
-import { Payment } from "@prisma/client";
+import { Payment, Prisma } from "@prisma/client";
 import prisma from "../models/prisma";
 
 import * as WalletService from './wallet.service';
 import * as OrderService from './order.service';
 
-export const createPayment = async (data: any) => {
+export const createPayment = async (data: Prisma.PaymentCreateInput) => {
     return await prisma.payment.create({
-        data: {
-            ...data,
-        },
+        data: data
     });
 };
 
