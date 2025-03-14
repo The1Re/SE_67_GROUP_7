@@ -1,10 +1,8 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares";
-import { Prisma } from "@prisma/client";
 
-import * as PaymentService from '../services/payment.service';
-import * as OrderService from '../services/order.service';
-import * as WalletService from '../services/wallet.service';
+import { PaymentService, OrderService } from "../services";
+
 import logger from "../utils/logger";
 
 export const createPayment = async (req: AuthRequest, res: Response): Promise<any> => {
@@ -96,15 +94,13 @@ export const pay = async (req: AuthRequest, res: Response): Promise<any> => {
         }
 
         if (payment.method === 'wallet') {
-            const user = await WalletService.getWallet(req.user?.id);
-            if (user!.balance < payment.amount!) {
-                return res.status(400).json({ error: "Not enough money in wallet" });
-            }
+            try {
+                await PaymentService.pay_with_wallet(payment, req.user?.id, payment.amount!);
 
-            // add transaction
-            await PaymentService.updatePayment(Number(id), { status: 'successful' });
-            await OrderService.updateOrder(payment.orderId, { status: 'paid' });
-            return res.status(200).json({ message: "Payment successful" });
+                return res.status(200).json({ message: "Payment successful" });
+            }catch (error) {
+                return res.status(400).json({ error });
+            }
         } else {
             // qrcode method
         }

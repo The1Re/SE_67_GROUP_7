@@ -1,4 +1,8 @@
+import { Payment } from "@prisma/client";
 import prisma from "../models/prisma";
+
+import * as WalletService from './wallet.service';
+import * as OrderService from './order.service';
 
 export const createPayment = async (data: any) => {
     return await prisma.payment.create({
@@ -33,4 +37,15 @@ export const updatePayment = async (id: number, data: any) => {
             ...data,
         },
     });
+}
+
+export const pay_with_wallet = async (payment: Payment, userId: number, amount: number) => {
+    const transaction = await WalletService.pay(userId, amount);
+    
+    await updatePayment(payment.id, { status: 'successful', transactionId: transaction.id });
+    await OrderService.updateOrder(payment.orderId, { status: 'paid' });
+}
+
+export const pay_with_qrcode = async (payment: Payment, userId: number, amount: number) => {
+    // not implemented
 }

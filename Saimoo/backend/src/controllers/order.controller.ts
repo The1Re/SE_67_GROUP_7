@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
+import { Prisma } from "@prisma/client";
 import { AuthRequest } from "../middlewares";
 import logger from "../utils/logger";
 
-import * as OrderService from "../services/order.service";
-import * as OrderDetailService from "../services/orderDetail.service";
-import { Prisma } from "@prisma/client";
+import { OrderService, OrderDetailService } from "../services";
 
 export const createOrder = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
