@@ -1,8 +1,9 @@
 import { Route, Navigate, Routes } from 'react-router-dom'
 import { Trips } from '@/pages/Trips'
 import GuestLayout from '@/layouts/GuestLayout';
-import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
+import BrowseTempleWithGuest from '@/pages/Temple';
 import SignupTemple from '@/pages/temple/SignupTemple';
+import TempleDetail from '@/components/ฺbrowsetemple/TempleDetail';
 
 function GuestRoutes() {
   return (
@@ -12,6 +13,7 @@ function GuestRoutes() {
           <Route path='/trips' element={<Trips />}></Route>
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
           <Route path='/temples/signup' element={<SignupTemple />} />
+          <Route path='/temples/:id' element={<TempleDetail />} /> 
       </Route>
     </Routes>
   );
