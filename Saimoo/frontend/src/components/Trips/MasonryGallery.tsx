@@ -25,7 +25,6 @@ export default function MasonryGallery() {
           <a
             key={trip.id}
             href={trip.url || "/trip-detail"}
-            target="_blank"
             rel="noopener noreferrer"
             className="block break-inside-avoid p-2 bg-white rounded-lg
                        hover:shadow-xl hover:brightness-105 transition-all duration-300 

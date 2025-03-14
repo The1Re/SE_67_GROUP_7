@@ -1,12 +1,11 @@
 import { useState } from "react";
 import TempleCard from "../../components/ฺbrowsetemple/TempleCard";
-import SearchFilter from "../../components/search/SearchFilter";
-
 import watpha from "../../assets/watpha.jpg";
 import watnakhon from "../../assets/watnakhon.jpg";
 import watchai from "../../assets/watchai.jpg";
 import watarun from "../../assets/watarun.jpg";
 import watjai from "../../assets/watjai.jpg";
+import SearchBar from "@/components/Trips/SearchBar";
 
 const tripsData = [
   { id: 1, title: "วัดพระธาตุช่อแฮ", description: "1 หมู่ 11 ตำบล ช่อแฮ อำเภอเมืองแพร่ แพร่ 54000", imageUrl: watpha, category: "popular" },
@@ -17,28 +16,27 @@ const tripsData = [
 ];
 
 const BrowseTempleWithGuest = () => {
-  const [filteredTrips, setFilteredTrips] = useState(tripsData);
+  const [filteredTrips] = useState(tripsData);
 
-  const handleSearch = (searchTerm) => {
-    const filtered = tripsData.filter((trip) =>
-      trip.title.includes(searchTerm) || trip.description.includes(searchTerm)
-    );
-    setFilteredTrips(filtered);
-  };
+  // const handleSearch = (searchTerm) => {
+  //   const filtered = tripsData.filter((trip) =>
+  //     trip.title.includes(searchTerm) || trip.description.includes(searchTerm)
+  //   );
+  //   setFilteredTrips(filtered);
+  // };
 
-  const handleFilter = (filter) => {
-    if (!filter) {
-      setFilteredTrips(tripsData);
-      return;
-    }
-    const filtered = tripsData.filter((trip) => trip.category === filter);
-    setFilteredTrips(filtered);
-  };
+  // const handleFilter = (filter) => {
+  //   if (!filter) {
+  //     setFilteredTrips(tripsData);
+  //     return;
+  //   }
+  //   const filtered = tripsData.filter((trip) => trip.category === filter);
+  //   setFilteredTrips(filtered);
+  // };
 
   return (
-    <div className="bg-white min-h-screen text-gray-500 p-6">
-      <SearchFilter onSearch={handleSearch} onFilter={handleFilter} /> {/* ✅ แสดงแถบค้นหา */}
-
+    <div className="bg-white min-h-screen text-gray-500">
+      <SearchBar search="" setSearch={() => {}} selectedSort="recommended" setSelectedSort={() => {}} />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredTrips.map((trip) => (
           <TempleCard key={trip.id} trip={trip} />

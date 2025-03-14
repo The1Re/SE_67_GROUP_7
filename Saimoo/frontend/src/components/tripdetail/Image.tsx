@@ -52,14 +52,14 @@ const ImageComponent = () => {
 
       {/* 🔹 Preview รูปใหญ่ */}
       {selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-opacity-80 z-50">
           <img
             src={selectedImage}
             alt="full-preview"
             className="max-w-full max-h-full object-contain rounded-lg"
           />
           <button
-            className="absolute top-4 right-4 text-white p-2 text-2xl cursor-pointer"
+            className="absolute top-4 right-4 text-black p-2 text-2xl cursor-pointer"
             onClick={handleClosePreview}
           >
             ✕
