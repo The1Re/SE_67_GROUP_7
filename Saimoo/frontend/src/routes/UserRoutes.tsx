@@ -5,6 +5,7 @@ import UserLayout from '@/layouts/UserLayout'
 import PlanTrip from '@/pages/PlanTrip';
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
 import SignupTemple from '@/pages/temple/SignupTemple';
+import TripDetail from '@/pages/TripDetail';
 
 
 const UserRoutes = () => {
@@ -17,6 +18,7 @@ const UserRoutes = () => {
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
           <Route path='/plan-trip' element={<PlanTrip />}></Route>
           <Route path='/temples/signup' element={<SignupTemple />} />
+          <Route path='/trip-detail' element={<TripDetail />} />
       </Route>
     </Routes>
   );
