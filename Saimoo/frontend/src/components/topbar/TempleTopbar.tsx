@@ -5,6 +5,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export const TempleTopbar: React.FC = () => {
   const { logout } = useAuth();
@@ -12,6 +13,8 @@ export const TempleTopbar: React.FC = () => {
     "SaiTrip"
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const navigate = useNavigate();
 
   return (
     <>
@@ -43,7 +46,7 @@ export const TempleTopbar: React.FC = () => {
 
         <div className="border-l border-gray-300 h-8 mx-2"></div>
         <h3 className="text-sm md:text-lg font-semibold text-black ml-3.5">
-          วัดพระแก้ว
+          วัดศีรษะทอง
         </h3>
         {/* Login Button */}
       </div>
@@ -74,10 +77,12 @@ export const TempleTopbar: React.FC = () => {
               <SidebarItem
                 title="โปรไฟล์"
                 icon={<MdOutlineTempleBuddhist />}
+                onClick={() => navigate("/temple/Profile")}
               />
               <SidebarItem
                 title="แก้ไขโปรไฟล์"
                 icon={<FaRegEdit  />}
+                onClick={() => navigate("/temple/detail")}
               />
               <SidebarItem className="text-red-500"
                 title="ออกจากระบบ"
