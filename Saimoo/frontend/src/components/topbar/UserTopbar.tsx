@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaSuitcaseRolling, FaUserCircle } from "react-icons/fa";
 import { FiLogOut, FiCreditCard } from "react-icons/fi";
 import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
+import { MdTour } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { TbFlag3 } from "react-icons/tb";
 import { useAuth } from "@/context/AuthContext";
@@ -143,12 +144,17 @@ const UserTopbar: React.FC = () => {
                   <span className="text-blue-500">O</span>
                 </h2>
               </div>
-              <SidebarItem title="ลงทะเบียนเป็นตัวแทนไกด์" icon={<TbFlag3 />} />
+              
               <SidebarItem
                 title="ลงทะเบียนเป็นตัวแทนวัด"
                 icon={<MdOutlineTempleBuddhist />}
                 onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
               />
+              <SidebarItem
+                title="ลงทะเบียนเป็นไกด์"
+                icon={<MdTour />}
+                onClick={() => { setIsSidebarOpen(false); navigate("/guides/signup"); }}
+                            />
               <SidebarItem
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}

@@ -6,8 +6,8 @@ import PlanTrip from '@/pages/PlanTrip';
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
 import SignupTemple from '@/pages/temple/SignupTemple';
 import TripDetail from '@/pages/TripDetail';
-
-
+import SignupGuide from '@/pages/Guide/SignupGuide';
+import ProfileTemple from '@/pages/temple/ProfileTemple';
 const UserRoutes = () => {
   return (
     <Routes>
@@ -19,6 +19,8 @@ const UserRoutes = () => {
           <Route path='/plan-trip' element={<PlanTrip />}></Route>
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/trip-detail' element={<TripDetail />} />
+          <Route path='/Guides/signup' element={<SignupGuide />} />
+          <Route path='/temple/profiletemple' element={<ProfileTemple />} />
       </Route>
     </Routes>
   );
