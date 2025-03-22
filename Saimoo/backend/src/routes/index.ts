@@ -10,6 +10,7 @@ import authRoutes from './auth.routes';
 import templeRoutes from './temple/temple.routes'; 
 import userRoutes from './user.routes';
 import reviewRoutes from './reviewGuide.routes';
+import provinceRoutes from './province.routes';
 
 const routes = Router();
 
@@ -24,6 +25,7 @@ routes.post('/upload', uploads.single('file'), (req, res) => {
     res.json({ message: 'File uploaded successfully', file: req.file });
 });
 routes.use('/reviews', reviewRoutes);
+routes.use('/provinces', provinceRoutes);
 
 
 export default routes;

@@ -3,6 +3,7 @@ import TempleInfo from "../../components/templedetail/TempleInfo";
 import TempleTabs from "../../components/templedetail/TempleTabs";
 import AddPicture from "../../components/templedetail/AddPicture";
 
+
 function TempleDetailPage() {
   // ✅ เก็บแท็บที่เลือก
   const [selectedTab, setSelectedTab] = useState("Picture");
@@ -12,16 +13,6 @@ function TempleDetailPage() {
 
   // ✅ เก็บรูปที่เพิ่ม
   const [pictures, setPictures] = useState([]);
-
-  // ✅ เก็บรูปหลักที่แสดงด้านบน
-  const [descImage, setDescImage] = useState(null);
-
-  // ✅ เก็บข้อมูลวัด
-  const [templeData, setTempleData] = useState({
-    name: "วัดศีรษะทอง",
-    description: "วัดเก่าแก่ในนครปฐม...",
-    address: "ถนนศีรษะทอง อำเภอศีรษะทอง จังหวัดนครปฐม",
-  });
 
   // ✅ เพิ่มรูปใหม่ไปที่ "Picture" ด้านล่าง
   const handleAddPicture = useCallback((newImage) => {
@@ -44,10 +35,6 @@ function TempleDetailPage() {
 
         {/* ✅ แสดงข้อมูลวัด */}
         <TempleInfo
-          templeData={templeData}
-          setTempleData={setTempleData}
-          descImage={descImage}
-          setDescImage={setDescImage}
         />
 
         {/* ✅ แท็บ */}
@@ -76,8 +63,7 @@ function TempleDetailPage() {
                   {/* ✅ ปุ่ม Edit รูป */}
                   <button
                     className="absolute bottom-2 right-2 bg-blue-500 text-white px-3 py-1 rounded-md text-sm"
-                    onClick={() => setShowAddPicturePopup(index)}
-                  >
+                    onClick={() => setShowAddPicturePopup(true)}                  >
                     Edit
                   </button>
                 </div>

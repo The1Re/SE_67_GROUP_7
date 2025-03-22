@@ -5,13 +5,25 @@ import { FaRegEdit } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export const TempleTopbar: React.FC = () => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
     "SaiTrip"
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Handler to navigate to temple detail page
+  const handleEditProfile = () => {
+    // Assuming the temple ID is stored in the user object
+    // If not, you might need to fetch it or store it somewhere else
+    if (user && user.id) {
+      navigate(`/temple/${user.id}`);
+      setIsSidebarOpen(false);
+    }
+  };
 
   return (
     <>
@@ -33,11 +45,13 @@ export const TempleTopbar: React.FC = () => {
             title="SaiTrip"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            onClick={() => navigate("/trips")}
           />
           <MenuItem
             title="SaiWat"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            onClick={() => navigate("/temples")}
           />
         </div>
 
@@ -77,13 +91,15 @@ export const TempleTopbar: React.FC = () => {
               />
               <SidebarItem
                 title="แก้ไขโปรไฟล์"
-                icon={<FaRegEdit  />}
+                icon={<FaRegEdit />}
+                onClick={handleEditProfile}
               />
-              <SidebarItem className="text-red-500"
+              <SidebarItem 
+                className="text-red-500"
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
                 onClick={logout}
-                />
+              />
             </motion.div>
 
             {/* Overlay Effect */}
@@ -106,14 +122,18 @@ const MenuItem: React.FC<{
   title: "SaiTrip" | "SaiWat";
   selectedTab: string;
   setSelectedTab: (tab: "SaiTrip" | "SaiWat") => void;
-}> = ({ title, selectedTab, setSelectedTab }) => (
+  onClick?: () => void;
+}> = ({ title, selectedTab, setSelectedTab, onClick }) => (
   <h1
     className={`text-sm md:text-lg font-semibold cursor-pointer transition-colors duration-300 ${
       selectedTab === title
         ? "text-teal-500 border-b-2 border-teal-500"
         : "text-black"
     } hover:text-teal-500`}
-    onClick={() => setSelectedTab(title)}
+    onClick={() => {
+      setSelectedTab(title);
+      if (onClick) onClick();
+    }}
   >
     {title}
   </h1>
@@ -126,7 +146,7 @@ const SidebarItem: React.FC<{ title: string; icon: JSX.Element; className?: stri
   onClick
 }) => (
   <div 
-    className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className} cursor-pointer`}
+    className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className || ''}`}
     onClick={onClick}
   >
     <span className="mr-3 text-lg">{icon}</span>

@@ -154,3 +154,9 @@ export const deleteTempleActivity = async (id: number) => {
         where: { id },
     });
 };
+
+export const getTempleImagesFront = async (templeId : number) => {
+    return await prisma.templeImage.findFirst({
+      where: { templeId },
+    });
+};

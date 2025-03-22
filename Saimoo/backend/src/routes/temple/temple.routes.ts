@@ -13,6 +13,7 @@ router.get('/:locationId',TempleController.getTempleByIdController); //ใช้
 router.put('/:templeId', TempleController.updateTempleController); //ใช้ templeId
 router.delete('/:locationId', TempleController.deleteTempleController); //
 router.put('/like/:templeId', TempleController.updateTempleLikeController); //ใช้ templeId บัคอยู่ +1 เรื่อยๆ
+router.get('/front/:templeId', TempleController.getTempleImagesFrontController); //ใช้ locationId
 
 router.use('/:locationId/charms', TempleCharmRoutes);
 router.use('/:locationId/activity', TempleActivityRoutes);

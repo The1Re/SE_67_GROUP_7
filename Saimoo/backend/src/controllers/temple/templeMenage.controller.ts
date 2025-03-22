@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { createTempleForNewtemple,deleteTemple,updateTempleDescription, updateTempleLike } from '../../services/temple.service';
+import { createTempleForNewtemple,deleteTemple,updateTempleDescription, updateTempleLike,getTempleImagesFront } from '../../services/temple.service';
 import logger from '../../utils/logger';
 import { AuthRequest } from '../../middlewares/authenticateUser.middleware';
 import { getLocationsTemple,getLocationTempleById,getLocationTempleByProvinceId, getTempleIdFromLocationId} from '../../services/location.service';
-
 export const createTempleController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
         const { name, latitude, longitude, provinceId, description } = req.body;
@@ -93,3 +92,15 @@ export const updateTempleLikeController = async (req: Request, res: Response): P
         return res.status(500).json({ message: 'Can not update like' });
     }
 };
+
+export const getTempleImagesFrontController = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { templeId } = req.params;
+        const temple = await getTempleImagesFront(Number(templeId));
+        return res.status(200).json(temple);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: 'Can not get' });
+    }
+};
+
