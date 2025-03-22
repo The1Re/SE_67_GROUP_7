@@ -1,5 +1,7 @@
+import api from "@/api";
 import { env } from "@/config";
 import { Request } from "@/models/Request";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function GuidePetitionDetail() {
@@ -12,13 +14,25 @@ export default function GuidePetitionDetail() {
   }
 
   const handleApprove = () => {
-    console.log(`อนุมัติไกด์ ID: ${guide.id}`);
-    navigate(-1); // ✅ กลับไปหน้าก่อนหน้า
+    api.patch('/requests/approve/guide', { requestId: guide.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }})
+    .then(() => {
+      toast.success(`อนุมัติเป็นไกด์ ID: ${guide.id}`);
+      navigate(-1);
+    })
+    .catch((err) => {
+      toast.error(`เกิดข้อผิดพลาด: ${err.response.data.message}`);
+    })
   };
 
   const handleReject = () => {
-    console.log(`ไม่อนุมัติไกด์ ID: ${guide.id}`);
-    navigate(-1); // ✅ กลับไปหน้าก่อนหน้า
+    api.patch('/requests/reject', { requestId: guide.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }})
+    .then(() => {
+      toast.success(`ไม่อนุมัติเป็นไกด์ ID: ${guide.id}`);
+      navigate(-1);
+    })
+    .catch((err) => {
+      toast.error(`เกิดข้อผิดพลาด: ${err.response.data.message}`);
+    })
   };
 
   return (

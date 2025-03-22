@@ -1,5 +1,7 @@
+import api from "@/api";
 import { env } from "@/config";
 import { Request } from "@/models/Request";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function TemplePetitionDetail() {
@@ -12,13 +14,25 @@ export default function TemplePetitionDetail() {
   }
 
   const handleApprove = () => {
-    console.log(`อนุมัติตัวแทนวัด ID: ${representative.id}`);
-    navigate(-1); // ✅ กลับไปหน้าก่อนหน้า
+    api.patch('/requests/approve/temple', { requestId: representative.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }})
+    .then(() => {
+      toast.success(`อนุมัติตัวแทนวัด ID: ${representative.id}`);
+      navigate(-1);
+    })
+    .catch((err) => {
+      toast.error(`เกิดข้อผิดพลาด: ${err.response.data.message}`);
+    })
   };
 
   const handleReject = () => {
-    console.log(`ไม่อนุมัติตัวแทนวัด ID: ${representative.id}`);
-    navigate(-1); // ✅ กลับไปหน้าก่อนหน้า
+    api.patch('/requests/reject', { requestId: representative.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }})
+    .then(() => {
+      toast.success(`ไม่อนุมัติตัวแทนวัด ID: ${representative.id}`);
+      navigate(-1);
+    })
+    .catch((err) => {
+      toast.error(`เกิดข้อผิดพลาด: ${err.response.data.message}`);
+    })
   };
 
   return (
