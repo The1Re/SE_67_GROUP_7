@@ -53,7 +53,7 @@ export default function GuidePetitionTable() {
               <td className="border p-2">{guide.status}</td>
               <td className="border p-2">
                 <button
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                  className="bg-blue-500 text-white px-2 py-1 rounded cursor-pointer"
                   onClick={() => navigate(`/admin/petitions/guide/${guide.id}`, { state: { guide } })}
                 >
                   ดูรายละเอียด

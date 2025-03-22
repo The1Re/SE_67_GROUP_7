@@ -52,13 +52,13 @@ export default function TemplePetitionDetail() {
       }
       <div className="mt-4 flex gap-4">
         <button
-          className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600"
+          className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 cursor-pointer"
           onClick={handleApprove}
         >
           อนุมัติ
         </button>
         <button
-          className="border border-red-500 text-red-500 px-6 py-2 rounded hover:bg-red-100"
+          className="border border-red-500 text-red-500 px-6 py-2 rounded hover:bg-red-100 cursor-pointer"
           onClick={handleReject}
         >
           ไม่อนุมัติ
