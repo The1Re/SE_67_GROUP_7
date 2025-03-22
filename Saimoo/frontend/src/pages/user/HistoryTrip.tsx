@@ -20,8 +20,12 @@ function HistoryTrip() {
         if (!res.ok) throw new Error("ไม่สามารถโหลดข้อมูลได้");
         const data = await res.json();
         setTrips(data);
-      } catch (err: any) {
-        setError(err.message || "เกิดข้อผิดพลาด");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message || "เกิดข้อผิดพลาด");
+        } else {
+          setError("เกิดข้อผิดพลาด");
+        }
       } finally {
         setLoading(false);
       }

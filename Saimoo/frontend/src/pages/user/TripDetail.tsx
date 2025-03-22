@@ -1,4 +1,3 @@
-import MyMap from "@/components/map/MyMap";
 import Image from "@/components/tripdetail/Image";
 import TripCard from "@/components/tripdetail/TripCard";
 import TripDayDetail from "@/components/tripdetail/TripDayDetail";
