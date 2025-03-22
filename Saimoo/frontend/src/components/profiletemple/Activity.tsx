@@ -2,10 +2,9 @@ import React from "react";
 
 const Activity = ({ activities }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-6 cursor-pointer ">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-6  ">
       {activities.map((activity, idx) => (
-        <div key={idx} className="relative bg-white overflow-hidden transition-all duration-300 
-                     hover:shadow-lg hover:-translate-y-2 active:shadow-xl active:scale-105 cursor-pointer">
+        <div key={idx} className="relative bg-white  ">
           <img
             src={activity.image}
             alt={activity.title}

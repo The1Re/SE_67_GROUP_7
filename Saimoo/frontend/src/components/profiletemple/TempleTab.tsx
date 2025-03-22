@@ -49,11 +49,11 @@ const TempleTab: React.FC = () => {
   return (
     <div className="mt-6">
   {/* 🔹 เมนูแท็บ */}
-  <div className="relative flex justify-center border-b border-gray-300">
+  <div className="relative flex justify-center border-b border-gray-300 ">
     {["Activity", "Charm", "Picture"].map((tab) => (
       <button
         key={tab}
-        className={`relative py-3 pb-2 px-6 text-xl font-semibold transition-all duration-300 ${
+        className={`relative py-3 pb-2 px-6 text-xl font-semibold transition-all duration-300 cursor-pointer ${
           activeTab === tab
             ? "text-black after:content-[''] after:absolute after:left-0 after:bottom-[-3px] after:w-full after:h-[3px] after:bg-black"
             : "text-gray-500 hover:text-black"
