@@ -3,7 +3,7 @@ import logger from '../utils/logger';
 
 import type { User } from '@prisma/client';
 
-import * as UserService from '../services/user.service';
+import { UserService } from '../services';
 import { AuthRequest } from '../middlewares';
 
 export const register = async (req: Request, res: Response): Promise<any> => {

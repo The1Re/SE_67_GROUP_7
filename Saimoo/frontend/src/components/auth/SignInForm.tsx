@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Input from "./Input";
 import api from "@/api";
 import { useAuth } from "@/context/AuthContext";
@@ -12,7 +11,6 @@ export type SignInData = {
 
 function SignInForm({ setIsModalOpen }) {
     const { login } = useAuth();
-    const navigate = useNavigate();
     const [formData, setFormData] = useState<SignInData>({
         username: "",
         password: ""
@@ -25,12 +23,9 @@ function SignInForm({ setIsModalOpen }) {
             const res = await api.post("/auth/login", formData);
 
             if (res.status === 200) {
-                toast.success("Login successful!");
-                localStorage.setItem("token", res.data.token);
                 setIsModalOpen(null);
                 
-                login(res.data.user);
-                navigate("/");
+                login(res.data);
             } else {
                 toast.error("Login failed!");
                 console.log(res);

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import logger from "../utils/logger";
 
-import * as UserService from "../services/user.service";
+import { UserService } from "../services";
 
 export const getAllUsers = async (req: Request, res: Response): Promise<any> => {
     try {
