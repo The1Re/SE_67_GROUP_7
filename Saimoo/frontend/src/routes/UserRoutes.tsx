@@ -6,6 +6,9 @@ import PlanTrip from '@/pages/PlanTrip';
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
 import SignupTemple from '@/pages/temple/SignupTemple';
 import TripDetail from '@/pages/TripDetail';
+import PurchaserDetails from '@/pages/user/PurchaserDetails';
+import PaymentDetails from '@/pages/user/PaymentDetails';
+import ConfirmPayment from '@/pages/user/ConfirmPayment';
 
 
 const UserRoutes = () => {
@@ -19,6 +22,9 @@ const UserRoutes = () => {
           <Route path='/plan-trip' element={<PlanTrip />}></Route>
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/trip-detail' element={<TripDetail />} />
+          <Route path='/trips/purchaser' element={<PurchaserDetails />} />
+          <Route path='/trips/payment' element={<PaymentDetails/>} />
+          <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
       </Route>
     </Routes>
   );

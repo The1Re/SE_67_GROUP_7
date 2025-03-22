@@ -1,6 +1,8 @@
 import { FaCar, FaClock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const TripCard = () => {
+  const navigate = useNavigate();
   return (
     <div className="max-w-full w-full mx-auto p-6 ">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:gap-0">
@@ -60,7 +62,9 @@ const TripCard = () => {
         </div>
         {/* 🔹 ปุ่มซื้อทริป*/}
         <div className="flex flex-col items-end gap-3">
-          <button className="cursor-pointer flex items-center gap-1 whitespace-nowrap rounded-lg border border-teal-500 px-6 py-3 font-semibold text-teal-500 shadow-sm duration-300 hover:bg-teal-500 hover:text-white">
+          <button 
+          onClick={() => navigate('/trips/purchaser')}
+          className="cursor-pointer flex items-center gap-1 whitespace-nowrap rounded-lg border border-teal-500 px-6 py-3 font-semibold text-teal-500 shadow-sm duration-300 hover:bg-teal-500 hover:text-white">
             ซื้อทริป
           </button>
           <div className="flex flex-col items-end gap-1">
