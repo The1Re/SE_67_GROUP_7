@@ -1,18 +1,25 @@
-import { useState } from "react";
+import api from "@/api";
+import { Request } from "@/models/Request";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const guides = [
-  { id: 1, username: "guide_anna", phone: "0991122334", email: "anna@example.com", status: "รออนุมัติ", certificateImage: "/guide-cert.jpg", idCardImage: "/guide-id.jpg" },
-  { id: 2, username: "guide_bob", phone: "0889988776", email: "bob@example.com", status: "รออนุมัติ", certificateImage: "/guide-cert.jpg", idCardImage: "/guide-id.jpg" },
-];
-
 export default function GuidePetitionTable() {
+  const [data, setData] = useState<Request[]>([]);
+  const [filterData, setFilterData] = useState<Request[]>([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const filteredGuides = guides.filter(guide =>
-    guide.username.includes(search) || guide.email.includes(search)
-  );
+  useEffect(() => {
+    api.get<{ requests: Request[] }>("/requests", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then((res) => {
+        const request_data = res.data.requests.filter((v) => v.type === "Become_Guide");
+        setData(request_data);
+      });
+  }, [])
+
+  useEffect(() => {
+    setFilterData(data.filter((v) => v.fullName?.includes(search) || v.phone?.includes(search) || v.email?.includes(search) || v.status?.includes(search)))
+  }, [search, data])
 
   return (
     <div>
@@ -28,19 +35,21 @@ export default function GuidePetitionTable() {
           <tr className="bg-gray-100">
             <th className="border p-2">ID</th>
             <th className="border p-2">Username</th>
-            <th className="border p-2">เบอร์โทร</th>
-            <th className="border p-2">E-mail</th>
-            <th className="border p-2">สถานะ</th>
+            <th className="border p-2">Fullname</th>
+            <th className="border p-2">Email</th>
+            <th className="border p-2">Phone</th>
+            <th className="border p-2">Status</th>
             <th className="border p-2">Action</th>
           </tr>
         </thead>
         <tbody>
-          {filteredGuides.map((guide) => (
+          {filterData.map((guide) => (
             <tr key={guide.id} className="text-center">
               <td className="border p-2">{guide.id}</td>
-              <td className="border p-2">{guide.username}</td>
+              <td className="border p-2">{guide.User.username}</td>
+              <td className="border p-2">{guide.fullName}</td>
+              <td className="border p-2">{guide.User.email}</td>
               <td className="border p-2">{guide.phone}</td>
-              <td className="border p-2">{guide.email}</td>
               <td className="border p-2">{guide.status}</td>
               <td className="border p-2">
                 <button

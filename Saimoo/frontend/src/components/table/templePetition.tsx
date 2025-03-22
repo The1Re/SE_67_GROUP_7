@@ -1,18 +1,25 @@
-import { useState } from "react";
+import api from "@/api";
+import { Request } from "@/models/Request";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const representatives = [
-  { id: 1, username: "john_doe", phone: "0812345678", email: "john@example.com", status: "รออนุมัติ", templeName: "วัดพระแก้ว", templeAddress: "กรุงเทพฯ", certificateImage: "/path-to-image.jpg" },
-  { id: 2, username: "jane_smith", phone: "0898765432", email: "jane@example.com", status: "รออนุมัติ", templeName: "วัดโพธิ์", templeAddress: "กรุงเทพฯ", certificateImage: "/path-to-image.jpg" },
-];
-
 export default function TemplePetitionTable() {
+  const [data, setData] = useState<Request[]>([]);
+  const [filterData, setFilterData] = useState<Request[]>([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const filteredRepresentatives = representatives.filter(rep =>
-    rep.username.includes(search) || rep.email.includes(search)
-  );
+  useEffect(() => {
+    api.get<{ requests: Request[] }>("/requests", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+      .then((res) => {
+        const request_data = res.data.requests.filter((v) => v.type === "Register_as_Temple");
+        setData(request_data);
+      });
+  }, [])
+
+  useEffect(() => {
+    setFilterData(data.filter((v) => v.fullName?.includes(search) || v.templeName?.includes(search) || v.phone?.includes(search) || v.email?.includes(search) || v.status?.includes(search)))
+  }, [search, data])
 
   return (
     <div>
@@ -27,24 +34,26 @@ export default function TemplePetitionTable() {
         <thead>
           <tr className="bg-gray-100">
             <th className="border p-2">ID</th>
-            <th className="border p-2">Username</th>
-            <th className="border p-2">เบอร์โทร</th>
+            <th className="border p-2">Full Name</th>
+            <th className="border p-2">Temple Name</th>
+            <th className="border p-2">Phone</th>
             <th className="border p-2">E-mail</th>
-            <th className="border p-2">สถานะ</th>
+            <th className="border p-2">Status</th>
             <th className="border p-2">Action</th>
           </tr>
         </thead>
         <tbody>
-          {filteredRepresentatives.map((rep) => (
+          {filterData.map((rep) => (
             <tr key={rep.id} className="text-center">
               <td className="border p-2">{rep.id}</td>
-              <td className="border p-2">{rep.username}</td>
+              <td className="border p-2">{rep.fullName}</td>
+              <td className="border p-2">{rep.templeName}</td>
               <td className="border p-2">{rep.phone}</td>
               <td className="border p-2">{rep.email}</td>
               <td className="border p-2">{rep.status}</td>
               <td className="border p-2">
                 <button
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                  className="bg-blue-500 text-white px-2 py-1 rounded cursor-pointer"
                   onClick={() => navigate(`/admin/petitions/temple/${rep.id}`, { state: { representative: rep } })}
                 >
                   ดูรายละเอียด
