@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import { AuthRequest } from "../middlewares";
 import logger from "../utils/logger";
 
-import * as RequestService from "../services/request.service";
-import * as UserService from "../services/user.service";
+import { RequestService, UserService } from "../services";
 
 export const requestGuide = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
