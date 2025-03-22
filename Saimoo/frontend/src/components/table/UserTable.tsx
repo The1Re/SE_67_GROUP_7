@@ -1,6 +1,7 @@
 import api from "@/api";
 import { useState, useEffect } from "react";
 import DataLoading from "../DataLoading";
+import toast from "react-hot-toast";
 
 export type User = {
   id: number;
@@ -55,6 +56,7 @@ const UserTable = () => {
       );
     }
     saveData();
+    toast.success("บันทึกข้อมูลเรียบร้อยแล้ว");
     handleClose();
   };
 
@@ -70,6 +72,7 @@ const UserTable = () => {
       );
     }
     deleteData();
+    toast.success("ลบข้อมูลเรียบร้อยแล้ว");
   };
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import { env } from "@/config";
 import { Request } from "@/models/Request";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import ImageNotFound from '@/assets/imagenotfound.png';
 
 export default function GuidePetitionDetail() {
   const location = useLocation();
@@ -46,7 +47,16 @@ export default function GuidePetitionDetail() {
         guide.IdentityDocument.map((doc) => (
           <div key={doc.id} className="mb-4">
             <p className="text-lg font-semibold">{doc.type == 'Id_verification' ? 'บัตรประชาชน:' : 'หนังสือรับรอง:' } </p>
-            <img src={env.API_URL + "/" + doc.filePath} alt={doc.type} className="w-1/2 border rounded shadow" />
+            <img 
+              src={env.API_URL + "/" + doc.filePath} 
+              alt={doc.type} 
+              className="w-1/2 border rounded shadow" 
+              onError={(e) => {
+                e.currentTarget.src = ImageNotFound;
+                e.currentTarget.classList.remove("w-1/2");
+                e.currentTarget.classList.add("w-1/4");
+              }}
+            />
           </div>
         ))
       }
