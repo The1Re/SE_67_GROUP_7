@@ -5,7 +5,6 @@ import { FiLogOut, FiCreditCard } from "react-icons/fi";
 import { MdAddCircleOutline, MdHistory, MdOutlineTempleBuddhist } from "react-icons/md";
 import { MdTour } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
-import { TbFlag3 } from "react-icons/tb";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -158,7 +157,7 @@ const UserTopbar: React.FC = () => {
               <SidebarItem
                 title="ประวัติการซื้อทริป"
                 icon={<MdHistory  />}
-                onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
+                onClick={() => { setIsSidebarOpen(false); navigate("/history"); }}
               />
               <SidebarItem
                 title="ออกจากระบบ"
