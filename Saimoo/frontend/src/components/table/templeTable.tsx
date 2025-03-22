@@ -1,5 +1,6 @@
 import api from "@/api";
 import { useEffect, useState } from "react";
+import DataLoading from "../DataLoading";
 
 export type Temple = {
   id?: number;
@@ -14,10 +15,12 @@ export type Temple = {
 const TempleTable = () => {
   const [temples, setTemples] = useState<Temple[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [newTemple, setNewTemple] = useState<Temple>({ name: "", province: "", description: "", like: 0 });
   const [editTemple, setEditTemple] = useState<Temple>(null); // ✅ เก็บข้อมูลวัดที่กำลังแก้ไข
 
   const fetchData = async () => {
+    setLoading(true);
     const res = await api.get("/temples?sortOrder=asc");
     const data = res.data.data;
     setTemples(data.map((v) => {
@@ -31,6 +34,7 @@ const TempleTable = () => {
         like: v.Temple.likes
       }
     }));
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -74,6 +78,10 @@ const TempleTable = () => {
     setTemples(temples.map(t => t.id === editTemple.id ? editTemple : t));
     handleClose();
   };
+
+  if (loading) {
+    return <DataLoading />;
+  }
 
   return (
     <div className="p-4">
