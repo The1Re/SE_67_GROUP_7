@@ -1,34 +1,41 @@
+import { useEffect } from "react";
 import {
     APIProvider,
     Map
 } from '@vis.gl/react-google-maps';
 import { env } from '@/config';
 import Directions from './Directions';
-import './style.css';
 
-const route = [
-    { key: "วัดสุทัศนเทพวรารามราชวรมหาวิหาร", location: { lat: 13.751943069434354, lng: 100.50103767897743} },
-    { key: "วัดพระศรีรัตนศาสดาราม", location: { lat: 13.752484975530201, lng: 100.49249752566696 } },
-    { key: "วัดบวรนิเวศวิหาร ราชวรวิหาร", location: { lat: 13.760571732918766, lng: 100.49996479536759 } }
-]
+function MyMap({ locations }) {
+    useEffect(() => {
+        console.log("📌 📍 อัปเดตแผนที่ใหม่: ", locations);
+    }, [locations]);
 
-function MyMap() {
+    if (!locations || locations.length < 2) {
+        return <div>กรุณาเพิ่มสถานที่อย่างน้อย 2 แห่ง</div>;
+    }
+
+    const origin = locations[0].location;
+    const destination = locations[locations.length - 1].location;
+    const waypoints = locations.slice(1, -1).map(loc => ({ location: loc.location }));
+
     return (
         <APIProvider apiKey={env.GOOGLE_MAP_API_KEY}>
             <Map
-                defaultCenter={{ lat: 37.774546, lng: -122.433523 }}
+                defaultCenter={origin}
                 defaultZoom={9}
                 gestureHandling={'greedy'}
                 fullscreenControl={false}
             >
                 <Directions 
-                    origin={route[0].location} 
-                    destination={route[route.length - 1].location} 
-                    waypoints={route.slice(1, -1)}
+                    key={JSON.stringify(locations)}  // ✅ ใช้ JSON.stringify(locations) เพื่อบังคับให้ Directions รีเรนเดอร์ใหม่
+                    origin={origin} 
+                    destination={destination} 
+                    waypoints={waypoints}
                 />
             </Map>
         </APIProvider>
-    )
+    );
 }
 
 export default MyMap;

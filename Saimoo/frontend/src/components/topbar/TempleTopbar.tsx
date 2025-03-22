@@ -5,13 +5,13 @@ import { FaRegEdit } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export const TempleTopbar: React.FC = () => {
   const { logout } = useAuth();
-  const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
-    "SaiTrip"
-  );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const navigate = useNavigate();
 
   return (
     <>
@@ -29,21 +29,12 @@ export const TempleTopbar: React.FC = () => {
 
         {/* Tabs */}
         <div className="flex items-center space-x-8 mx-auto">
-          <MenuItem
-            title="SaiTrip"
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-          />
-          <MenuItem
-            title="SaiWat"
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-          />
+          
         </div>
 
         <div className="border-l border-gray-300 h-8 mx-2"></div>
         <h3 className="text-sm md:text-lg font-semibold text-black ml-3.5">
-          วัดพระแก้ว
+          วัดศีรษะทอง
         </h3>
         {/* Login Button */}
       </div>
@@ -74,10 +65,12 @@ export const TempleTopbar: React.FC = () => {
               <SidebarItem
                 title="โปรไฟล์"
                 icon={<MdOutlineTempleBuddhist />}
+                onClick={() => navigate("/temple/Profile")}
               />
               <SidebarItem
                 title="แก้ไขโปรไฟล์"
                 icon={<FaRegEdit  />}
+                onClick={() => navigate("/temple/detail")}
               />
               <SidebarItem className="text-red-500"
                 title="ออกจากระบบ"
@@ -101,23 +94,6 @@ export const TempleTopbar: React.FC = () => {
     </>
   );
 };
-
-const MenuItem: React.FC<{
-  title: "SaiTrip" | "SaiWat";
-  selectedTab: string;
-  setSelectedTab: (tab: "SaiTrip" | "SaiWat") => void;
-}> = ({ title, selectedTab, setSelectedTab }) => (
-  <h1
-    className={`text-sm md:text-lg font-semibold cursor-pointer transition-colors duration-300 ${
-      selectedTab === title
-        ? "text-teal-500 border-b-2 border-teal-500"
-        : "text-black"
-    } hover:text-teal-500`}
-    onClick={() => setSelectedTab(title)}
-  >
-    {title}
-  </h1>
-);
 
 const SidebarItem: React.FC<{ title: string; icon: JSX.Element; className?: string, onClick?: () => void }> = ({
   title,

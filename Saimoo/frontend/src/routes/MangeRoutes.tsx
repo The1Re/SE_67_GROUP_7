@@ -4,6 +4,7 @@ import GuestRoutes from "./GuestRoutes";
 import AdminRoutes from "./AdminRoutes";
 import UserRoutes from "./UserRoutes";
 import TempleRoutes from "./TempleRoutes";
+import GuideRoutes from "./GuideRoutes";
 import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 
@@ -28,7 +29,7 @@ function ManageRoutes() {
       { user?.role === "admin" && <Route path="/*" element={<AdminRoutes />} /> }
       { user?.role === "user" && <Route path="/*" element={<UserRoutes />} /> }
       { user?.role === "temple" && <Route path="/*" element={<TempleRoutes />} /> }
-      { user?.role === "guide" && <Route path="/*" element={<h1>not implement</h1>} /> }
+      { user?.role === "guide" && <Route path="/*" element={<GuideRoutes />} /> }
 
       {/* 404 Page */}
       <Route path="*" element={<h1>Not Found</h1>} />
