@@ -11,6 +11,8 @@ import PaymentDetails from '@/pages/user/PaymentDetails';
 import ConfirmPayment from '@/pages/user/ConfirmPayment';
 
 
+import SignupGuide from '@/pages/Guide/SignupGuide';
+import ProfileTemple from '@/pages/temple/ProfileTemple';
 const UserRoutes = () => {
   return (
     <Routes>
@@ -25,6 +27,8 @@ const UserRoutes = () => {
           <Route path='/trips/purchaser' element={<PurchaserDetails />} />
           <Route path='/trips/payment' element={<PaymentDetails/>} />
           <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
+          <Route path='/Guides/signup' element={<SignupGuide />} />
+          <Route path='/temple/profiletemple' element={<ProfileTemple />} />
       </Route>
     </Routes>
   );

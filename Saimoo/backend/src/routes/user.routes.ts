@@ -5,10 +5,10 @@ import * as UserController from '../controllers/user.controller';
 
 const router = Router();
 
-router.get('/', UserController.getAllUsers)
+router.get('/', authorizeRoles('admin'), UserController.getAllUsers)
 router.get('/:id', UserController.getUser)
-router.post('/', UserController.createUser)
-router.put('/', UserController.updateUser)
-router.delete('/:id', UserController.deleteUser)
+router.post('/', authorizeRoles('admin'), UserController.createUser)
+router.put('/', authorizeRoles('admin'), UserController.updateUser)
+router.delete('/:id', authorizeRoles('admin'), UserController.deleteUser)
 
 export default router;

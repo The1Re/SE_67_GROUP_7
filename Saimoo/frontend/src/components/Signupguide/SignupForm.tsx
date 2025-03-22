@@ -12,14 +12,10 @@ const SignupForm: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      {/* ✅ ฟอร์มอยู่ตรงกลางของหน้าจอ */}
-      <div className="max-w-2xl w-full bg-white shadow-xl rounded-lg p-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-left border-b-2 border-gray-400 pb-2 w-fit">
-          ยื่นเรื่องขอเป็นไกด์
-        </h2>
+    
+        
 
-        <form className="space-y-6 text-left">
+        <form className=" text-left">
           {[{ field: "name", label: "ชื่อ - นามสกุล" }, { field: "phone", label: "เบอร์โทร" }].map((item, index) => (
             <div key={index} className="flex flex-col">
               {/* ✅ Label ชิดซ้ายของกรอบ */}
@@ -66,8 +62,8 @@ const SignupForm: React.FC = () => {
             </button>
           </div>
         </form>
-      </div>
-    </div>
+      
+  
   );
 };
 

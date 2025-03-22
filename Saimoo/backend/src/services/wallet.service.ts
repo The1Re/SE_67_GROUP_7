@@ -57,3 +57,25 @@ export const getWalletTransactions = async (userId: number) => {
         orderBy: { createdAt: 'desc' } 
     });
 }
+
+export const pay = async (userId: number, amount: number) => {
+    const wallet = await getWallet(userId);
+
+    if (wallet!.balance < amount) {
+        throw new Error('Not enough money in wallet');
+    }
+
+    await prisma.wallet.update({ 
+        where: { id: wallet!.id }, 
+        data: { balance: { decrement: amount } } 
+    });
+
+    return await prisma.transaction.create({
+        data: {
+            amount,
+            type: 'payment',
+            walletId: wallet!.id,
+            status: 'completed'
+        }
+    });
+}
