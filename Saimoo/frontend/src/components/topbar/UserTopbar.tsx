@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSuitcaseRolling, FaUserCircle } from "react-icons/fa";
 import { FiLogOut, FiCreditCard } from "react-icons/fi";
-import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
+import { MdAddCircleOutline, MdHistory, MdOutlineTempleBuddhist } from "react-icons/md";
 import { MdTour } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { TbFlag3 } from "react-icons/tb";
@@ -155,6 +155,11 @@ const UserTopbar: React.FC = () => {
                 icon={<MdTour />}
                 onClick={() => { setIsSidebarOpen(false); navigate("/guides/signup"); }}
                             />
+              <SidebarItem
+                title="ประวัติการซื้อทริป"
+                icon={<MdHistory  />}
+                onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
+              />
               <SidebarItem
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
