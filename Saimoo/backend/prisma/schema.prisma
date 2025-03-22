@@ -66,8 +66,8 @@ model Payment {
   amount        Float?         @db.Float
   method        Payment_method @default(wallet)
   createdAt     DateTime       @default(now()) @db.DateTime(0)
-  transactionId Int
-  Transaction   Transaction    @relation(fields: [transactionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Payment_Transaction1")
+  transactionId Int?
+  Transaction   Transaction?    @relation(fields: [transactionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Payment_Transaction1")
   TripOrder     TripOrder      @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Payment_TripOrder1")
 
   @@index([transactionId], map: "fk_Payment_Transaction1_idx")
@@ -230,7 +230,7 @@ model TripOrderDetail {
   phone        String?   @db.VarChar(45)
   requirement  String?   @db.VarChar(255)
   isChild      Int       @default(0) @db.TinyInt
-  identityCode String    @db.VarChar(4)
+  identityCode String?    @db.VarChar(4)
   isJoined     Int       @default(0) @db.TinyInt
   TripOrder    TripOrder @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_UserInTripDetail_UserInTrip1")
 

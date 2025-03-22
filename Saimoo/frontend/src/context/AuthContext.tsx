@@ -32,12 +32,15 @@ export const AuthProvider = ({ children }) => {
                     })
                     .catch((err) => {
                         console.log(err);
+                        setUser(null);
+                        localStorage.removeItem("token");
+                        navigate('/', { replace: true });
                     });
             }
         }
 
         fetchUser();
-    }, []);
+    }, [navigate]);
 
     const login = (userData) => {
         toast.success("Login successful!");
