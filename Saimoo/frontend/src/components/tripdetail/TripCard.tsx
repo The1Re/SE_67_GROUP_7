@@ -1,6 +1,8 @@
 import { FaCar, FaClock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const TripCard = () => {
+  const navigate = useNavigate();
   return (
     <div className="max-w-full w-full mx-auto p-6 ">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:gap-0">
@@ -44,13 +46,7 @@ const TripCard = () => {
               <h3 className="text-gray-600 text-lg  font-bold flex items-center gap-2">
                 <FaCar /> เดินทางโดย รถตู้
               </h3>
-              <p className="mt-3 text-black-500 text-2xl leading-relaxed">
-                เริ่มต้นทริปด้วยความอยากไปเที่ยวต่างประเทศแบบใกล้ๆ
-                จะไปญี่ปุ่นก็ตั๋วแพง เลยมาจบที่ไต้หวัน
-                ประเทศที่มีความญี่ปุ่นนิดๆ จีนหน่อยๆ เกาหลีเบาๆ
-                เริ่มต้นทริปด้วยความอยากไปเที่ยวต่างประเทศแบบใกล้ๆ
-                จะไปญี่ปุ่นก็ตั๋วแพง เลยมาจบที่ไต้หวัน
-                ประเทศที่มีความญี่ปุ่นนิดๆ จีนหน่อยๆ เกาหลีเบาๆ
+              <p className="mt-3 text-black-500 text-xl leading-relaxed">
                 เริ่มต้นทริปด้วยความอยากไปเที่ยวต่างประเทศแบบใกล้ๆ
                 จะไปญี่ปุ่นก็ตั๋วแพง เลยมาจบที่ไต้หวัน
                 ประเทศที่มีความญี่ปุ่นนิดๆ จีนหน่อยๆ เกาหลีเบาๆ
@@ -60,11 +56,13 @@ const TripCard = () => {
         </div>
         {/* 🔹 ปุ่มซื้อทริป*/}
         <div className="flex flex-col items-end gap-3">
-          <button className="cursor-pointer flex items-center gap-1 whitespace-nowrap rounded-lg border border-teal-500 px-6 py-3 font-semibold text-teal-500 shadow-sm duration-300 hover:bg-teal-500 hover:text-white">
+          <button 
+          onClick={() => navigate('/trips/purchaser')}
+          className="cursor-pointer flex items-center gap-1 whitespace-nowrap rounded-lg border border-teal-500 px-6 py-3 font-semibold text-teal-500 shadow-sm duration-300 hover:bg-teal-500 hover:text-white">
             ซื้อทริป
           </button>
           <div className="flex flex-col items-end gap-1">
-            <h1 className="text-7xl font-extrabold text-black">1,899 ฿</h1>
+            <p className="text-2xl font-extrabold text-black">1,899 ฿</p>
             <h1 className="text-red-500 text-lg font-semibold">2/10</h1>
             <h3 className="text-red-500 text-lg font-semibold">คนเข้าร่วม</h3>
           </div>

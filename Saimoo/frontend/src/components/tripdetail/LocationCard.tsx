@@ -4,7 +4,7 @@ import ImageGallery from "./ImageGallery";
 const LocationCard = ({ location, index, openImageModal }) => {
   return (
     <li className="relative pl-3 my-8">
-      <div className="absolute -left-[41px] top-4 transform -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-teal-500 text-white font-bold">
+      <div className="absolute -left-[18px] top-4 transform -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-teal-500 text-white font-bold">
         {index + 1}
       </div>
       <div className="ml-3">
