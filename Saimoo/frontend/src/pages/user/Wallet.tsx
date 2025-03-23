@@ -5,6 +5,7 @@ import TransactionHistory from '@/components/wallet/TransactionHistory';
 import BalanceCard from '@/components/wallet/BalanceCard';
 import TransactionForm from '@/components/wallet/TransactionForm';
 import ErrorAlert from '@/components/wallet/ErrorAlert';
+import QRCodeModal from '@/components/wallet/QRCodeModal';
 
 function Wallet() {
     const [balance, setBalance] = useState<number>(0);
@@ -12,6 +13,8 @@ function Wallet() {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [qrModalOpen, setQrModalOpen] = useState<boolean>(false);
+    const [transactionType, setTransactionType] = useState<'topup' | 'withdraw'>('topup');
     const token = localStorage.getItem('token');
 
     const fetchWalletData = useCallback(async () => {
@@ -73,8 +76,10 @@ function Wallet() {
                 }
             );
 
-            setAmount(0);
-            fetchWalletData();
+            setTransactionType('topup');
+            setQrModalOpen(true);
+            setLoading(false);
+
             fetchTransactions();
             setError(null);
         } catch (error) {
@@ -118,6 +123,12 @@ function Wallet() {
         }
     };
 
+    const handleQrModalClose = () => {
+        setQrModalOpen(false);
+        setAmount(0); // Reset amount after modal is closed
+        fetchWalletData(); // Update balance after transaction
+    };
+
     const clearError = () => setError(null);
 
     return (
@@ -132,8 +143,15 @@ function Wallet() {
                 loading={loading}
             />
             <TransactionHistory transactions={transactions} loading={loading} />
+        
+            <QRCodeModal 
+                isOpen={qrModalOpen}
+                onClose={handleQrModalClose}
+                amount={amount}
+                type={transactionType}
+            />
         </div>
-    );
+    )
 }
 
 export default Wallet;
