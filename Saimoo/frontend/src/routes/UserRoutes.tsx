@@ -7,7 +7,7 @@ import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
 import TempleDetail from "@/components/ฺbrowsetemple/TempleDetail";
 import SignupTemple from '@/pages/temple/SignupTemple';
 import TripDetail from '@/pages/TripDetail';
-import PurchaserDetails from '@/pages/user/PurchaserDetails';
+import PurchaseDetails from '@/pages/user/PurchaseDetails';
 import PaymentDetails from '@/pages/user/PaymentDetails';
 import ConfirmPayment from '@/pages/user/ConfirmPayment';
 import SignupGuide from '@/pages/Guide/SignupGuide';
@@ -29,7 +29,7 @@ const UserRoutes = () => {
           <Route path='/plan-trip' element={<PlanTrip />}></Route>
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/trip-detail' element={<TripDetail />} />
-          <Route path='/trips/purchaser' element={<PurchaserDetails />} />
+          <Route path='/trips/purchase' element={<PurchaseDetails />} />
           <Route path='/trips/payment' element={<PaymentDetails/>} />
           <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
           <Route path='/Guides/signup' element={<SignupGuide />} />
