@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ClaimForm from "./ClaimForm";
-
 const StatusInProgress = () => {
   const [showCode, setShowCode] = useState<string | null>(null);
 
@@ -30,18 +29,10 @@ const StatusInProgress = () => {
               </button>
             </div>
           ))}
-        </div>
-      </div>
 
-      {/* ปุ่มขอเครม */}
-      <div className="text-right">
-        <ClaimForm
-          trigger={
-            <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mt-4 cursor-pointer">
-              ขอเครมทริป
-            </button>
-          }
-        />
+          <ClaimForm />
+
+        </div>
       </div>
 
       {/* Popup แสดง code */}

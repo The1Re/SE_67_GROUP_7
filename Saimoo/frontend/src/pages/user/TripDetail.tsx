@@ -18,7 +18,7 @@ function TripDetail() {
 
       {/* คอลัมน์ขวา (แผนที่) ✅ ใช้ sticky ทำให้ไม่เลื่อนตาม */}
       <div className="hidden md:flex w-2/6 h-screen bg-green-300 items-center justify-center sticky top-0">
-          {/* <MyMap /> */}
+          <MyMap />
       </div>
     </div>
   );
