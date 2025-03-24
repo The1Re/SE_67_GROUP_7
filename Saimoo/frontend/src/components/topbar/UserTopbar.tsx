@@ -5,7 +5,6 @@ import { FiLogOut, FiCreditCard } from "react-icons/fi";
 import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
 import { MdTour } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
-import { TbFlag3 } from "react-icons/tb";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -98,14 +97,22 @@ const UserTopbar: React.FC = () => {
                 <div className="w-3/4 mx-auto border-b border-gray-300 mt-2 py-1"></div>
               </div>
               <div className="py-2">
-                <DropdownItem icon={<FaUserCircle />} text="โปรไฟล์" />
+                <DropdownItem 
+                  icon={<FaUserCircle />} 
+                  text="โปรไฟล์" 
+                  onClick={() => {setIsDropdownOpen(false); navigate("/profile")}}
+                />
                 <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน" />
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
                   onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
                 />
-                <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
+                <DropdownItem 
+                  icon={<FiCreditCard />} 
+                  text="กระเป๋าตัง" 
+                  onClick={() => {setIsDropdownOpen(false); navigate("/wallet")}}
+                />
               </div>
               <div className="px-2 py-2">
                 <button 

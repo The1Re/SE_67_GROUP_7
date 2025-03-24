@@ -1,4 +1,5 @@
 import { FaCar, FaClock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 type TripCardProps = {
   startDate: Date | null;
@@ -15,6 +16,7 @@ const TripCard: React.FC<TripCardProps> = ({
   transportation,
   description,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="max-w-full w-full mx-auto p-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:gap-0">
@@ -70,11 +72,13 @@ const TripCard: React.FC<TripCardProps> = ({
 
         {/* 🔹 ปุ่มซื้อทริป */}
         <div className="flex flex-col items-end gap-3">
-          <button className="cursor-pointer flex items-center gap-1 whitespace-nowrap rounded-lg border border-teal-500 px-6 py-3 font-semibold text-teal-500 shadow-sm duration-300 hover:bg-teal-500 hover:text-white">
+          <button 
+          onClick={() => navigate('/trips/purchase')}
+          className="cursor-pointer flex items-center gap-1 whitespace-nowrap rounded-lg border border-teal-500 px-6 py-3 font-semibold text-teal-500 shadow-sm duration-300 hover:bg-teal-500 hover:text-white">
             ซื้อทริป
           </button>
           <div className="flex flex-col items-end gap-1">
-            <h1 className="text-7xl font-extrabold text-black">1,899 ฿</h1>
+            <p className="text-2xl font-extrabold text-black">1,899 ฿</p>
             <h1 className="text-red-500 text-lg font-semibold">2/10</h1>
             <h3 className="text-red-500 text-lg font-semibold">คนเข้าร่วม</h3>
           </div>
