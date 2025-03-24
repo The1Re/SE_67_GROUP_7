@@ -9,41 +9,50 @@ interface TripData {
   url?: string;
 }
 
-const ImageComponent = () => {
+interface ImageComponentProps {
+  imageURL?: string | null;
+}
+
+const ImageComponent: React.FC<ImageComponentProps> = ({ imageURL }) => {
   const [trips, setTrips] = useState<TripData[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/assets/fakeData.json")
-      .then((res) => res.json())
-      .then((data) => setTrips(data));
-  }, []);
+    if (!imageURL) {
+      // ถ้ายังไม่มี imageURL จาก props → ใช้ fakeData.json แทน
+      fetch("/assets/fakeData.json")
+        .then((res) => res.json())
+        .then((data) => setTrips(data));
+    }
+  }, [imageURL]);
 
   const handleImageClick = (image: string) => {
-    setSelectedImage(image); // ✅ เปิด preview เมื่อคลิก
+    setSelectedImage(image);
   };
 
   const handleClosePreview = () => {
-    setSelectedImage(null); // ✅ ปิด preview
+    setSelectedImage(null);
   };
+
+  // 🔁 ใช้ imageURL ถ้ามี ไม่งั้นใช้จาก trips[0].image
+  const displayImage = imageURL || (trips.length > 0 ? trips[0].image : null);
 
   return (
     <div className="w-full">
-      {trips.length > 0 && trips[0].image && (
+      {displayImage && (
         <div
           className="w-full h-[400px] bg-gray-100 flex items-center justify-center rounded-lg relative overflow-hidden cursor-pointer"
-          onClick={() => handleImageClick(trips[0].image)}
+          onClick={() => handleImageClick(displayImage)}
         >
           {/* 🔹 พื้นหลังเบลอ */}
-          {
-            <div
-              className="absolute inset-0 bg-cover bg-center blur-md opacity-50"
-              style={{ backgroundImage: `url('${trips[0].image}')` }}
-            ></div>
-          }
+          <div
+            className="absolute inset-0 bg-cover bg-center blur-md opacity-50"
+            style={{ backgroundImage: `url('${displayImage}')` }}
+          ></div>
+
           {/* 🔹 แสดงรูปหลัก */}
           <img
-            src={trips[0].image}
+            src={displayImage}
             alt="trip-preview"
             className="max-w-full max-h-full object-contain rounded-lg relative z-10"
           />

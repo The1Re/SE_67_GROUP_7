@@ -4,6 +4,7 @@ import { Trips } from '@/pages/Trips'
 import UserLayout from '@/layouts/UserLayout'
 import PlanTrip from '@/pages/PlanTrip';
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
+import TempleDetail from "@/components/ฺbrowsetemple/TempleDetail";
 import SignupTemple from '@/pages/temple/SignupTemple';
 import TripDetail from '@/pages/TripDetail';
 import SignupGuide from '@/pages/Guide/SignupGuide';
@@ -16,6 +17,8 @@ const UserRoutes = () => {
           <Route path='/profile' element={<Profile />}></Route>
           <Route path='/trips' element={<Trips />}></Route>
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
+          <Route path='/temples/:id' element={<TempleDetail />} /> {/* ✅ เพิ่มตรงนี้ */}
+          <Route path='/browse-temple' element={<BrowseTempleWithGuest />} /> 
           <Route path='/plan-trip' element={<PlanTrip />}></Route>
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/trip-detail' element={<TripDetail />} />
