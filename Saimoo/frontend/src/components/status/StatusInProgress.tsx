@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ClaimForm from "./ClaimForm";
 const StatusInProgress = () => {
   const [showCode, setShowCode] = useState<string | null>(null);
