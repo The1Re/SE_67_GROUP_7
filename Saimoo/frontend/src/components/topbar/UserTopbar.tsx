@@ -108,7 +108,11 @@ const UserTopbar: React.FC = () => {
                   text="สร้างทริปของฉัน"
                   onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
                 />
-                <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
+                <DropdownItem 
+                  icon={<FiCreditCard />} 
+                  text="กระเป๋าตัง" 
+                  onClick={() => {setIsDropdownOpen(false); navigate("/wallet")}}
+                />
               </div>
               <div className="px-2 py-2">
                 <button 
