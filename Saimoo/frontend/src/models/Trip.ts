@@ -5,7 +5,7 @@ export type Location = {
     longitude: number | null,
     type: 'temple' | 'place',
     provinceId: number | null
-    Provice: Provice
+    Provice?: Provice
 }
 
 export type Provice = {
@@ -25,10 +25,10 @@ export type Trip = {
     ownerTripId: number,
     type: 'paid' | 'free',
     price: number,
-    TripPicture: {
+    TripPicture?: {
         imagePath: string | null,
     }
-    TripDetail: TripDetail[]
+    TripDetail?: TripDetail[]
 }
 
 export type TripDetail = {
@@ -39,8 +39,8 @@ export type TripDetail = {
     day: number,
     description: string | null,
     locationId: number,
-    TripDetailPicture: {
+    TripDetailPicture?: {
         imagePath: string,
     }
-    Location: Location
+    Location?: Location
 }

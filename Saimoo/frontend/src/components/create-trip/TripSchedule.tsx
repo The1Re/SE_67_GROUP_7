@@ -1,5 +1,4 @@
 import DatePicker from "react-datepicker";
-import TimePicker from "react-time-picker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
@@ -11,14 +10,20 @@ function TripSchedule() {
     const startDate = trip.dateStart;
     const endDate = trip.dateEnd;
 
-    const handleTimeChange = (time: string, prevDate: Date, isStartDate: boolean) => {
-        const [hour, minute] = time.split(":").map(Number);
-        const newDate = new Date(prevDate || new Date());
-        newDate.setHours(hour, minute);
-        if (isStartDate)
-            setTrip({ ...trip, dateStart: newDate });
-        else
-            setTrip({ ...trip, dateEnd: newDate });
+    const handleTimeChange = (event: Date | null, isStartDate: boolean) => {
+        if (isStartDate) {
+            if (event && event > endDate) {
+                setTrip({ ...trip, dateStart: event, dateEnd: event });
+            } else {
+                setTrip({ ...trip, dateStart: event });
+            }
+        } else {
+            if (event && event < startDate) {
+                setTrip({ ...trip, dateStart: event, dateEnd: event });
+            } else {
+                setTrip({ ...trip, dateEnd: event });
+            }
+        }
     };
 
     return (
@@ -36,44 +41,32 @@ function TripSchedule() {
                     <label className="text-gray-600">📅 วันที่ไป</label>
                     <DatePicker
                         selected={startDate}
-                        onChange={(date: Date | null) => setTrip({ ...trip, dateStart: date })}
+                        onChange={(date: Date | null) => handleTimeChange(date, true)}
                         selectsStart
                         startDate={startDate}
                         endDate={endDate}
-                        dateFormat="MMMM d, yyyy"
+                        dateFormat="MMMM d, yyyy HH:mm"
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={30}
                         className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-56"
-                        placeholderText="เลือกวันที่"
+                        placeholderText="Select start date and time"
                     />
-                    <TimePicker
-                        onChange={(e) => handleTimeChange(e, startDate, true)}
-                        value={startDate? startDate.toISOString().substring(11, 16) : ""}
-                        format="HH:mm a"
-                        disableClock
-                        clearIcon={null}
-                        className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-56"
-                    />
-
                 </div>
                 <div className="flex flex-col space-y-2">
                     <label className="text-gray-600">📅 วันที่กลับ</label>
                     <DatePicker
                         selected={endDate}
-                        onChange={(date: Date | null) => setTrip({ ...trip, dateEnd: date })}
-                        selectsEnd
+                        onChange={(date: Date | null) => handleTimeChange(date, false)}
+                        selectsStart
                         startDate={startDate}
                         endDate={endDate}
-                        minDate={startDate}
-                        dateFormat="MMMM d, yyyy"
+                        dateFormat="MMMM d, yyyy HH:mm"
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={30}
                         className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-56"
-                        placeholderText="เลือกวันที่"
-                    />
-                    <TimePicker
-                        onChange={(e) => handleTimeChange(e, endDate, false)}
-                        value={endDate ? endDate.toISOString().substring(11, 16) : ""}
-                        format="HH:mm a"
-                        disableClock
-                        clearIcon={null}
-                        className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-56"
+                        placeholderText="Select start date and time"
                     />
                 </div>
             </div>
