@@ -7,7 +7,7 @@ const TempleCard = ({ trip }) => {
   return (
     <div
       className="bg-white p-4 cursor-pointer "
-      onClick={() => navigate(`/temple/profiletemple`)} // 📌 คลิกแล้วไปหน้า profiletemple
+      onClick={() => navigate(`/temples/profiletemple`)} // 📌 คลิกแล้วไปหน้า profiletemple
     >
       <img
         src={trip.imageUrl}

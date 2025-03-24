@@ -21,6 +21,7 @@ const UserRoutes = () => {
           <Route path='/trip-detail' element={<TripDetail />} />
           <Route path='/Guides/signup' element={<SignupGuide />} />
           <Route path='/temple/profiletemple' element={<ProfileTemple />} />
+          
       </Route>
     </Routes>
   );

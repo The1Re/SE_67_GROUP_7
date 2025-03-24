@@ -2,14 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSuitcaseRolling, FaUserCircle } from "react-icons/fa";
 import { FiLogOut, FiCreditCard } from "react-icons/fi";
-import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
-import { MdTour } from "react-icons/md";
-import { IoIosMenu, IoMdClose } from "react-icons/io";
+import { FiHome } from "react-icons/fi";
+import { MdAddCircleOutline } from "react-icons/md";
 
+import { IoIosMenu, IoMdClose } from "react-icons/io";
+import { MdDashboard } from "react-icons/md";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const UserTopbar: React.FC = () => {
+const GuideTopbar: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<"SaiTrip" | "SaiWat">(
@@ -99,14 +100,16 @@ const UserTopbar: React.FC = () => {
               </div>
               <div className="py-2">
                 <DropdownItem icon={<FaUserCircle />} text="โปรไฟล์" />
-                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน" />
+                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน"onClick={() => {setIsDropdownOpen(false); navigate("/historytrip")}} />
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
                   onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
                 />
                 <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
+                <DropdownItem icon={<FiHome />} text="แดชบอร์ด"onClick={() => {setIsDropdownOpen(false); navigate("/dashboard")}}/>
               </div>
+
               <div className="px-2 py-2">
                 <button 
                   className="cursor-pointer w-full text-red-500 font-semi py-2 flex items-center justify-center space-x-2 hover:bg-gray-100"
@@ -145,16 +148,13 @@ const UserTopbar: React.FC = () => {
                 </h2>
               </div>
               
+              
+              
               <SidebarItem
-                title="ลงทะเบียนเป็นตัวแทนวัด"
-                icon={<MdOutlineTempleBuddhist />}
-                onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
+                title="ตรวจคำขอเข้าร่วมทริป"
+                icon={<MdDashboard size={15} />}
+                onClick={() => { setIsSidebarOpen(false); navigate("/guides/check"); }}
               />
-              <SidebarItem
-                title="ลงทะเบียนเป็นไกด์"
-                icon={<MdTour />}
-                onClick={() => { setIsSidebarOpen(false); navigate("/guides/signup"); }}
-                            />
               <SidebarItem
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
@@ -227,4 +227,4 @@ const SidebarItem: React.FC<{
   </div>
 );
 
-export default UserTopbar;
+export default GuideTopbar;
