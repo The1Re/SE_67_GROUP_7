@@ -13,6 +13,7 @@ import ConfirmPayment from '@/pages/user/ConfirmPayment';
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
 import Wallet from '@/pages/user/Wallet';
+import CreateTrip from '@/pages/CreateTrip';
 
 
 const UserRoutes = () => {
@@ -34,6 +35,7 @@ const UserRoutes = () => {
           <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
           <Route path='/Guides/signup' element={<SignupGuide />} />
           <Route path='/temple/profiletemple' element={<ProfileTemple />} />
+          <Route path='/create-trip' element={<CreateTrip />} />
       </Route>
     </Routes>
   );

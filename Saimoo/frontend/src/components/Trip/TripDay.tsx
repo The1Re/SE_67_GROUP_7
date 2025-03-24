@@ -27,6 +27,8 @@ const TripDay = ({ startDate, endDate, setLocations, days, setDays }) => {
     const hasInitialized = useRef(false);
     const isNavigatingBack = useRef(false);
     const daysRef = useRef(days);
+
+    console.log(location.state)
     
     useEffect(() => {
         daysRef.current = days;

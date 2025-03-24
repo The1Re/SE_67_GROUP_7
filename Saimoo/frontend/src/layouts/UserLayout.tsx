@@ -5,7 +5,7 @@ function UserLayout() {
     return (
         <>
          <UserTopbar />
-            <main className="h-dvh pt-[75px] overflow-auto">
+            <main className="h-dvh overflow-auto">
                 <Outlet />
             </main>
         </>

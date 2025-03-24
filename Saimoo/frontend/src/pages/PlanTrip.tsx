@@ -3,6 +3,7 @@ import TripDay from "@/components/Trip/TripDay";
 import TripDetails from "@/components/Trip/TripDetails";
 import UploadImage from "@/components/Trip/UploadImage";
 import { useEffect, useState, useRef } from "react";
+import { TripProvider } from "@/context/TripContext";
 
 
 function PlanTrip() {
@@ -44,34 +45,36 @@ function PlanTrip() {
   }, [startDate, endDate, days, transportation, description, imageURL]);
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-4/6 flex flex-col">
-        <UploadImage imageURL={imageURL} setImageURL={setImageURL} />
-        <div className="p-4 px-32 bg-white">
-          <TripDetails
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            setDays={setDays}
-            transportation={transportation}
-            setTransportation={setTransportation}
-            description={description}
-            setDescription={setDescription}
-          />
-          <TripDay
-            startDate={startDate}
-            endDate={endDate}
-            setLocations={setLocations}
-            days={days}
-            setDays={setDays}
-          />
+    <TripProvider>
+      <div className="flex flex-col md:flex-row">
+        <div className="w-full md:w-4/6 flex flex-col">
+          <UploadImage imageURL={imageURL} setImageURL={setImageURL} />
+          <div className="p-4 px-32 bg-white">
+            <TripDetails
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+              setDays={setDays}
+              transportation={transportation}
+              setTransportation={setTransportation}
+              description={description}
+              setDescription={setDescription}
+            />
+            <TripDay
+              startDate={startDate}
+              endDate={endDate}
+              setLocations={setLocations}
+              days={days}
+              setDays={setDays}
+            />
+          </div>
+        </div>
+        <div className="hidden md:flex w-2/6 h-screen bg-gray-200 items-center justify-center sticky top-0">
+          <MyMap locations={locations} />
         </div>
       </div>
-      <div className="hidden md:flex w-2/6 h-screen bg-gray-200 items-center justify-center sticky top-0">
-        <MyMap locations={locations} />
-      </div>
-    </div>
+    </TripProvider>
   );
 }
 

@@ -1,23 +1,12 @@
 import { useAuth } from "@/context/AuthContext";
-import { useEffect, useState } from "react";
+import { useTrip } from "@/context/TripContext";
 
 const UserInfo = () => {
   const { user } = useAuth();
-  const [maxPeople, setMaxPeople] = useState("");
-
-  // โหลดจาก sessionStorage
-  useEffect(() => {
-    const savedPeople = sessionStorage.getItem("maxPeople");
-    if (savedPeople) setMaxPeople(savedPeople);
-  }, []);
-
-  // บันทึกทุกครั้งที่เปลี่ยน
-  useEffect(() => {
-    sessionStorage.setItem("maxPeople", maxPeople);
-  }, [maxPeople]);
+  const { trip, setTrip } = useTrip();
 
   const handleCreateTrip = () => {
-    console.log(`สร้างทริปสำเร็จ! จำนวนคน: ${maxPeople || "จำนวนคนมากที่สุด"}`);
+    console.log(`สร้างทริปสำเร็จ! จำนวนคน: ${trip.maxPerson || "จำนวนคนมากที่สุด"}`);
   };
 
   return (
@@ -40,8 +29,8 @@ const UserInfo = () => {
         <input
           type="number"
           min="1"
-          value={maxPeople}
-          onChange={(e) => setMaxPeople(e.target.value)}
+          value={trip.maxPerson}
+          onChange={(e) => setTrip({ ...trip, maxPerson: Number(e.target.value) })}
           placeholder="จำนวนคนมากที่สุด"
           className="mt-2 p-2 border border-gray-300 rounded-lg text-center w-full max-w-[200px] bg-gray-200 text-gray-700"
         />
