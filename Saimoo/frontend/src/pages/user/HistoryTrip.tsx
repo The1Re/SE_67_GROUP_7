@@ -1,5 +1,6 @@
-import TripRow from "@/components/history/TripRow";
 import { useEffect, useState } from "react";
+import TripRow from "@/components/history/TripRow";
+import TripDetailModal from "@/components/status/TripDetailModal";
 
 interface Trip {
   id: number;
@@ -12,6 +13,13 @@ function HistoryTrip() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleView = (trip: Trip) => {
+    setSelectedTrip(trip);
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -36,7 +44,7 @@ function HistoryTrip() {
 
   return (
     <div className="p-8 w-3/4 mx-auto">
-      <h2 className="text-2xl font-bold mb-6">History My Trip</h2>
+      <h2 className="text-2xl font-bold mb-6">ประวัติการซื้อทริป</h2>
 
       {loading ? (
         <p className="text-gray-600">กำลังโหลดข้อมูล...</p>
@@ -57,16 +65,21 @@ function HistoryTrip() {
               {trips.map((trip) => (
                 <TripRow
                   key={trip.id}
-                  id={trip.id}
-                  name={trip.name}
-                  date={trip.date}
-                  status={trip.status}
+                  {...trip}
+                  onView={() => handleView(trip)}
                 />
               ))}
             </tbody>
           </table>
         </div>
       )}
+
+      {/* ✅ Modal แสดงรายละเอียด */}
+      <TripDetailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        trip={selectedTrip}
+      />
     </div>
   );
 }

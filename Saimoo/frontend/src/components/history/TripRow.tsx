@@ -5,6 +5,7 @@ interface TripRowProps {
   name: string;
   date: string;
   status: string;
+  onView: () => void;
 }
 
 const getStatusStyle = (status: string) => {
@@ -24,7 +25,7 @@ const getStatusStyle = (status: string) => {
   }
 };
 
-const TripRow = ({ name, date, status }: TripRowProps) => {
+const TripRow = ({ name, date, status, onView }: TripRowProps) => {
   return (
     <tr className="hover:bg-gray-50 transition duration-150">
       <td className="p-4 font-medium text-gray-800">{name}</td>
@@ -38,13 +39,14 @@ const TripRow = ({ name, date, status }: TripRowProps) => {
           {status}
         </span>
       </td>
-      <td className="p-4 ">
-        <div className="flex justify-center gap-2 ">
-          <button className="flex items-center gap-2 bg-teal-500 hover:bg-teal-600 text-white px-4 py-1 rounded transition duration-200 cursor-pointer">
-            <FaEye className="text-sm" />
-            ดู
-          </button>
-        </div>
+      <td className="p-4 text-center">
+        <button
+          onClick={onView}
+          className="flex items-center gap-2 bg-teal-500 hover:bg-teal-600 text-white px-4 py-1 rounded transition duration-200 cursor-pointer"
+        >
+          <FaEye className="text-sm" />
+          ดู
+        </button>
       </td>
     </tr>
   );
