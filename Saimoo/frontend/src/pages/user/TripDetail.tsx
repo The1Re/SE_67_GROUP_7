@@ -7,7 +7,6 @@ function TripDetail() {
  
   return (
     <div className="flex flex-col md:flex-row">
-      {/* คอลัมน์ซ้าย (เนื้อหาหลัก) */}
       <div className="w-full md:w-4/6 flex flex-col">
           <Image/>
           <div className=" w-full bg-white px-8">
@@ -18,8 +17,8 @@ function TripDetail() {
       </div>
 
       {/* คอลัมน์ขวา (แผนที่) ✅ ใช้ sticky ทำให้ไม่เลื่อนตาม */}
-      <div className="hidden md:flex w-2/6 h-screen bg-white items-center justify-center sticky top-0">
-          {/* <MyMap /> */}
+      <div className="hidden md:flex w-2/6 h-screen bg-green-300 items-center justify-center sticky top-0">
+          <MyMap />
       </div>
     </div>
   );
