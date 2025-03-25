@@ -1,10 +1,10 @@
 export type Location = {
     id?: number,
     name: string,
-    latitude: number | null,
-    longitude: number | null,
+    latitude: number | string | null,
+    longitude: number | string | null,
     type: 'temple' | 'place',
-    provinceId: number | null
+    provinceId?: number | null
     Provice?: Provice
 }
 

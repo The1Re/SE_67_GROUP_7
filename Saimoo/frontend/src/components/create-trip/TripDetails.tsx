@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { XMarkIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import LocationModal from './LocationModal';
 
 const TripDetails = ({
     id,
@@ -9,8 +10,8 @@ const TripDetails = ({
     initialDescription = '',
     initialArriveTime = '',
     images = [],
+    location,
     onDelete,
-    onSelectLocation,
     onUpdate
 }) => {
     const [description, setDescription] = useState(initialDescription);
@@ -18,6 +19,7 @@ const TripDetails = ({
     const [imageList, setImageList] = useState(images);
     const fileInputRef = useRef(null);
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+    const [isOpenLocationModal, setIsOpenLocationModal] = useState(false);
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
@@ -38,7 +40,7 @@ const TripDetails = ({
         >
             <button
                 onClick={() => onDelete(id)}
-                className="cursor-pointer absolute top-2 right-2 p-1 bg-red-500 rounded-full text-white hover:bg-red-600 z-10"
+                className="cursor-pointer absolute top-2 right-2 p-1 bg-red-500 rounded-full text-white hover:bg-red-600 z-2"
                 aria-label="Delete"
             >
                 <XMarkIcon className="h-5 w-5" />
@@ -54,13 +56,22 @@ const TripDetails = ({
 
                 <div className="flex flex-row gap-4">
                     <div className="w-3/4">
-                        <button
-                            onClick={onSelectLocation}
-                            className="cursor-pointer flex items-center justify-center w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 mb-4"
-                        >
-                            <MapPinIcon className="h-5 w-5 mr-2" />
-                            เลือกสถานที่
-                        </button>
+                        {
+                            location ? (
+                                <div className="flex items-center gap-2 mb-4">
+                                    <MapPinIcon className="h-5 w-5 text-gray-500" />
+                                    <span className="text-gray-600">{location.name}</span>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setIsOpenLocationModal(true)}
+                                    className="cursor-pointer flex items-center justify-center w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 mb-4"
+                                >
+                                    <MapPinIcon className="h-5 w-5 mr-2" />
+                                    เลือกสถานที่
+                                </button>
+                            )
+                        }
 
                         <textarea
                             value={description}
@@ -128,7 +139,14 @@ const TripDetails = ({
                     />
                 </div>
             </div>
+            <LocationModal 
+                tripDetailId={id} 
+                isOpen={isOpenLocationModal} 
+                setIsOpen={setIsOpenLocationModal}
+                onUpdate={onUpdate}
+            />
         </div>
+
     );
 };
 

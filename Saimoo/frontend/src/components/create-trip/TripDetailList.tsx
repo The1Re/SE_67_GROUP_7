@@ -89,9 +89,9 @@ function TripDetailList({ day }: { day: number }) {
                         id={tripDetail.id}
                         initialDescription={tripDetail.description}
                         initialArriveTime={formatDateTimeLocal(tripDetail.arriveTime)}
+                        location={tripDetail.Location}
                         images={tripDetail.TripDetailPicture && tripDetail.TripDetailPicture.imagePath}
                         onDelete={handleDelete}
-                        onSelectLocation={() => {}}
                         onUpdate={handleUpdateTripDetail}
                     />
                 
