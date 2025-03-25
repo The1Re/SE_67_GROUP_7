@@ -3,17 +3,26 @@ import { useEffect, useState } from "react";
 interface TripData {
   id: number;
   title: string;
-  image: string;
-  posted_at: string;
-  posted_by: string;
+  description: string;
+  dateStart: string;
+  dateEnd: string;
+  vehicle: string;
+  maxPerson: number;
+  status: string;
+  ownerTripId: number;
+  type: string;
+  price: number;
+  image?: string;
   url?: string;
 }
+
+
 
 export default function MasonryGallery() {
   const [trips, setTrips] = useState<TripData[]>([]);
 
   useEffect(() => {
-    fetch("/assets/fakeData.json")
+    fetch("/api/trips")
       .then((res) => res.json())
       .then((data) => setTrips(data));
   }, []);
