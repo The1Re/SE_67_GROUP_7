@@ -3,6 +3,7 @@ import { useState } from "react";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 import { MdOutlineTempleBuddhist } from "react-icons/md";
 import AuthModal from "@/components/auth/AuthModal";
+import { MdTour } from "react-icons/md";
 import type { AuthType } from "@/components/auth/AuthModal";
 import { useNavigate } from "react-router-dom";
 
@@ -87,6 +88,12 @@ export const GuestTopbar: React.FC = () => {
                 icon={<MdOutlineTempleBuddhist />}
                 onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
               />
+              <SidebarItem
+                title="ลงทะเบียนเป็นไกด์"
+                icon={<MdTour />}
+                onClick={() => { setIsSidebarOpen(false); navigate("/guides/signup"); }}
+                />
+              
             </motion.div>
 
             {/* Overlay Effect */}
