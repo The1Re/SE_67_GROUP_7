@@ -11,7 +11,9 @@ import TripScreeningForm from "@/pages/Guide/TripScreeningFrom";
 import Dashboard from "@/pages/Guide/Dashboard";
 import HistoryTrip from "@/pages/Guide/HistoryTrip";
 import ProfileTemple from "@/pages/temple/ProfileTemple";
-
+import Document from "@/pages/Guide/Document";
+import TripDetail from "@/pages/TripDetail";
+import TripCancellationPage from "@/pages/Guide/TripCancellationPage";
 const GuideRoutes = () => {
   return (
     <Routes>
@@ -25,7 +27,9 @@ const GuideRoutes = () => {
       <Route path='/dashboard' element={<Dashboard />}/>
       <Route path='/historytrip' element={<HistoryTrip />}/>
       <Route path='/temples/profiletemple' element={<ProfileTemple />}></Route>
-      
+      <Route path='/Document' element={<Document/>}></Route>
+      <Route path='/trip-detail' element={<TripDetail />} />
+      <Route path='/TripCancellationPage' element={<TripCancellationPage />} />
       </Route>
     </Routes>
   );

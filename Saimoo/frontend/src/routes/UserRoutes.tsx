@@ -20,7 +20,7 @@ const UserRoutes = () => {
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/trip-detail' element={<TripDetail />} />
           <Route path='/Guides/signup' element={<SignupGuide />} />
-          <Route path='/temple/profiletemple' element={<ProfileTemple />} />
+          <Route path='/temples/profiletemple' element={<ProfileTemple />} />
           
       </Route>
     </Routes>

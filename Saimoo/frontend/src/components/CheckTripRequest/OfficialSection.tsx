@@ -15,7 +15,7 @@ const OfficialSection = ({ formData, handleChange }) => {
           value={formData.approvalNotes}
           onChange={handleChange}
           className="w-full p-2 border rounded"
-          rows="3"
+          rows={3}
         ></textarea>
       </div>
       {/* เพิ่มฟิลด์อื่น ๆ เช่น ผู้ตรวจสอบ, วันที่ */}

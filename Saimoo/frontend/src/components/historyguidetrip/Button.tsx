@@ -12,7 +12,7 @@ const Button: React.FC<ButtonProps> = ({ type, text, onClick }) => {
   const getButtonClass = () => {
     switch (type) {
       case 'primary':
-        return 'bg-blue-600 hover:bg-blue-700 text-white';
+        return 'bg-blue-600 hover:bg-blue-700 text-white ';
       case 'danger':
         return 'bg-red-600 hover:bg-red-700 text-white';
       case 'default':
@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({ type, text, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`${getButtonClass()} px-4 py-2 rounded-md text-sm`}
+      className={`${getButtonClass()} px-4 py-2 rounded-md text-sm cursor-pointer`}
     >
       {text}
     </button>
