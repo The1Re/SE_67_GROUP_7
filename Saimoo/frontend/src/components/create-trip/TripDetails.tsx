@@ -54,8 +54,8 @@ const TripDetails = ({
                     className="w-full font-bold text-xl mb-3 text-gray-800 border-b border-transparent focus:border-gray-300 focus:outline-none py-1"
                 />
 
-                <div className="flex flex-row gap-4">
-                    <div className="w-3/4">
+                <div className="flex flex-col md:flex-row md:gap-4 max-sm:mb-4">
+                    <div className="w-full md:w-3/4">
                         {
                             location ? (
                                 <div className="flex items-center gap-2 mb-4">

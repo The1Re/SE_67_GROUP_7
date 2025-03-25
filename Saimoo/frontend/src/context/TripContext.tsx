@@ -23,9 +23,10 @@ const getSate = () => {
     if (state) {
         state.dateStart = new Date(state.dateStart);
         state.dateEnd = new Date(state.dateEnd);
-        state.TripDetail.forEach(detail => {
-            detail.arriveTime = new Date(detail.arriveTime);
-        });
+        state.TripDetail.map(detail => ({
+            ...detail,
+            arriveTime: new Date(detail.arriveTime)
+        }));
     }
     return state;
 }

@@ -25,7 +25,7 @@ function CreateTripForm() {
         <div className="flex flex-col md:flex-row">
             <div className="w-full md:w-4/6 flex flex-col">
                 <UploadImage />
-                <div className="p-4 md:px-32 bg-white">
+                <div className="p-4 lg:px-32 bg-white">
                     <TripForm />
                     {
                         Array.from({ length: numDay }, (_, index) => (
