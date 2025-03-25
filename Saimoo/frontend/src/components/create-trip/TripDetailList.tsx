@@ -9,7 +9,7 @@ import { formatDateTimeLocal } from "@/utils/TimeFormat";
 
 function TripDetailList({ day }: { day: number }) {
     const { trip, setTripDetail } = useTrip();
-    const [tripDetailData, setTripDetailData] = useState<TripDetail[]>([]);
+    const [tripDetailData, setTripDetailData] = useState<TripDetail[]>(trip.TripDetail.filter(detail => detail.day === day));
 
     useEffect(() => {
         setTripDetailData(trip.TripDetail.filter(detail => detail.day === day))

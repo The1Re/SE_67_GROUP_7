@@ -45,7 +45,7 @@ const TempleCard = ({ isSelectMode = false }) => {
   const handleClick = (templeId: number) => {
     if (isSelectMode) {
       navigate(`/temples/${templeId}`, {
-        state: { fromTripDay: true },
+        state: { createMode: true },
       });
     } else {
       navigate(`/temples/${templeId}`);

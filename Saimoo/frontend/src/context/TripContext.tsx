@@ -18,10 +18,22 @@ const initTripValue: Trip = {
     TripDetail: [],
 } 
 
+const getSate = () => {
+    const state = JSON.parse(sessionStorage.getItem('trip')) as Trip;
+    if (state) {
+        state.dateStart = new Date(state.dateStart);
+        state.dateEnd = new Date(state.dateEnd);
+        state.TripDetail.forEach(detail => {
+            detail.arriveTime = new Date(detail.arriveTime);
+        });
+    }
+    return state;
+}
+
 const TripContext = createContext(null);
 
 export const TripProvider = ({ children }) => {
-    const [trip, setTrip] = useState<Trip>(initTripValue);
+    const [trip, setTrip] = useState<Trip>(getSate() || initTripValue);
     const [numDay, setNumDay] = useState(1);
 
     const setTripDetail = useCallback((day: number, tripDetail: TripDetail[]) => {
@@ -33,6 +45,14 @@ export const TripProvider = ({ children }) => {
             return updatedTrip;
         });
     }, []);
+
+    const saveState = () => {
+        sessionStorage.setItem('trip', JSON.stringify(trip));
+    }
+
+    const clearState = () => {
+        sessionStorage.removeItem('trip');
+    }
     
     useEffect(() => {
         if (trip.dateStart && trip.dateEnd) {
@@ -43,7 +63,7 @@ export const TripProvider = ({ children }) => {
     }, [trip.dateStart, trip.dateEnd]);
 
     return (
-        <TripContext.Provider value={{ trip, setTrip, setTripDetail, numDay }}>
+        <TripContext.Provider value={{ trip, setTrip, setTripDetail, numDay, saveState, clearState }}>
             {children}
         </TripContext.Provider>
     );
@@ -55,5 +75,7 @@ export const useTrip = () => useContext<{
     trip: Trip, 
     setTrip: React.Dispatch<React.SetStateAction<Trip>>,
     setTripDetail: (day: number, tripDetail: TripDetail[]) => void,
+    saveState: () => void,
+    clearState: () => void,
     numDay: number
 }>(TripContext);

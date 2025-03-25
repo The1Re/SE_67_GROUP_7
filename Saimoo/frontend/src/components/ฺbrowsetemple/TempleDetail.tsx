@@ -8,7 +8,7 @@ const TempleDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isFromTripDay = location.state?.fromTripDay === true;
+  const isCreateMode = location.state?.createMode === true;
 
   useEffect(() => {
     if (!id) return;
@@ -37,7 +37,7 @@ const TempleDetail = () => {
     sessionStorage.setItem("selectedTemple", JSON.stringify(selectedTemple));
   
     // 👈 กลับไปหน้าเดิม โดยไม่รีโหลดใหม่ (รักษา state หน้า plan-trip)
-    navigate("/plan-trip", { replace: true });
+    navigate("/create-trip", { replace: true });
   };
 
   if (!id || !temple) {
@@ -68,7 +68,7 @@ const TempleDetail = () => {
         ถูกใจ: {temple.Temple?.[0]?.likes ?? 0}
       </p>
 
-      {isFromTripDay && (
+      {isCreateMode && (
         <button
           onClick={handleSelectTemple}
           className="px-4 py-2 bg-green-500 text-white rounded-lg mt-4"
