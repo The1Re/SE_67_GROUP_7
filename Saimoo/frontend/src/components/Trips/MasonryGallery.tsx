@@ -14,6 +14,8 @@ interface TripData {
   price: number;
   image?: string;
   url?: string;
+  posted_by: string;
+  posted_at: string;
 }
 
 
@@ -22,7 +24,7 @@ export default function MasonryGallery() {
   const [trips, setTrips] = useState<TripData[]>([]);
 
   useEffect(() => {
-    fetch("/api/trips")
+    fetch("/assets/fakeTrips.json")
       .then((res) => res.json())
       .then((data) => setTrips(data));
   }, []);

@@ -1,26 +1,73 @@
-// pages/PurchaserDetails.tsx
+import api from "@/api";
 import ParticipantForm from "@/components/purchaser/ParticipantForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface Participant {
-  name: string;
+export interface TripOrderDetail {
+  id?: number;
+  orderId?: number;
+  order?: number;
+  fullName: string;
   phone: string;
-  note: string;
-  ageUnder6: boolean;
+  requirement: string;
+  isChild: boolean;
+  identityCode?: string;
+  isJoined?: boolean;
 }
 
-function PurchaserDetails() {
-  const [numPeople, setNumPeople] = useState(1);
-  const [participants, setParticipants] = useState<Participant[]>(
-    Array(1).fill({ name: "", phone: "", note: "", ageUnder6: false })
-  );
+export interface Trip {
+  id: number;
+  title: string;
+  description: string;
+  dateStart: string;
+  dateEnd: string;
+  vehicle: string;
+  maxPerson: number;
+  status: string;
+  ownerTripId: number;
+  type: string;
+  price: number;
+}
 
+function PurchaserDetails(tripId: number) {
+  const [trip, setTrip] = useState<Trip | null>(null);
+  const [participants, setParticipants] = useState<TripOrderDetail[]>([]);
+  const [numPeople, setNumPeople] = useState(1);
   const navigator = useNavigate();
 
+  useEffect(() => {
+    const fetchTrip = async () => {
+      try {
+        const res = await api.get(`/trips/${tripId}`);
+        setTrip(res.data);
+      } catch (error) {
+        console.error(error); // Changed from err to error
+      }
+    }
+    fetchTrip(); // Also need to call the function
+  }, [tripId]);
+  
+  
+  useEffect(() => {
+    if (!tripId) return;
+    
+    const fetchOrders = async () => {
+      try {
+        const res = await api.get(`/orders/${tripId}`);
+        setParticipants(res.data);
+        setNumPeople(res.data.length);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+    
+    fetchOrders();
+  }, [tripId]);
+  
+  
   const handleChange = (
     index: number,
-    field: keyof Participant,
+    field: keyof TripOrderDetail,
     value: string | boolean
   ) => {
     const updated = [...participants];
@@ -30,10 +77,23 @@ function PurchaserDetails() {
 
   const handleNumChange = (value: number) => {
     setNumPeople(value);
-    setParticipants(
-      Array(value).fill({ name: "", phone: "", note: "", ageUnder6: false })
-    );
-    
+    const updated = [...participants];
+
+    if (value > updated.length) {
+      const diff = value - updated.length;
+      for (let i = 0; i < diff; i++) {
+        updated.push({
+          fullName: "",
+          phone: "",
+          requirement: "",
+          isChild: false,
+        });
+      }
+    } else {
+      updated.length = value;
+    }
+
+    setParticipants(updated);
   };
 
   return (
@@ -53,21 +113,33 @@ function PurchaserDetails() {
 
       {/* Header Card */}
       <div className="bg-white p-6 rounded-lg shadow mb-6 w-3/4 mx-auto">
-        <h2 className="text-lg font-bold">ไหว้พระ สุพรรณ อิ่มบุญอิ่มใจ</h2>
-        <h3 className="mb-2">กำหนดการ 5 ธ.ค. 2568 [ 1 Day ]</h3>
-        <h2 className="text-3xl font-bold mb-4">1,899 ฿ / คน</h2>
-        <label className="block mb-1">จำนวนคนที่เข้าร่วมทริป</label>
-        <select
-          value={numPeople}
-          onChange={(e) => handleNumChange(Number(e.target.value))}
-          className="border rounded px-2 py-1 cursor-pointer"
-        >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
+        {trip ? (
+          <>
+            <h2 className="text-lg font-bold">{trip.title}</h2>
+            <h3 className="mb-2">
+              กำหนดการ{" "}
+              {new Date(trip.dateStart).toLocaleDateString("th-TH")} -{" "}
+              {new Date(trip.dateEnd).toLocaleDateString("th-TH")}
+            </h3>
+            <h2 className="text-3xl font-bold mb-4">
+              {trip.price.toLocaleString()} ฿ / คน
+            </h2>
+            <label className="block mb-1">จำนวนคนที่เข้าร่วมทริป</label>
+            <select
+              value={numPeople}
+              onChange={(e) => handleNumChange(Number(e.target.value))}
+              className="border rounded px-2 py-1 cursor-pointer"
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </>
+        ) : (
+          <p>กำลังโหลดข้อมูลทริป...</p>
+        )}
       </div>
 
       {/* Participant Forms */}
