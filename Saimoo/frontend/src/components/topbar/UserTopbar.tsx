@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSuitcaseRolling, FaUserCircle } from "react-icons/fa";
 import { FiLogOut, FiCreditCard } from "react-icons/fi";
-import { MdAddCircleOutline, MdOutlineTempleBuddhist } from "react-icons/md";
+import { MdAddCircleOutline, MdHistory, MdOutlineTempleBuddhist } from "react-icons/md";
 import { MdTour } from "react-icons/md";
 import { IoIosMenu, IoMdClose } from "react-icons/io";
 
@@ -40,7 +40,7 @@ const UserTopbar: React.FC = () => {
   return (
     <>
       {/* Topbar */}
-      <div className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
+      <div className="top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200 sticky">
         <button className="cursor-pointer text-2xl" onClick={() => setIsSidebarOpen(true)}>
           <IoIosMenu />
         </button>
@@ -98,14 +98,22 @@ const UserTopbar: React.FC = () => {
                 <div className="w-3/4 mx-auto border-b border-gray-300 mt-2 py-1"></div>
               </div>
               <div className="py-2">
-                <DropdownItem icon={<FaUserCircle />} text="โปรไฟล์" />
+                <DropdownItem 
+                  icon={<FaUserCircle />} 
+                  text="โปรไฟล์" 
+                  onClick={() => {setIsDropdownOpen(false); navigate("/profile")}}
+                />
                 <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน" />
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
                   onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
                 />
-                <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
+                <DropdownItem 
+                  icon={<FiCreditCard />} 
+                  text="กระเป๋าตัง" 
+                  onClick={() => {setIsDropdownOpen(false); navigate("/wallet")}}
+                />
               </div>
               <div className="px-2 py-2">
                 <button 
@@ -155,6 +163,11 @@ const UserTopbar: React.FC = () => {
                 icon={<MdTour />}
                 onClick={() => { setIsSidebarOpen(false); navigate("/guides/signup"); }}
                             />
+              <SidebarItem
+                title="ประวัติการซื้อทริป"
+                icon={<MdHistory  />}
+                onClick={() => { setIsSidebarOpen(false); navigate("/history"); }}
+              />
               <SidebarItem
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}

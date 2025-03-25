@@ -1,11 +1,11 @@
 import { Route, Navigate, Routes } from 'react-router-dom'
-import { Trips } from '@/pages/Trips'
+import { Trips } from '@/pages/user/Trips'
 import GuestLayout from '@/layouts/GuestLayout';
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
 import SignupTemple from '@/pages/temple/SignupTemple';
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
-import TripDetail from '@/pages/TripDetail';
+import TripDetail from '@/pages/user/TripDetail';
 function GuestRoutes() {
   return (
     <Routes>

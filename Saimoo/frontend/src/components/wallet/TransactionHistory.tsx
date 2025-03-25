@@ -1,7 +1,7 @@
-//import { Transaction } from "@/models/Wallet";
+import { Transaction } from "@/models/Wallet";
 import StatusBadge from "./StatusBadge";
-import TypeBadge from "@/components/wallet/TypeBadge";
-//import { convertDateTimeToThaiFormat } from "@/utils/TimeFormat";
+import TypeBadge from "./TypeBadge";
+import { convertDateTimeToThaiFormat } from "@/utils/TimeFormat";
 
 const TransactionHistory = (
     { transactions, loading }: { transactions: Transaction[]; loading: boolean }

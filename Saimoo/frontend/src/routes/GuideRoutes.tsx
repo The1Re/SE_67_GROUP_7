@@ -3,18 +3,18 @@ import { Routes, Route } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
 import SignupGuide from "@/pages/Guide/SignupGuide";
-import { Trips } from '@/pages/Trips'
+import { Trips } from '@/pages/user/Trips'
 import GuideLayout from "@/layouts/GuideLayout";
 import BrowseTempleWithGuest from "@/pages/temple/BrowseTempleWithGuest";
-import PlanTrip from "@/pages/PlanTrip";
+import PlanTrip from "@/pages/user/PlanTrip";
 import TripScreeningForm from "@/pages/Guide/TripScreeningFrom";
 import Dashboard from "@/pages/Guide/Dashboard";
-import HistoryTrip from "@/pages/Guide/HistoryTrip";
+import HistoryTrip from "@/pages/Guide/Historytrip";
 import ProfileTemple from "@/pages/temple/ProfileTemple";
 import Document from "@/pages/Guide/Document";
-import TripDetail from "@/pages/TripDetail";
+import TripDetail from "@/pages/user/TripDetail";
 import TripCancellationPage from "@/pages/Guide/TripCancellationPage";
-import Wallet from "@/pages/Guide/Wallet";
+import Wallet from "@/pages/user/Wallet";
 const GuideRoutes = () => {
   return (
     <Routes>
