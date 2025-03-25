@@ -88,11 +88,7 @@ export const GuestTopbar: React.FC = () => {
                 icon={<MdOutlineTempleBuddhist />}
                 onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
               />
-              <SidebarItem
-                title="ลงทะเบียนเป็นไกด์"
-                icon={<MdTour />}
-                onClick={() => { setIsSidebarOpen(false); navigate("/guides/signup"); }}
-                />
+             
               
             </motion.div>
 

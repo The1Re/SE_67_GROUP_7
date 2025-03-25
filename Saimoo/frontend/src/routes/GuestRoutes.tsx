@@ -3,7 +3,7 @@ import { Trips } from '@/pages/user/Trips'
 import GuestLayout from '@/layouts/GuestLayout';
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
 import SignupTemple from '@/pages/temple/SignupTemple';
-import SignupGuide from '@/pages/Guide/SignupGuide';
+
 import ProfileTemple from '@/pages/temple/ProfileTemple';
 import TripDetail from '@/pages/user/TripDetail';
 function GuestRoutes() {
@@ -14,7 +14,7 @@ function GuestRoutes() {
           <Route path='/trips' element={<Trips />}></Route>
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
           <Route path='/temples/signup' element={<SignupTemple />} />
-          <Route path='/guides/signup' element={<SignupGuide />} />
+          
           <Route path='/temples/profiletemple' element={<ProfileTemple />} />
           <Route path='/trip-detail' element={<TripDetail />} />
       </Route>

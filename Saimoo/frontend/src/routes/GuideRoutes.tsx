@@ -7,7 +7,7 @@ import { Trips } from '@/pages/user/Trips'
 import GuideLayout from "@/layouts/GuideLayout";
 import BrowseTempleWithGuest from "@/pages/temple/BrowseTempleWithGuest";
 import PlanTrip from "@/pages/user/PlanTrip";
-import TripScreeningForm from "@/pages/Guide/TripScreeningFrom";
+
 import Dashboard from "@/pages/Guide/Dashboard";
 import HistoryTrip from "@/pages/Guide/Historytrip";
 import ProfileTemple from "@/pages/temple/ProfileTemple";
