@@ -5,9 +5,12 @@ import UserLayout from '@/layouts/UserLayout'
 import PlanTrip from '@/pages/PlanTrip';
 import BrowseTempleWithGuest from '@/pages/Temple';
 import SignupTemple from '@/pages/temple/SignupTemple';
-import TempleDetailForTrip from '@/components/ฺbrowsetemple/TempleDetailForTrip';
 
 
+import TripDetail from '@/pages/TripDetail';
+import SignupGuide from '@/pages/Guide/SignupGuide';
+import ProfileTemple from '@/pages/temple/ProfileTemple';
+import TempleDetail from '@/components/ฺbrowsetemple/TempleDetail';
 const UserRoutes = () => {
   return (
     <Routes>
@@ -15,10 +18,14 @@ const UserRoutes = () => {
           <Route path='/' element={<Navigate to="/trips" replace />}></Route>
           <Route path='/profile' element={<Profile />}></Route>
           <Route path='/trips' element={<Trips />}></Route>
-          <Route path='/temples' element={<BrowseTempleWithGuest />} />
+          <Route path='/temples' element={<BrowseTempleWithGuest />} /> 
+          <Route path='/temples/:id' element={<TempleDetail />} /> 
+    
           <Route path='/plan-trip' element={<PlanTrip />}></Route>
           <Route path='/temples/signup' element={<SignupTemple />} />
-          <Route path='/temples/:id' element={<TempleDetailForTrip />} />
+          <Route path='/trip-detail' element={<TripDetail />} />
+          <Route path='/Guides/signup' element={<SignupGuide />} />
+          <Route path='/temple/profiletemple' element={<ProfileTemple />} />
       </Route>
     </Routes>
   );

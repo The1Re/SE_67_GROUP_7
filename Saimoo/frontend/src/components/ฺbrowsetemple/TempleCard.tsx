@@ -28,7 +28,7 @@ const TempleCard = () => {
             name: v.name,
             latitude: v.latitude,
             longtitude: v.longitude,
-            province: v.Province?.name || "ไม่ระบุ",
+            province: v.Province[0]?.name || "ไม่ระบุ",
             description: v.Temple[0]?.description || "ไม่มีคำอธิบาย",
             like: v.Temple[0]?.likes || 0,
             imageUrl: v.Temple?.imageUrl || null,
@@ -65,9 +65,15 @@ const TempleCard = () => {
               )}
 
               <h3 className="text-gray-800 font-bold mt-2">{temple.name}</h3>
-              <p className="text-gray-600 text-sm">
-                {temple.description || "ไม่มีคำอธิบาย"}
-              </p>
+                <div className="flex justify-between items-center mt-1">
+                    <p className="text-gray-600 text-sm">
+                        {temple.description || "ไม่มีคำอธิบาย"}
+                    </p>
+                    <p className="text-gray-600 text-sm flex items-center pr-5">
+                        <span className="ml-1">{temple.like || 0}</span>
+                        <span className="ml-1">{temple.province || 0}</span>
+                    </p>
+                </div>
             </div>
           ))
         ) : (

@@ -5,6 +5,8 @@ import BrowseTempleWithGuest from '@/pages/Temple';
 import SignupTemple from '@/pages/temple/SignupTemple';
 import TempleDetail from '@/components/ฺbrowsetemple/TempleDetail';
 
+import SignupGuide from '@/pages/Guide/SignupGuide';
+import ProfileTemple from '@/pages/temple/ProfileTemple';
 function GuestRoutes() {
   return (
     <Routes>
@@ -14,6 +16,9 @@ function GuestRoutes() {
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/temples/:id' element={<TempleDetail />} /> 
+          <Route path='/guides/signup' element={<SignupGuide />} />
+          <Route path='/temple/profiletemple' element={<ProfileTemple />} />
+         
       </Route>
     </Routes>
   );

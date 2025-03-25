@@ -1,18 +1,17 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { Trips } from '@/pages/Trips'
 import TempleLayout from '@/layouts/TempleLayout';
 import TempleDetailPage from '@/pages/temple/TempleDetailPage';
-import BrowseTempleWithGuest from '@/pages/Temple';
+
+import ProfileTemple from '@/pages/temple/ProfileTemple';
 
 function TempleRoutes() {
   return (
     <Routes>
       <Route element={<TempleLayout />} >
-          <Route path='/' element={<Navigate to="/trips" replace />}></Route>
-          <Route path='/trips' element={<Trips />}></Route>
-          <Route path='/temples' element={<BrowseTempleWithGuest />} />
-          <Route path='/temple/:id' element={<TempleDetailPage />}></Route>
-      </Route>
+      <Route path='/' element={<Navigate to="/temple/profile" replace />}></Route>
+      <Route path='/temple/detail' element={<TempleDetailPage />}></Route>
+      <Route path='/temple/profile' element={<ProfileTemple />}></Route>
+      </Route>        
     </Routes>
   );
 };

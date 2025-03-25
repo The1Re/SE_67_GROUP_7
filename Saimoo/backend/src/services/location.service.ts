@@ -95,3 +95,10 @@ export const getProvinceById = async (id: number) => {
   });
 };
 
+export const updateLocation = async (id: number, locationData: Partial<Location>) => {
+  return await prisma.location.update({
+    where: { id },
+    data: locationData,
+  });
+};
+

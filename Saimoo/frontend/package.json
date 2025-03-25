@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "eject": "react-scripts eject",
     "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -20,14 +21,18 @@
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.4.7",
+    "google-map-react": "^2.2.1",
     "lucide-react": "^0.476.0",
     "react": "^18.3.1",
+    "react-beautiful-dnd": "^13.1.1",
     "react-datepicker": "^8.1.0",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-masonry-css": "^1.0.16",
+    "react-modal": "^3.16.3",
     "react-router-dom": "^7.1.5",
+    "react-time-picker": "^7.0.0",
     "tailwindcss": "^4.0.6"
   },
   "devDependencies": {

@@ -2,7 +2,6 @@ import { useState } from "react";
 import Input from "./Input";
 import api from "@/api";
 import { useAuth } from "@/context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 export type SignUpData = {
 	username: string;
@@ -15,7 +14,6 @@ export type SignUpData = {
 
 function SignupForm({ setIsModalOpen }) {
 	const { login } = useAuth();
-	const navigate = useNavigate();
 	const [formData, setFormData] = useState<SignUpData>({
 		username: "",
 		email: "",
@@ -33,13 +31,9 @@ function SignupForm({ setIsModalOpen }) {
 			if (res.status === 201) {
 				const loginRes = await api.post("/auth/login", { username: formData.username, password: formData.password });
 				if (loginRes.status === 200) {
-					console.log(loginRes.data.token);
-					localStorage.setItem("token", loginRes.data.token);
 					setIsModalOpen(null);
 					
-					console.log(loginRes.data.user);
-					login(loginRes.data.user);
-					navigate("/");
+					login(loginRes.data);
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import api from "@/api";
 import toast from "react-hot-toast";
-import { UNSAFE_createBrowserHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export type UserRole = "admin" | "user" | "guest" | "guide" | "temple";
 
@@ -15,7 +15,7 @@ export type User = {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
-    const history = UNSAFE_createBrowserHistory();
+    const navigate = useNavigate();
     
 
     useEffect(() => {
@@ -32,20 +32,28 @@ export const AuthProvider = ({ children }) => {
                     })
                     .catch((err) => {
                         console.log(err);
+                        setUser(null);
+                        localStorage.removeItem("token");
+                        navigate('/', { replace: true });
                     });
             }
         }
 
         fetchUser();
-    }, []);
+    }, [navigate]);
 
-    const login = (userData) => setUser(userData);
+    const login = (userData) => {
+        toast.success("Login successful!");
+        localStorage.setItem("token", userData.token);
+        setUser(userData.user);
+        navigate('/', { replace: true });
+    };
+
     const logout = () => {
         setUser(null);
-        localStorage.removeItem("token");
         toast.success("Logout successful!");
-        // location.href = "/";
-        history.push('/')
+        localStorage.removeItem("token");
+        navigate('/', { replace: true });
     };
 
     return (

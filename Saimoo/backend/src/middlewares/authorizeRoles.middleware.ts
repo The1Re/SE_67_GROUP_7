@@ -6,7 +6,7 @@ const authorizeRoles = (...allowedRoles: string[]) => {
         const userRole = req.user?.role;
 
         if (!userRole || !allowedRoles.includes(userRole)) {
-            return res.status(403).json({ message: 'Forbidden' });
+            return res.status(403).json({ message: `Forbidden only role ${allowedRoles.join(' ')}` });
         }
 
         next();

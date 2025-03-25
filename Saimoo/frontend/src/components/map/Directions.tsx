@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
     useMapsLibrary,
     useMap
@@ -10,106 +10,59 @@ export type DirectionsProps = {
     waypoints?: { location: google.maps.LatLngLiteral | string }[];
 };
 
-function Directions(
-    { origin, destination, waypoints = [] }: DirectionsProps
-) {
+function Directions({ origin, destination, waypoints = [] }: DirectionsProps) {
     const map = useMap();
     const routesLibrary = useMapsLibrary('routes');
-    const [directionsService, setDirectionsService] =
-        useState<google.maps.DirectionsService>();
-    const [directionsRenderer, setDirectionsRenderer] =
-        useState<google.maps.DirectionsRenderer>();
-    const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
-    const [leg, setLeg] = useState<google.maps.DirectionsLeg | null>(null);
-    const [routeIndex, ] = useState(0);
-    const selected = routes[routeIndex];
-    const legs = selected?.legs;
+    const directionsServiceRef = useRef<google.maps.DirectionsService | null>(null);
+    const directionsRendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
 
-    useEffect(() => {
-        setLeg(legs ? legs[0] : null);
-    }, [legs]);
-
-    // Initialize directions service and renderer
     useEffect(() => {
         if (!routesLibrary || !map) return;
-        setDirectionsService(new routesLibrary.DirectionsService());
-        setDirectionsRenderer(
-            new routesLibrary.DirectionsRenderer({
-                draggable: true, // Only necessary for draggable markers
+
+        if (!directionsServiceRef.current) {
+            directionsServiceRef.current = new routesLibrary.DirectionsService();
+        }
+
+        if (!directionsRendererRef.current) {
+            directionsRendererRef.current = new routesLibrary.DirectionsRenderer({
+                draggable: true,
                 map
-            })
-        );
+            });
+        } else {
+            directionsRendererRef.current.setMap(map);
+        }
+
+        return () => {
+            if (directionsRendererRef.current) {
+                directionsRendererRef.current.setMap(null);
+            }
+        };
     }, [routesLibrary, map]);
 
-    // Add the following useEffect to make markers draggable
     useEffect(() => {
-        if (!directionsRenderer) return;
+        if (!directionsServiceRef.current || !directionsRendererRef.current || !origin || !destination) return;
 
-        // Add the listener to update routes when directions change
-        const listener = directionsRenderer.addListener(
-            'directions_changed',
-            () => {
-                const result = directionsRenderer.getDirections();
-                if (result) {
-                    setRoutes(result.routes);
-                }
+        console.log("📌 อัปเดตเส้นทางใหม่: ", { origin, destination, waypoints });
+
+        directionsServiceRef.current.route({
+            origin,
+            destination,
+            waypoints: waypoints.map(wp => ({ location: wp.location, stopover: true })),
+            travelMode: google.maps.TravelMode.DRIVING,
+            provideRouteAlternatives: true
+        })
+        .then(response => {
+            if (directionsRendererRef.current) {
+                directionsRendererRef.current.setDirections(response);
+            } else {
+                console.error("❌ directionsRendererRef.current is null");
             }
-        );
+        })
+        .catch(error => console.error("❌ Error fetching directions:", error));
 
-        return () => google.maps.event.removeListener(listener);
-    }, [directionsRenderer]);
+    }, [origin, destination, waypoints]);
 
-    // Use directions service
-    useEffect(() => {
-        if (!directionsService || !directionsRenderer) return;
-
-        directionsService
-            .route({
-                origin,
-                destination,
-                waypoints: waypoints.map(wp => ({ location: wp.location, stopover: true })),
-                travelMode: google.maps.TravelMode.DRIVING,
-                provideRouteAlternatives: true
-            })
-            .then(response => {
-                directionsRenderer.setDirections(response);
-                console.log(response);
-                setRoutes(response.routes);
-            });
-
-        return () => directionsRenderer.setMap(null);
-    }, [directionsService, directionsRenderer, origin, destination, waypoints]);
-
-    // Update direction route
-    useEffect(() => {
-        if (!directionsRenderer) return;
-        directionsRenderer.setRouteIndex(routeIndex);
-    }, [routeIndex, directionsRenderer]);
-
-    if (!leg) return null;
-
-    return (
-        // <div className="directions">
-        //     <h2>{selected.summary}</h2>
-        //     <h2>
-        //         {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
-        //     </h2>
-        //     <p>Distance: {leg.distance?.text}</p>
-        //     <p>Duration: {leg.duration?.text}</p>
-
-        //     <h2>Other Routes</h2>
-        //     <ul>
-        //         {selected.legs.map((route, index) => (
-        //             <li key={index}>
-        //                 <button onClick={() => setLeg(route)}>
-        //                     <p className='text-sm'>{route.start_address.split(',')[0]} to {route.end_address.split(',')[0]}</p>
-        //                 </button>
-        //             </li>
-        //         ))}
-        //     </ul>
-        // </div>
-        <></>
-    );
+    return null;
 }
 
 export default Directions;
