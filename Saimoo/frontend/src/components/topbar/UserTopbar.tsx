@@ -106,7 +106,7 @@ const UserTopbar: React.FC = () => {
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
-                  onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
+                  onClick={() => {setIsDropdownOpen(false); navigate("/create-trip")}}
                 />
                 <DropdownItem 
                   icon={<FiCreditCard />} 
