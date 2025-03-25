@@ -32,15 +32,15 @@ export type Trip = {
 }
 
 export type TripDetail = {
-    id?: number,
-    tripId: number,
-    order: number,
-    arriveTime: string,
+    id: number,
+    tripId?: number,
+    arriveTime: Date | null, 
     day: number,
+    order?: number,
     description: string | null,
-    locationId: number,
+    locationId?: number,
     TripDetailPicture?: {
-        imagePath: string,
+        imagePath: string[] | null,
     }
     Location?: Location
 }

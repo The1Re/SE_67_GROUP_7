@@ -1,5 +1,5 @@
-import { Trip } from "@/models/Trip";
-import { createContext, useContext, useEffect, useState } from "react";
+import { Trip, TripDetail } from "@/models/Trip";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const initTripValue: Trip = {
     title: "",
@@ -23,6 +23,16 @@ const TripContext = createContext(null);
 export const TripProvider = ({ children }) => {
     const [trip, setTrip] = useState<Trip>(initTripValue);
     const [numDay, setNumDay] = useState(1);
+
+    const setTripDetail = useCallback((day: number, tripDetail: TripDetail[]) => {
+        setTrip(prev => {
+            const updatedTrip = {
+                ...prev,
+                TripDetail: prev.TripDetail.filter(detail => detail.day !== day).concat(tripDetail)
+            };
+            return updatedTrip;
+        });
+    }, []);
     
     useEffect(() => {
         if (trip.dateStart && trip.dateEnd) {
@@ -33,7 +43,7 @@ export const TripProvider = ({ children }) => {
     }, [trip.dateStart, trip.dateEnd]);
 
     return (
-        <TripContext.Provider value={{ trip, setTrip, numDay }}>
+        <TripContext.Provider value={{ trip, setTrip, setTripDetail, numDay }}>
             {children}
         </TripContext.Provider>
     );
@@ -44,5 +54,6 @@ export const TripProvider = ({ children }) => {
 export const useTrip = () => useContext<{ 
     trip: Trip, 
     setTrip: React.Dispatch<React.SetStateAction<Trip>>,
+    setTripDetail: (day: number, tripDetail: TripDetail[]) => void,
     numDay: number
 }>(TripContext);

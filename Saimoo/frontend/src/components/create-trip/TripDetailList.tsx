@@ -2,68 +2,107 @@ import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import TripDetails from "./TripDetails";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTrip } from "@/context/TripContext";
+import { TripDetail } from "@/models/Trip";
+import { formatDateTimeLocal } from "@/utils/TimeFormat";
 
-const dummy = [
-    {
-        id: 1,
-        tripId: 1,
-        description: 'description',
-        day: 1,
-        locationId: 1,
-        arriveTime: '2021-09-01T00:00:00',
-        order: 1,
-    },
-    {
-        id: 2,
-        tripId: 1,
-        description: 'description',
-        day: 1,
-        locationId: 1,
-        arriveTime: '2021-09-01T00:00:00',
-        order: 2,
-    },
-    {
-        id: 3,
-        tripId: 1,
-        description: 'description',
-        day: 1,
-        locationId: 1,
-        arriveTime: '2021-09-01T00:00:00',
-        order: 3,
-    },
-    {
-        id: 4,
-        tripId: 1,
-        description: 'description',
-        day: 1,
-        locationId: 1,
-        arriveTime: '2021-09-01T00:00:00',
-        order: 4,
-    }
-]
+function TripDetailList({ day }: { day: number }) {
+    const { trip, setTripDetail } = useTrip();
+    const [tripDetailData, setTripDetailData] = useState<TripDetail[]>([]);
 
-function TripDetailList() {
-    const [tripDetailData, setTripDetailData] = useState(dummy);
+    useEffect(() => {
+        setTripDetailData(trip.TripDetail.filter(detail => detail.day === day))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [day]);
+
+    useEffect(() => {
+        if (tripDetailData.length === 0) {
+            setTripDetailData([{ 
+                id: Math.max(0, ...trip.TripDetail.map(detail => detail.id)) + 1, 
+                order: 1, 
+                arriveTime: new Date(),
+                description: '', 
+                day 
+            }])
+            return;
+        }
+        setTripDetail(day, tripDetailData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tripDetailData, setTripDetail])
 
     const handleDragEnd = (event: DragEndEvent) => {
-        const {active, over} = event;
+        const { active, over } = event;
         if (over && active.id !== over.id) {
-            setTripDetailData(item => {
-                const oldIndex = item.findIndex(({id}) => id === active.id);
-                const newIndex = item.findIndex(({id}) => id === over.id);
-                return arrayMove(item, oldIndex, newIndex);
-            })
+            setTripDetailData(items => {
+                const oldIndex = items.findIndex(({ id }) => id === active.id);
+                const newIndex = items.findIndex(({ id }) => id === over.id);
+                const newItems = arrayMove(items, oldIndex, newIndex).map((item, index) => ({
+                    ...item,
+                    order: index + 1
+                }));
+                return newItems;
+            });
         }
     }
 
+    const newTripDetail = () => {
+        setTripDetailData(prev => [
+            ...prev,
+            {
+                id: Math.max(0, ...trip.TripDetail.map(detail => detail.id)) + 1,
+                order: prev.length + 1,
+                arriveTime: new Date(),
+                description: '',
+                day
+            }
+        ])
+    }
+
+    const handleDelete = (id: number) => {
+        setTripDetailData(prev => 
+            prev
+            .filter(detail => detail.id !== id)
+            .map((detail, index) => ({
+                ...detail,
+                order: index + 1
+            }))
+        );
+    }
+
+    const handleUpdateTripDetail = (id: number, updatedFields: Partial<TripDetail>) => {
+        setTripDetailData(prev =>
+            prev.map(detail =>
+                detail.id === id ? { ...detail, ...updatedFields } : detail
+            )
+        );
+    };
+    
+
     return (
-        <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
+        <DndContext autoScroll={{ layoutShiftCompensation: false }} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
             <SortableContext items={tripDetailData}>
-                {tripDetailData.map((trip) => (
-                    <TripDetails key={trip.id} id={trip.id} onDelete={null} onSelectLocation={null} />
+                {tripDetailData.map((tripDetail) => (
+                    <TripDetails 
+                        key={tripDetail.id}
+                        title={tripDetail.order === 1 ? "จุดนัดพบ" : `สถานทีที่ ${tripDetail.order}`}
+                        id={tripDetail.id}
+                        initialDescription={tripDetail.description}
+                        initialArriveTime={formatDateTimeLocal(tripDetail.arriveTime)}
+                        images={tripDetail.TripDetailPicture && tripDetail.TripDetailPicture.imagePath}
+                        onDelete={handleDelete}
+                        onSelectLocation={() => {}}
+                        onUpdate={handleUpdateTripDetail}
+                    />
+                
                 ))}
             </SortableContext>
+            <button 
+                className="cursor-pointer mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                onClick={newTripDetail}
+            >
+                + เพิ่มสถานที่
+            </button>
         </DndContext>
     )
 }
