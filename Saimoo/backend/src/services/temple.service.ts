@@ -62,17 +62,23 @@ export const deleteTemple = async (id : number) => {
     await LocationService.deleteLocation(id);
 };
 
-export const createTempleCharm = async (charmData: Omit<Charm, "charmId">) => {
-    return await prisma.charm.create({ data: charmData });
+export const createTempleCharm = async (charmData: Omit<Charm, "charmId"|"templeId">, templeId: number) => {
+    const charmDataWithTempleId = { ...charmData, templeId };
+    return await prisma.charm.create({ data: charmDataWithTempleId });
 };
 
-export const getTempleCharm = async () => {
-    return await prisma.charm.findMany();
+export const getTempleCharm = async ( templeId: number) => {
+    return await prisma.charm.findMany({
+        where: { templeId  : templeId}
+    });
 };
 
-export const getTempleCharmById = async (charmId: number) => {
-    return await prisma.charm.findUnique({
-      where: { charmId },
+export const getTempleCharmById = async (charmId: number, templeId: number) => {
+    return await prisma.charm.findFirst({
+        where: {
+            charmId: charmId,  // ID ของ charm
+            templeId: templeId, // ID ของวัด
+        },
     });
 };
   
@@ -85,54 +91,60 @@ export const updateTempleCharm = async (charmId: number, charmData: Partial<Char
 
 export const deleteTempleCharm = async (charmId: number) => {
     return await prisma.charm.delete({
-        where: { charmId },
+        where: { charmId: charmId },
+    });
+};  ///
+
+export const createTempleImage = async (templeImageData: Omit<TempleImage, "id" | "templeId">, templeId: number) => {
+    const templeImageDataWithTempleId = { ...templeImageData, templeId };
+    return await prisma.templeImage.create({ data: templeImageDataWithTempleId });
+};
+
+export const getTempleImages = async (templeId : number) => {
+    return await prisma.templeImage.findMany({
+        where: { templeId : templeId}
     });
 };
 
-export const createTempleImage = async (templeImageData: Omit<TempleImage, "id">) => {
-    return await prisma.templeImage.create({ data: templeImageData });
-};
-
-export const getTempleImages = async () => {
-    return await prisma.templeImage.findMany();
-};
-
-export const getTempleImagesById = async (id: number) => {
+export const getTempleImagesById = async (imgId: number,templeId : number) => {
     return await prisma.templeImage.findUnique({
-      where: { id },
+      where: { id : imgId ,templeId },
     });
 };
   
-export const updateTempleImage = async (id: number, templeImageData: Partial<TempleImage>) => {
+export const updateTempleImage = async (imgId: number, templeImageData: Partial<TempleImage>) => {
     return await prisma.templeImage.update({
-        where: { id },
+        where: { id : imgId },
         data: templeImageData,
     });
 };
 
-export const deleteTempleImage = async (id: number) => {
+export const deleteTempleImage = async (imgId: number) => {
     return await prisma.templeImage.delete({
-        where: { id },
+        where: { id : imgId},
+    });
+};////
+
+export const createTempleActivity = async (activityData: Omit<Activity, "id" | "templeId">, templeId: number) => {
+    const activityDataWithTempleId = { ...activityData, templeId };
+    return await prisma.activity.create({ data: activityDataWithTempleId });
+};
+
+export const getTempleActivities = async (templeId : number) => {
+    return await prisma.activity.findMany({
+        where: { templeId : templeId}
     });
 };
 
-export const createTempleActivity = async (activityData: Omit<Activity, "id">) => {
-    return await prisma.activity.create({ data: activityData });
-};
-
-export const getTempleActivities = async () => {
-    return await prisma.activity.findMany();
-};
-
-export const getTempleActivitiesById = async (id: number) => {
+export const getTempleActivitiesById = async (id: number, templeId : number) => {   
     return await prisma.activity.findUnique({
-      where: { id: id },
+      where: { id: id, templeId : templeId },
     });
   };
   
 export const updateTempleActivity = async (id: number, activityData: Partial<Activity>) => {
     return await prisma.activity.update({
-        where: { id },
+        where: { id : id },
         data: activityData,
     });
 };

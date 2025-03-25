@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { createTempleForNewtemple,deleteTemple,updateTempleDescription } from '../../services/temple.service';
+import { createTempleForNewtemple,deleteTemple,updateTempleDescription, updateTempleLike } from '../../services/temple.service';
 import logger from '../../utils/logger';
 import { AuthRequest } from '../../middlewares/authenticateUser.middleware';
-import { getLocationsTemple,getLocationTempleById,getLocationTempleByProvinceId} from '../../services/location.service';
+import { getLocationsTemple,getLocationTempleById,getLocationTempleByProvinceId, getTempleIdFromLocationId} from '../../services/location.service';
 
 export const createTempleController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
@@ -31,12 +31,21 @@ export const getTempleController = async (req: Request, res: Response): Promise<
 
 export const getTempleByIdController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { locationId } = req.body;
+        const locationId = parseInt(req.params.locationId, 10);
+        if (isNaN(locationId)) {
+            return res.status(400).json({ message: "Invalid location ID" }); // ✅ ตรวจสอบ ID
+        }
+
         const temple = await getLocationTempleById(locationId);
+
+        if (!temple) {
+            return res.status(404).json({ message: "Temple not found" }); // ✅ ถ้าไม่พบข้อมูล
+        }
+
         return res.status(200).json(temple);
     } catch (error) {
-        logger.error(error);
-        return res.status(500).json({ message: 'Can not get' });
+        console.error(error);
+        return res.status(500).json({ message: "Cannot get temple" });
     }
 };
 
@@ -53,8 +62,9 @@ export const getTempleByProvinceIdController = async (req: Request, res: Respons
 
 export const updateTempleController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id, description } = req.body;
-        const temple = await updateTempleDescription(id, { description });
+        const id = parseInt(req.params.templeId, 10);
+        const {  description } = req.body;
+        const temple = await updateTempleDescription(id , { description });
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);
@@ -64,11 +74,22 @@ export const updateTempleController = async (req: Request, res: Response): Promi
 
 export const deleteTempleController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.params;
-        const temple = await deleteTemple(Number(id));
+        const { locationId } = req.params;
+        const temple = await deleteTemple(Number(locationId));
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: 'Can not delete' });
+    }
+};
+
+export const updateTempleLikeController = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { templeId } = req.params;
+        const temple = await updateTempleLike(Number(templeId));
+        return res.status(200).json(temple);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: 'Can not update like' });
     }
 };
