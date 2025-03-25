@@ -4,10 +4,22 @@ import UploadImage from '../Trip/UploadImage'
 import MyMap from '../map/MyMap'
 import TripForm from './TripForm';
 import TripDetailList from './TripDetailList';
+import { useLocation } from 'react-router-dom';
 
 function CreateTripForm() {
-    const { numDay } = useTrip();
+    const { trip, numDay, saveState } = useTrip();
+    const location = useLocation();
     const [selectedDay, setSelectedDay] = useState<number>(1);
+    const temple = location.state?.temple;
+
+    if (temple) {
+        if (sessionStorage.getItem('tripDetailId')) {
+            const tripDetailId = Number(sessionStorage.getItem('tripDetailId'));
+            trip.TripDetail.find(detail => detail.id === tripDetailId).Location = temple;
+            sessionStorage.removeItem('tripDetailId');
+            saveState();
+        }
+    }
 
     return (
         <div className="flex flex-col md:flex-row">

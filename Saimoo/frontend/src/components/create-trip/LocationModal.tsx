@@ -17,6 +17,7 @@ function LocationModal({ tripDetailId, isOpen, setIsOpen, onUpdate }) {
 
     const handleTemple = () => {
         saveState();
+        sessionStorage.setItem('tripDetailId', tripDetailId.toString());
         navigate('/temples', { state: { createMode: true }});
         setIsOpen(false);
     }

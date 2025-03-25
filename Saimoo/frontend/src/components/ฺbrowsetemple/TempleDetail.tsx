@@ -16,6 +16,7 @@ const TempleDetail = () => {
     const fetchTempleDetail = async () => {
       try {
         const res = await api.get(`/temples/${id}`);
+        console.log(res)
         setTemple(res.data);
       } catch (error) {
         console.error("Error fetching temple detail:", error);
@@ -26,18 +27,7 @@ const TempleDetail = () => {
   }, [id]);
 
   const handleSelectTemple = () => {
-    const selectedTemple = {
-      name: temple.name,
-      address: temple.address,
-      lat: temple.latitude,
-      lng: temple.longitude,
-    };
-  
-    // 👇 เก็บไว้ชั่วคราวใน sessionStorage
-    sessionStorage.setItem("selectedTemple", JSON.stringify(selectedTemple));
-  
-    // 👈 กลับไปหน้าเดิม โดยไม่รีโหลดใหม่ (รักษา state หน้า plan-trip)
-    navigate("/create-trip", { replace: true });
+    navigate("/create-trip", { replace: true, state: { temple }});
   };
 
   if (!id || !temple) {
