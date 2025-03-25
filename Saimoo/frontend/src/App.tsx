@@ -5,12 +5,12 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <AuthProvider>
-      <Toaster/>
-      <Router>
+    <Router>
+      <AuthProvider>
+        <Toaster/>
         <ManageRoutes />
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

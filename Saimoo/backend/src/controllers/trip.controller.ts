@@ -3,7 +3,7 @@ import logger from "../utils/logger";
 
 import type { TripData } from "../services/trip.service";
 
-import * as TripService from "../services/trip.service";
+import { TripService } from "../services";
 
 export const getAllTrips = async (req: Request, res: Response): Promise<any> => {
     try {

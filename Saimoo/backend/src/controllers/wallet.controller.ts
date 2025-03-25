@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import logger from "../utils/logger";
 
-import * as walletService from '../services/wallet.service'
+import { WalletService } from "../services";
 import { AuthRequest } from "../middlewares";
 
 export const getWallet = async (req: AuthRequest, res: Response): Promise<any>  =>{
     try {
         const userId = req.user?.id;
-        const wallet = await walletService.getWallet(userId);
+        const wallet = await WalletService.getWallet(userId);
         return res.status(200).json(wallet);
     } catch (error) {
         logger.error(error);
@@ -24,7 +24,7 @@ export const topup = async (req: AuthRequest, res: Response): Promise<any> => {
             return res.status(400).json({ message: 'amount is required' });
         }
 
-        const wallet = await walletService.topup(userId, amount);
+        const wallet = await WalletService.topup(userId, amount);
         return res.status(201).json(wallet);
     } catch (error) {
         logger.error(error);
@@ -41,7 +41,7 @@ export const withdraw = async (req: AuthRequest, res: Response): Promise<any> =>
             return res.status(400).json({ message: 'amount is required' });
         }
 
-        const wallet = await walletService.withdraw(userId, amount);
+        const wallet = await WalletService.withdraw(userId, amount);
         return res.status(201).json(wallet);
     } catch (error) {
         logger.error(error);
@@ -52,7 +52,7 @@ export const withdraw = async (req: AuthRequest, res: Response): Promise<any> =>
 export const getWalletTransactions = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
         const userId = req.user?.id;
-        const transactions = await walletService.getWalletTransactions(userId);
+        const transactions = await WalletService.getWalletTransactions(userId);
         return res.status(200).json(transactions);
     } catch (error) {
         logger.error(error);
