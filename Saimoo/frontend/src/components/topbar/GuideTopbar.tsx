@@ -150,11 +150,7 @@ const GuideTopbar: React.FC = () => {
               
               
               
-              <SidebarItem
-                title="ตรวจคำขอเข้าร่วมทริป"
-                icon={<MdDashboard size={15} />}
-                onClick={() => { setIsSidebarOpen(false); navigate("/guides/check"); }}
-              />
+              
               <SidebarItem
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
