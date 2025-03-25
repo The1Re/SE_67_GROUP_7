@@ -1,5 +1,5 @@
 import { Route, Navigate, Routes } from 'react-router-dom'
-import { Trips } from '@/pages/Trips'
+import { Trips } from '@/pages/user/Trips'
 import GuestLayout from '@/layouts/GuestLayout';
 import BrowseTempleWithGuest from '@/pages/Temple';
 import SignupTemple from '@/pages/temple/SignupTemple';

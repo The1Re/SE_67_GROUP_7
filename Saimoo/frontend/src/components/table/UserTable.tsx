@@ -1,5 +1,7 @@
 import api from "@/api";
 import { useState, useEffect } from "react";
+import DataLoading from "../DataLoading";
+import toast from "react-hot-toast";
 
 export type User = {
   id: number;
@@ -12,6 +14,7 @@ export type User = {
 const UserTable = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [editUser, setEditUser] = useState<User>(null);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
@@ -25,6 +28,7 @@ const UserTable = () => {
         } 
       );
       setUsers(res.data);
+      setLoading(false);
     }
 
     fetchData();
@@ -52,6 +56,7 @@ const UserTable = () => {
       );
     }
     saveData();
+    toast.success("บันทึกข้อมูลเรียบร้อยแล้ว");
     handleClose();
   };
 
@@ -67,6 +72,7 @@ const UserTable = () => {
       );
     }
     deleteData();
+    toast.success("ลบข้อมูลเรียบร้อยแล้ว");
   };
 
   useEffect(() => {
@@ -78,6 +84,9 @@ const UserTable = () => {
     ));
   }, [search, users])
 
+  if (loading) {
+    return <DataLoading />;
+  }
 
   return (
     <div className="p-4">

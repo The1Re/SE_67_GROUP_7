@@ -1,4 +1,5 @@
 import api from "@/api";
+import { env } from "@/config";
 import React, { useRef, useState } from "react";
 
 interface FileUploadProps {
@@ -63,7 +64,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, callback }) => {
             <span className="text-sm text-gray-700">{fileName}</span>
             {fileUrl && (
               <a
-                href={"http://localhost:3000/" + fileUrl}
+                href={env.API_URL + "/"  + fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 underline text-sm hover:underline cursor-pointer"
