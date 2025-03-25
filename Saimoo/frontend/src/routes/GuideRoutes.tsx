@@ -14,6 +14,7 @@ import ProfileTemple from "@/pages/temple/ProfileTemple";
 import Document from "@/pages/Guide/Document";
 import TripDetail from "@/pages/TripDetail";
 import TripCancellationPage from "@/pages/Guide/TripCancellationPage";
+import Wallet from "@/pages/Guide/Wallet";
 const GuideRoutes = () => {
   return (
     <Routes>
@@ -30,6 +31,7 @@ const GuideRoutes = () => {
       <Route path='/Document' element={<Document/>}></Route>
       <Route path='/trip-detail' element={<TripDetail />} />
       <Route path='/TripCancellationPage' element={<TripCancellationPage />} />
+      <Route path='/wallet' element={<Wallet />} />
       </Route>
     </Routes>
   );

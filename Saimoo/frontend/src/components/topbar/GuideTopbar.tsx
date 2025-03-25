@@ -106,7 +106,7 @@ const GuideTopbar: React.FC = () => {
                   text="สร้างทริปของฉัน"
                   onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
                 />
-                <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" />
+                <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" onClick={() => {setIsDropdownOpen(false); navigate("/wallet")}}/>
                 <DropdownItem icon={<FiHome />} text="แดชบอร์ด"onClick={() => {setIsDropdownOpen(false); navigate("/dashboard")}}/>
               </div>
 
