@@ -77,6 +77,18 @@ export const getOrderById = async (req: AuthRequest, res: Response): Promise<any
     }
 }
 
+export const getOrderByTripId = async (req: AuthRequest, res: Response): Promise<any> => {
+    try {
+        const { id } = req.params;
+        const orders = await OrderService.getOrderByTripId(Number(id));
+        return res.status(200).json(orders);
+    }
+    catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 export const getAllOrderDetail = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
         const { id } = req.params;

@@ -8,6 +8,7 @@ routes.get('/', OrderController.getAllOrders);
 routes.get('/:id', OrderController.getOrderById);
 routes.post('/', OrderController.createOrder);
 routes.patch('/', OrderController.updateOrder);
+routes.get('/trips/:id', OrderController.getOrderByTripId);
 
 routes.use('/:id/details', Router({ mergeParams: true })
     .get('/', OrderController.getAllOrderDetail)

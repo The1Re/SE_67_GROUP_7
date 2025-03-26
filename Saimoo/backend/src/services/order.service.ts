@@ -17,6 +17,10 @@ export const calTotalPrice = async (tripId: number, amountPerson: number) => {
     return trip.price * amountPerson;
 }
 
+export const getOrderByTripId = async (tripId: number) => {
+    return await prisma.tripOrder.findMany({ where: { tripId } });
+}
+
 export const generateIdentityCode = () => {
     const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
