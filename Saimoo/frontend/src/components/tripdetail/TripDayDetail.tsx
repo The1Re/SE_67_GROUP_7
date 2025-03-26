@@ -34,6 +34,14 @@ interface LocationData {
   images: string[];
 }
 
+interface Props {
+  activeTab: number;
+  setActiveTab: (tab: number) => void;
+  tripDetailData: any[];
+}
+
+
+
 const TripDayDetail: React.FC = () => {
   const { id } = useParams();
   const tripId = Number(id);
