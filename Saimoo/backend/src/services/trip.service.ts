@@ -33,7 +33,7 @@ export const getTripAvailable = async (
             totalPages: Math.ceil(totalItems / pageSize),
             currentPage: page,
             pageSize,
-        },
+        }
     }
 }
 
@@ -47,7 +47,7 @@ export const getTripById = async (id: number) => {
     return await prisma.trip.findUnique({
         where: { id },
         include: {
-            TripDetail: true,
+            TripDetail: { include: { Location: true, TripDetailPicture: true } },
             TripPicture: true
         }
     });
@@ -115,7 +115,8 @@ export const deleteImage = async (id: number) => {
 
 export const getTripDetails = async (tripId: number) => {
     return await prisma.tripDetail.findMany({
-        where: { tripId }
+        where: { tripId },
+        include: { Location: true, TripDetailPicture: true }
     })
 }
 
