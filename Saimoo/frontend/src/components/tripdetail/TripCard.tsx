@@ -1,37 +1,14 @@
 import api from "@/api";
+import { Trip } from "@/models/Trip";
+import { User } from "@/models/User";
 import { useEffect, useState } from "react";
 import { FaCar, FaClock } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-
-export interface Trip {
-  id: number;
-  title: string;
-  description: string;
-  dateStart: string;
-  dateEnd: string;
-  vehicle: string;
-  maxPerson: number;
-  status: string;
-  ownerTripId: number;
-  type: string;
-  price: number;
-}
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  password: string;
-  fullName: string;
-  phone: string | null;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { MouseEvent } from "react"; 
 
 const TripCard = () => {
   const { tripId: tripIdParam } = useParams();
-  const tripId = Number(tripIdParam) || 1;
+  const tripId = Number(tripIdParam) || 2;
 
   const navigate = useNavigate();
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -53,7 +30,9 @@ const TripCard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await api.get(`/users/${trip?.ownerTripId}`);
+        const res = await api.get(`/users/${trip?.ownerTripId}`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        });
         setUser(res.data);
       } catch (error) {
         console.error(error);
@@ -152,6 +131,77 @@ const TripCard = () => {
     if (price === undefined) return "Loading...";
     return price === 0 ? "FREE" : `${price.toLocaleString()} ฿`;
   };
+  // 1. เพิ่ม state สำหรับเก็บจำนวนคนที่เข้าร่วม
+  const [participantCount, setParticipantCount] = useState(0);
+
+  // 2. เพิ่ม useEffect เพื่อดึงข้อมูลจำนวนคนที่เข้าร่วม
+  useEffect(() => {
+    const fetchParticipantCount = async () => {
+      if (!trip?.id) return;
+  
+      try {
+        console.log("Fetching participant count for tripId:", trip.id);
+  
+        // เปลี่ยน URL ให้ถูกต้อง
+        const response = await api.get(`/orders?tripId=${trip.id}`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        });
+        console.log("API Response:", response.data);
+  
+        // ตรวจสอบรูปแบบข้อมูลที่ได้รับ
+        let count = 0;
+        
+        // ถ้าข้อมูลเป็น array
+        if (Array.isArray(response.data)) {
+          count = response.data.reduce((total, order) => {
+            return total + (order.amountPerson || 0);
+          }, 0);
+        } 
+        // ถ้าข้อมูลเป็น object ที่มี property เป็น array
+        else if (response.data && Array.isArray(response.data.orders)) {
+          count = response.data.orders.reduce((total, order) => {
+            return total + (order.amountPerson || 0);
+          }, 0);
+        }
+        // ถ้าข้อมูลเป็น object เดี่ยว (กรณีเรียก order เดียว)
+        else if (response.data && response.data.amountPerson) {
+          count = response.data.amountPerson;
+        }
+  
+        console.log("Calculated participant count:", count);
+        setParticipantCount(count);
+      } catch (error) {
+        console.error("Error fetching participant count:", error);
+        setParticipantCount(0);
+      }
+    };
+  
+    fetchParticipantCount();
+  }, [trip?.id]);
+  
+  const isTripFull = participantCount === (trip?.maxPerson || 0);
+
+  const handleBuyTrip = (event: MouseEvent<HTMLButtonElement>) => {
+    // ป้องกันการ reload หน้าเว็บ
+    event.preventDefault();
+    
+    // ตรวจสอบว่าทริปเต็มหรือไม่
+    if (isTripFull) {
+      return; // ไม่ทำอะไรถ้าทริปเต็มแล้ว
+    }
+    
+    // ตรวจสอบว่ามีการล็อกอินหรือไม่
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // ถ้ายังไม่ได้ล็อกอิน ให้ redirect ไปหน้าล็อกอิน
+      navigate("/login", { state: { from: `/trips/${tripId}` } });
+      return;
+    }
+    
+    // ถ้าล็อกอินแล้ว ให้ไปหน้าซื้อทริป
+    navigate(`/trips/${tripId}/purchase`);
+  };
+  
 
   return (
     <div className="max-w-full w-full mx-auto p-6 ">
@@ -171,8 +221,8 @@ const TripCard = () => {
           </a>
           <div className="flex flex-col">
             <h1 className="flex-wrap text-xl font-bold">
-              {trip ? trip.title : "Loading..."} 
-            </h1>//ติดที่ API ไม่ดึงข้อมูลเพราะติด token
+              {trip ? trip.title : "Loading..."}
+            </h1>
             <div className="flex w-full items-center gap-4 mobile:gap-2">
               <a
                 target="_blank"
@@ -217,17 +267,26 @@ const TripCard = () => {
         </div>
         {/* 🔹 ปุ่มซื้อทริป*/}
         <div className="flex flex-col items-end gap-3">
-          <button
-            onClick={() => navigate("/trips/purchaser")}
-            className="cursor-pointer flex items-center gap-1 whitespace-nowrap rounded-lg border border-teal-500 px-6 py-3 font-semibold text-teal-500 shadow-sm duration-300 hover:bg-teal-500 hover:text-white"
-          >
-            ซื้อทริป
-          </button>
+        <button
+          className={`px-6 py-2 rounded-md font-semibold ${
+            isTripFull
+              ? "bg-gray-400 cursor-not-allowed" // สีเทาและไม่สามารถกดได้เมื่อทริปเต็ม
+              : "bg-teal-500 text-white hover:bg-teal-600" // สีปกติเมื่อยังมีที่ว่าง
+          }`}
+          onClick={handleBuyTrip}
+          disabled={isTripFull} // ปิดการใช้งานปุ่มเมื่อทริปเต็ม
+        >
+          {isTripFull ? "ทริปเต็มแล้ว" : "ซื้อทริป"}
+        </button>
+
           <div className="flex flex-col items-end gap-1">
             <p className="text-2xl font-extrabold text-black">
               {formatPrice(trip?.price)}
             </p>
-            <h1 className="text-red-500 text-lg font-semibold">2/10</h1> // จำนวนคนเข้าร่วมทริปยังไม่ได้เชื่อมกับ API
+            <h1 className="text-red-500 text-lg font-semibold">
+              {participantCount}/{trip?.maxPerson}
+            </h1>
+
             <h3 className="text-red-500 text-lg font-semibold">คนเข้าร่วม</h3>
           </div>
         </div>

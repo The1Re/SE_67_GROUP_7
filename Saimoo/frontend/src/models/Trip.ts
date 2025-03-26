@@ -11,3 +11,13 @@ export type Trip = {
     type: string;
     price: number;
   }
+
+  export interface Location {
+    id: number;
+    name: string;
+    latitude: number | null;
+    longitude: number | null;
+    type: 'temple' | 'place';
+    provinceId: number | null;
+  }
+  
