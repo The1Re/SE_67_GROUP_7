@@ -18,7 +18,7 @@ export const calTotalPrice = async (tripId: number, amountPerson: number) => {
 }
 
 export const getOrderByTripId = async (tripId: number) => {
-    return await prisma.tripOrder.findMany({ where: { tripId } });
+    return await prisma.tripOrder.findMany({ where: { tripId }, include: {TripOrderDetail: true, Payment: true} });
 }
 
 export const generateIdentityCode = () => {
