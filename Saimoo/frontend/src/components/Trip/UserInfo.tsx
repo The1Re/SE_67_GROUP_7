@@ -1,3 +1,4 @@
+import api from "@/api";
 import { useAuth } from "@/context/AuthContext";
 import { useTrip } from "@/context/TripContext";
 
@@ -7,8 +8,13 @@ const UserInfo = () => {
 
   const handleCreateTrip = () => {
     setTrip({ ...trip, ownerTripId: user.id });
+    console.log(trip)
+    api.post("/trips", trip, { headers: { Authorization: `Bearer ${user.token}` } })
+      .then((res) => {
+        console.log(res.data);
+      }
+    );
     console.log(`สร้างทริปสำเร็จ!`);
-    console.log(trip);
   };
 
   return (
