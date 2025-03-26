@@ -53,6 +53,7 @@ const TripDayDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchDetails = async () => {
+      console.log("tripId",tripId);
       try {
         const res = await api.get(`/trips/${tripId}/details`);
         const details = res.data;
@@ -60,9 +61,19 @@ const TripDayDetail: React.FC = () => {
         const grouped: Record<number, LocationData[]> = {};
   
         const detailsWithImages = (details as TripDetailFromAPI[]).map((item) => {
-          const images = (item.TripDetailPicture || []).map((img) =>
-            `${import.meta.env.VITE_API_URL}/uploads/image/${img.imagePath}`
-          );
+          const images = (item.TripDetailPicture || [])
+            .filter((img) => img.imagePath)
+            .map((img) => {
+              const rawPath = img.imagePath;
+              if (rawPath.startsWith("http")) {
+                return rawPath;
+              }
+              const normalizedPath = rawPath.replace(/\\/g, "/");
+              const fullPath = normalizedPath.startsWith("uploads/image/")
+                ? normalizedPath
+                : `uploads/image/${normalizedPath}`;
+              return `${import.meta.env.VITE_API_URL}/${fullPath}`;
+            });
         
           return {
             day: item.day,
@@ -76,7 +87,8 @@ const TripDayDetail: React.FC = () => {
               images,
             },
           };
-        });        
+        });
+                
   
         detailsWithImages.forEach(({ day, location }) => {
           if (!grouped[day]) grouped[day] = [];

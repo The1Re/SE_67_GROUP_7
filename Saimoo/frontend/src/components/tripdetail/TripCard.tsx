@@ -3,18 +3,20 @@ import { Trip } from "@/models/Trip";
 import { User } from "@/models/User";
 import { useEffect, useState } from "react";
 import { FaCar, FaClock } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { MouseEvent } from "react"; 
 
-const TripCard = () => {
-  const { tripId: tripIdParam } = useParams();
-  const tripId = Number(tripIdParam) || 2;
+interface TripCardProps {
+  tripId: number;
+}
 
+const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
   const navigate = useNavigate();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    console.log("tripIdcard",tripId);
     const fetchTrip = async () => {
       try {
         const res = await api.get(`/trips/${tripId}`);

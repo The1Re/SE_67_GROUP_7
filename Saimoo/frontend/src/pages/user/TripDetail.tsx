@@ -34,12 +34,14 @@ function TripDetail() {
     fetchTrip();
   }, [id]);
 
+  const tripId = Number(id);
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-4/6 flex flex-col">
-        <Image />
+        <Image tripId={tripId} />
         <div className=" w-full bg-white px-8">
-          <TripCard />
+          <TripCard tripId={tripId} />
           <TripDayDetail />
         </div>
       </div>

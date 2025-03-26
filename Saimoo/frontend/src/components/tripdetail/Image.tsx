@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import api from "@/api"; // ✅ axios instance
+import api from "@/api";
 
 interface TripPicture {
   id: number;
@@ -13,30 +12,38 @@ interface TripResponse {
   TripPicture: TripPicture[];
 }
 
-const ImageComponent = () => {
-  const { id } = useParams();
+interface ImageProps {
+  tripId: number;
+}
+
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+const ImageComponent: React.FC<ImageProps> = ({ tripId }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [preview, setPreview] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTrip = async () => {
       try {
-        const res = await api.get<TripResponse>(`/trips/${id}`);
+        const res = await api.get<TripResponse>(`/trips/${tripId}`);
         const trip = res.data;
 
         if (trip.TripPicture && trip.TripPicture.length > 0) {
-          const firstImage = trip.TripPicture[0].imagePath;
-          setImageUrl(firstImage);
+          const rawPath = trip.TripPicture[0].imagePath;
+
+          const finalUrl = rawPath.startsWith("http")
+            ? rawPath
+            : `${BASE_URL}/${rawPath.replace(/\\/g, "/")}`; // ✅ แปลงให้ถูกต้อง
+
+          setImageUrl(finalUrl);
         }
       } catch (error) {
         console.error("Error loading trip image:", error);
       }
     };
 
-    if (id) {
-      fetchTrip();
-    }
-  }, [id]);
+    if (tripId) fetchTrip();
+  }, [tripId]);
 
   if (!imageUrl) return null;
 

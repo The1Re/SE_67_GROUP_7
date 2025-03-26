@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "@/api";
 
+const BASE_URL = import.meta.env.VITE_API_URL; // ✅ ดึงจาก .env เช่น http://localhost:3000
+
 interface TripData {
   id: number;
   title: string;
@@ -13,7 +15,7 @@ interface TripData {
   ownerTripId: number;
   type: string;
   price: number;
-  image?: string; // เพิ่ม field สำหรับรูป
+  image?: string;
 }
 
 export default function MasonryGallery() {
@@ -25,30 +27,33 @@ export default function MasonryGallery() {
         const res = await api.get("/trips");
         const tripsData = res.data.data;
 
-        // ดึงรูปของแต่ละทริปจาก /trips/:id
         const tripsWithImages = await Promise.all(
           tripsData.map(async (trip: TripData) => {
             try {
               const tripDetailRes = await api.get(`/trips/${trip.id}`);
               const tripDetail = tripDetailRes.data;
-              const tripImage = tripDetail.TripPicture?.[0]?.imagePath || "";
-              return {
-                ...trip,
-                image: tripImage,
-              };
+              const rawImage = tripDetail.TripPicture?.[0]?.imagePath || "";
+
+              let image = "";
+              if (rawImage.startsWith("http://") || rawImage.startsWith("https://")) {
+                image = rawImage;
+              } else if (rawImage) {
+                image = `${BASE_URL}/${rawImage.replace(/\\/g, "/")}`; // ✅ แปลงเป็น URL
+              }
+
+              console.log(`📸 Trip ID ${trip.id} image:`, image);
+
+              return { ...trip, image };
             } catch (error) {
-              console.error("Error fetching trip image for tripId", trip.id, error);
-              return {
-                ...trip,
-                image: "",
-              };
+              console.error("❌ Error fetching trip image for tripId", trip.id, error);
+              return { ...trip, image: "" };
             }
           })
         );
 
         setTrips(tripsWithImages);
       } catch (error) {
-        console.error("Error fetching trips:", error);
+        console.error("❌ Error fetching trips:", error);
       }
     };
 
@@ -76,7 +81,7 @@ export default function MasonryGallery() {
             <h2 className="text-lg font-bold">{trip.title}</h2>
             <p className="text-sm text-gray-600">โดยผู้ใช้ #{trip.ownerTripId}</p>
             <p className="text-xs text-gray-400">
-              {new Date(trip.dateStart).toLocaleDateString()} - {" "}
+              {new Date(trip.dateStart).toLocaleDateString()} -{" "}
               {new Date(trip.dateEnd).toLocaleDateString()}
             </p>
           </a>
