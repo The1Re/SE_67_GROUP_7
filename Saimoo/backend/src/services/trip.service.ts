@@ -1,3 +1,4 @@
+import { connect } from "http2";
 import prisma from "../models/prisma";
 
 import { Prisma, Trip, TripDetail, Location, Province } from "@prisma/client";
@@ -114,17 +115,14 @@ export const createTrip = async (tripData: TripData) => {
                     day: detail.day,
                     arriveTime: new Date(detail.arriveTime),
                     description: detail.description,
-                    Location: {
-                        connectOrCreate: {
-                            where: { id: detail.locationId },
-                            create: {
-                                name: detail.Location?.name ?? "unknow location",
-                                latitude: detail.Location?.latitude,
-                                longitude: detail.Location?.longitude,
-                                type: detail.Location?.type,
-                            }
-                        }
-                    },
+                    Location: detail.locationId ? {
+                        connect: { id: detail.locationId }
+                    } : { create: {
+                        name: detail.Location?.name ?? "unknow place",
+                        latitude: detail.Location?.latitude ?? 0,
+                        longitude: detail.Location?.longitude ?? 0,
+                        type: detail.Location?.type ?? "place",
+                    }},
                     TripDetailPicture: {
                         create: TripDetail.map((detail) => ({
                             imagePath: detail.TripDetailPicture?.imagePath
