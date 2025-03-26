@@ -14,11 +14,14 @@ interface TripDetailFromAPI {
   Location: {
     name: string;
     address?: string;
+    latitude: number;
+    longitude: number;
   };
   TripDetailPicture: {
     imagePath: string;
   }[];
 }
+
 interface DayData {
   day: number;
   locations: LocationData[];
@@ -32,17 +35,15 @@ interface LocationData {
   time: string;
   description: string;
   images: string[];
+  lat: number;
+  lng: number;
 }
 
-interface Props {
-  activeTab: number;
-  setActiveTab: (tab: number) => void;
-  tripDetailData: any[];
+interface TripDayDetailProps {
+  onChangeActiveDay: (locations: { location: { lat: number; lng: number } }[]) => void;
 }
 
-
-
-const TripDayDetail: React.FC = () => {
+const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
   const { id } = useParams();
   const tripId = Number(id);
   const [days, setDays] = useState<DayData[]>([]);
@@ -53,28 +54,25 @@ const TripDayDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchDetails = async () => {
-      console.log("tripId",tripId);
       try {
         const res = await api.get(`/trips/${tripId}/details`);
         const details = res.data;
-  
+
         const grouped: Record<number, LocationData[]> = {};
-  
+
         const detailsWithImages = (details as TripDetailFromAPI[]).map((item) => {
           const images = (item.TripDetailPicture || [])
             .filter((img) => img.imagePath)
             .map((img) => {
               const rawPath = img.imagePath;
-              if (rawPath.startsWith("http")) {
-                return rawPath;
-              }
-              const normalizedPath = rawPath.replace(/\\/g, "/");
-              const fullPath = normalizedPath.startsWith("uploads/image/")
-                ? normalizedPath
-                : `uploads/image/${normalizedPath}`;
+              if (rawPath.startsWith("http")) return rawPath;
+              const normalized = rawPath.replace(/\\/g, "/");
+              const fullPath = normalized.startsWith("uploads/image/")
+                ? normalized
+                : `uploads/image/${normalized}`;
               return `${import.meta.env.VITE_API_URL}/${fullPath}`;
             });
-        
+
           return {
             day: item.day,
             location: {
@@ -85,61 +83,59 @@ const TripDayDetail: React.FC = () => {
               time: item.arriveTime,
               description: item.description,
               images,
+              lat: item.Location.latitude,
+              lng: item.Location.longitude,
             },
           };
         });
-                
-  
+
         detailsWithImages.forEach(({ day, location }) => {
           if (!grouped[day]) grouped[day] = [];
           grouped[day].push(location);
         });
-  
+
         const dayArray: DayData[] = Object.entries(grouped).map(([day, locations]) => ({
           day: Number(day),
           locations,
         }));
-  
+
         setDays(dayArray);
       } catch (error) {
         console.error("Error fetching trip details:", error);
       }
     };
-  
-    fetchDetails();
-  }, [id, tripId]);  
 
-  // เปิด modal รูป
+    fetchDetails();
+  }, [id, tripId]);
+
+  useEffect(() => {
+    const activeDay = days.find((d) => d.day === activeTab);
+    if (activeDay) {
+      const locs = activeDay.locations.map((l) => ({ location: { lat: l.lat, lng: l.lng } }));
+      onChangeActiveDay(locs);
+    }
+  }, [activeTab, days, onChangeActiveDay]);
+
   const openImageModal = async (location: LocationData, index: number) => {
     let images = location.images;
-  
+
     if (images.length === 0) {
       try {
-        console.log("🟡 กำลังโหลดภาพจาก API...");
         const res = await api.get(`/trips/${tripId}/details/${location.tripDetailId}/images`);
         const rawImages = res.data || [];
-  
-        console.log("✅ รูปที่ได้จาก API:", rawImages);
-  
-        // แปลง path ให้ใช้ "/" แทน "\" และต่อ URL
         const fullPaths = rawImages.map((img: { imagePath: string }) =>
-          `${import.meta.env.VITE_API_URL}/${img.imagePath.replace(/\\/g, '/')}`
+          `${import.meta.env.VITE_API_URL}/${img.imagePath.replace(/\\/g, "/")}`
         );
-  
-        console.log("🔗 Full image URLs ที่จะใช้แสดง:", fullPaths);
-  
         images = fullPaths;
       } catch (err) {
         console.error("❌ โหลดรูปไม่สำเร็จ:", err);
       }
-    } else {
-      console.log("ℹ️ ใช้ภาพที่มีอยู่แล้วใน location.images:", images);
     }
-  
+
     setImageList(images);
     setCurrentIndex(index);
     setSelectedImage(images[index]);
-  };  
+  };
 
   const nextImage = () => {
     if (imageList.length > 0) {
@@ -175,25 +171,22 @@ const TripDayDetail: React.FC = () => {
                   <h2 className="font-bold text-gray-800 items-center gap-3 flex">
                     📍 {location.name}
                   </h2>
-                  {location.address && (
-                    <p className="text-gray-600 text-sm">{location.address}</p>
-                  )}
+                  {location.address && <p className="text-gray-600 text-sm">{location.address}</p>}
                   <p className="text-gray-500 text-sm flex items-center gap-2">🕓 {location.time}</p>
                   <p className="text-gray-600 text-sm mt-2 ml-8">{location.description}</p>
 
-                  {/* ✅ แสดงรูปภาพ thumbnail */}
                   {location.images.length > 0 && (
                     <div className="mt-3 ml-8 flex flex-wrap gap-2">
-                    {location.images.map((img, imgIndex) => (
-                      <img
-                        key={imgIndex}
-                        src={img}
-                        alt={`ภาพ ${imgIndex + 1}`}
-                        onClick={() => openImageModal(location, imgIndex)}
-                        className="h-24 w-24 object-cover rounded cursor-pointer border border-gray-300"
-                      />
-                    ))}
-                  </div>
+                      {location.images.map((img, imgIndex) => (
+                        <img
+                          key={imgIndex}
+                          src={img}
+                          alt={`ภาพ ${imgIndex + 1}`}
+                          onClick={() => openImageModal(location, imgIndex)}
+                          className="h-24 w-24 object-cover rounded cursor-pointer border border-gray-300"
+                        />
+                      ))}
+                    </div>
                   )}
                 </div>
               </li>
