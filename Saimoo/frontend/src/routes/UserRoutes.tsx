@@ -11,10 +11,10 @@ import PaymentDetails from '@/pages/user/PaymentDetails';
 import ConfirmPayment from '@/pages/user/ConfirmPayment';
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
-import HistoryTrip from '@/pages/user/HistoryTrip';
+
 import Wallet from '@/pages/user/Wallet';
-
-
+import Document from '@/pages/user/Document';
+import History from '@/pages/user/History';
 const UserRoutes = () => {
   return (
     <Routes>
@@ -34,7 +34,8 @@ const UserRoutes = () => {
           <Route path='/temples/profiletemple' element={<ProfileTemple />} />
           
           <Route path='/temple/profiletemple' element={<ProfileTemple />} />
-          <Route path='history' element={<HistoryTrip/>}></Route>
+          <Route path='/History' element={<History />}/>
+          <Route path='/Document' element={<Document/>}></Route>
       </Route>
     </Routes>
   );

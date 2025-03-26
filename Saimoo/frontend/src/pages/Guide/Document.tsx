@@ -53,7 +53,7 @@ const DocumentPage = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value.length <= 4) {
+    if (value.length <= 5) {
       setInputCode(value);
       if (value.trim() !== '') setError('');
     }

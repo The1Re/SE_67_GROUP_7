@@ -7,7 +7,7 @@ import { Trips } from '@/pages/user/Trips'
 import GuideLayout from "@/layouts/GuideLayout";
 import BrowseTempleWithGuest from "@/pages/temple/BrowseTempleWithGuest";
 import PlanTrip from "@/pages/user/PlanTrip";
-
+import Profile from "@/pages/user/Profile";
 import Dashboard from "@/pages/Guide/Dashboard";
 import HistoryTrip from "@/pages/Guide/Historytrip";
 import ProfileTemple from "@/pages/temple/ProfileTemple";
@@ -25,7 +25,7 @@ const GuideRoutes = () => {
       <Route path="/trips" element={<Trips/>} />
       <Route path='/temples' element={<BrowseTempleWithGuest />} />
       <Route path='/plan-trip' element={<PlanTrip />}></Route>
-      <Route path='/trips/purchaser' element={<PurchaserDetails />} />
+      <Route path='/purchaser-details' element={<PurchaserDetails />}></Route>
       <Route path='/dashboard' element={<Dashboard />}/>
       <Route path='/historytrip' element={<HistoryTrip />}/>
       <Route path='/temples/profiletemple' element={<ProfileTemple />}></Route>
@@ -33,6 +33,7 @@ const GuideRoutes = () => {
       <Route path='/trip-detail' element={<TripDetail />} />
       <Route path='/TripCancellationPage' element={<TripCancellationPage />} />
       <Route path='/wallet' element={<Wallet />} />
+      <Route path='/profile' element={<Profile />}></Route>
       </Route>
     </Routes>
   );

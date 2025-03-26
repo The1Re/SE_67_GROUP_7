@@ -103,7 +103,7 @@ const UserTopbar: React.FC = () => {
                   text="โปรไฟล์" 
                   onClick={() => {setIsDropdownOpen(false); navigate("/profile")}}
                 />
-                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน" />
+                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน"  onClick={() => {setIsDropdownOpen(false); navigate("/History")}} />
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
@@ -114,6 +114,7 @@ const UserTopbar: React.FC = () => {
                   text="กระเป๋าตัง" 
                   onClick={() => {setIsDropdownOpen(false); navigate("/wallet")}}
                 />
+                
               </div>
               <div className="px-2 py-2">
                 <button 

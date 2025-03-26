@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FileUpload from "./FileUpload";
 import toast from "react-hot-toast";
 import api from "@/api";
-
+import { useNavigate } from "react-router-dom";
 export type SignupFormData = {
   fullName: string;
   phone: string;
@@ -16,6 +16,7 @@ const SignupForm: React.FC = () => {
     phone: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -133,15 +134,10 @@ const SignupForm: React.FC = () => {
           {isSubmitting ? "กำลังส่ง..." : "ส่ง"}
         </button>
         <button
-          type="button"
-          className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg text-lg w-40 font-semibold shadow-md cursor-pointer"
+          type="reset"
+          className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg text-lg w-32 cursor-pointer"
+          onClick={() => navigate("/")}
           disabled={isSubmitting}
-          onClick={() =>
-            setFormData({
-              fullName: "",
-              phone: "",
-            })
-          }
         >
           ยกเลิก
         </button>
