@@ -5,8 +5,8 @@ import * as TripController from '../controllers/trip.controller';
 const router = Router();
 
 router.get('/', TripController.getAllTrips);
-router.get('/:id', TripController.getTrip);
 router.get('/history', TripController.getAllTripByUser);
+router.get('/:id', TripController.getTrip);
 router.post('/', TripController.newTrip);
 router.put('/', TripController.updateTrip);
 router.delete('/', TripController.removeTrip);
