@@ -6,9 +6,9 @@ const UserInfo = () => {
   const { trip, setTrip } = useTrip();
 
   const handleCreateTrip = () => {
+    setTrip({ ...trip, ownerTripId: user.id });
     console.log(`สร้างทริปสำเร็จ!`);
     console.log(trip);
-    sessionStorage.clear();
   };
 
   return (
