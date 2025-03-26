@@ -7,19 +7,15 @@ import { useEffect } from "react";
 import api from "@/api";
 
 function TripDetail() {
-  // ย้ายโค้ดจาก TripDetail ที่ซ้อนอยู่มาไว้ที่นี่
   const { tripId } = useParams();
   const tripIdNumber = tripId ? parseInt(tripId) : undefined;
-  
-  // ใช้ tripIdNumber ในการดึงข้อมูลทริป
-  useEffect(() => {
+    useEffect(() => {
     const fetchTripDetails = async () => {
       if (!tripIdNumber) return;
       
       try {
         const response = await api.get(`/trips/${tripIdNumber}`);
         console.log("Trip details:", response.data);
-        // จัดการข้อมูลที่ได้รับตามต้องการ
       } catch (error) {
         console.error("Error fetching trip details:", error);
       }

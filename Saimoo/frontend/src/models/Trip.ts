@@ -1,16 +1,16 @@
-export type Trip = {
-    id: number;
-    title: string;
-    description: string;
-    dateStart: string;
-    dateEnd: string;
-    vehicle: "van" | "bus",
-    maxPerson: number;
-    status: string;
-    ownerTripId: number;
-    type: string;
-    price: number;
-  }
+export interface Trip {
+  id: number;
+  title: string;
+  description: string;
+  dateStart: string;
+  dateEnd: string;
+  vehicle: string;
+  maxPerson: number;
+  status: string;
+  ownerTripId: number;
+  type: string;
+  price: number;
+}
 
   export interface Location {
     id: number;

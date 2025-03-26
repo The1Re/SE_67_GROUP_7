@@ -11,3 +11,8 @@ export type Transaction = {
     status: 'pending' | 'completed' | 'failed',
     createdAt: Date,
 }
+
+export type WithdrawRequest = {
+    amount: number; ///wallets/withdraw
+  }
+  

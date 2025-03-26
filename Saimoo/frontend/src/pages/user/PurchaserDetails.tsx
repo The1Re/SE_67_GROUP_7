@@ -157,25 +157,26 @@ function PurchaserDetails() {
       }
       
       // Navigate to payment page
-      navigate(`/trips/${numericTripId}/payment`);
-    } catch (error: any) {
+      navigate(`/trips/${numericTripId}/${response.data.id}/payment`);
+    } catch (error: unknown) {
       console.error("Error submitting order:", error);
-      
+
       // Show more detailed error information
-      if (error.response) {
+      if (error instanceof Error && 'response' in error) {
+        const axiosError = error as { response: { status: number; data?: { message?: string } } };
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
+        console.error("Error response data:", axiosError.response.data);
+        console.error("Error response status:", axiosError.response.status);
         setValidationErrors([
-          `เกิดข้อผิดพลาดจากเซิร์ฟเวอร์: ${error.response.status}`,
-          error.response.data?.message || "โปรดตรวจสอบข้อมูลและลองใหม่อีกครั้ง"
+          `เกิดข้อผิดพลาดจากเซิร์ฟเวอร์: ${axiosError.response.status}`,
+          axiosError.response.data?.message || "โปรดตรวจสอบข้อมูลและลองใหม่อีกครั้ง"
         ]);
-      } else if (error.request) {
+      } else if (error instanceof Error && 'request' in error) {
         // The request was made but no response was received
-        console.error("No response received:", error.request);
+        console.error("No response received:", (error as { request: unknown }).request);
         setValidationErrors(["ไม่ได้รับการตอบกลับจากเซิร์ฟเวอร์ โปรดตรวจสอบการเชื่อมต่อ"]);
-      } else {
+      } else if (error instanceof Error) {
         // Something happened in setting up the request that triggered an Error
         console.error("Error message:", error.message);
         setValidationErrors([`เกิดข้อผิดพลาด: ${error.message}`]);
@@ -184,34 +185,7 @@ function PurchaserDetails() {
       setIsSubmitting(false);
     }
   };
-
   // Function to toggle debug information;
-  const PurchaserDetails = () => {
-    // ใช้ useParams เพื่อรับค่า tripId จาก URL
-    const { tripId } = useParams();
-    
-    // แปลง tripId จาก string เป็น number (ถ้าจำเป็น)
-    const tripIdNumber = tripId ? parseInt(tripId) : undefined;
-    
-    // ใช้ tripIdNumber ในการดึงข้อมูลทริป
-    useEffect(() => {
-      const fetchTripDetails = async () => {
-        if (!tripIdNumber) return;
-        
-        try {
-          const response = await api.get(`/trips/${tripIdNumber}`);
-          // จัดการข้อมูลที่ได้รับ
-          console.log(response.data);
-        } catch (error) {
-          console.error("Error fetching trip details:", error);
-        }
-      };
-      
-      fetchTripDetails();
-    }, [tripIdNumber]);
-    
-    // ส่วนที่เหลือของคอมโพเนนต์...
-  };
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       {/* Steps Tabs */}
