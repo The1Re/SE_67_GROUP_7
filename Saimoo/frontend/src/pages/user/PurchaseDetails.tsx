@@ -1,5 +1,5 @@
 // pages/PurchaserDetails.tsx
-import ParticipantForm from "@/components/purchaser/ParticipantForm";
+import ParticipantForm from "@/components/purchase/ParticipantForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ interface Participant {
   ageUnder6: boolean;
 }
 
-function PurchaserDetails() {
+function PurchaseDetails() {
   const [numPeople, setNumPeople] = useState(1);
   const [participants, setParticipants] = useState<Participant[]>(
     Array(1).fill({ name: "", phone: "", note: "", ageUnder6: false })
@@ -93,4 +93,4 @@ function PurchaserDetails() {
   );
 }
 
-export default PurchaserDetails;
+export default PurchaseDetails;

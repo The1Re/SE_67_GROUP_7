@@ -1,21 +1,94 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "@/api";
 
-const TempleCard = ({ trip }) => {
+export type Temple = {
+  id?: number;
+  name: string;
+  latitude?: number;
+  longtitude?: number;
+  province: string;
+  description?: string;
+  like: number;
+  imageUrl?: string;
+};
+
+const TempleCard = ({ isSelectMode = false }) => {
+  const [temples, setTemples] = useState<Temple[]>([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get("/temples");
+        const data = res.data.data;
+        setTemples(
+          data.map((v) => ({
+            id: v.id,
+            name: v.name,
+            latitude: v.latitude,
+            longtitude: v.longitude,
+            province: v.Province?.name || "ไม่ระบุ",
+            description: v.Temple?.[0]?.description || "ไม่มีคำอธิบาย",
+            like: v.Temple?.[0]?.likes || 0,
+            imageUrl: v.imageUrl || null,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching temples:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleClick = (templeId: number) => {
+    if (isSelectMode) {
+      navigate(`/temples/${templeId}`, {
+        state: { createMode: true },
+      });
+    } else {
+      navigate(`/temples/${templeId}`);
+    }
+  };
+
   return (
-    <div
-      className="bg-white p-4 cursor-pointer "
-      onClick={() => navigate(`/temple/profiletemple`)} // 📌 คลิกแล้วไปหน้า profiletemple
-    >
-      <img
-        src={trip.imageUrl}
-        alt={trip.title}
-        className="w-full h-40 object-cover rounded-t-lg"
-      />
-      <h3 className="text-gray-800 font-bold mt-2">{trip.title}</h3>
-      <p className="text-gray-600 text-sm">{trip.description}</p>
+    <div className="bg-white p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {temples.length > 0 ? (
+          temples.map((temple) => (
+            <div
+              key={temple.id}
+              onClick={() => handleClick(temple.id!)}
+              className="bg-white p-4 cursor-pointer overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
+            >
+              {temple.imageUrl ? (
+                <img
+                  src={temple.imageUrl}
+                  alt={temple.name}
+                  className="w-full h-40 object-cover rounded-lg"
+                />
+              ) : (
+                <div className="w-full h-40 bg-gray-300 flex items-center justify-center rounded-lg">
+                  <span className="text-gray-500">ไม่มีรูปภาพ</span>
+                </div>
+              )}
+
+              <h3 className="text-gray-800 font-bold mt-2">{temple.name}</h3>
+              <div className="flex justify-between items-center mt-1">
+                <p className="text-gray-600 text-sm truncate">
+                  {temple.description}
+                </p>
+                <p className="text-gray-600 text-sm flex items-center pr-5">
+                  ❤️ {temple.like}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">⛔️ ไม่พบข้อมูลวัด</p>
+        )}
+      </div>
     </div>
   );
 };
