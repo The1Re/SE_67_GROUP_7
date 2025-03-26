@@ -4,20 +4,21 @@ import DaySelector from "./DaySelector";
 import api from "@/api";
 import { useParams } from "react-router-dom";
 
-interface Trip {
+interface TripDetailFromAPI {
   id: number;
   order: number;
   arriveTime: string;
   day: number;
   description: string;
   locationId: number;
-  location?: {
+  Location: {
     name: string;
     address?: string;
   };
-  images: string[];
+  TripDetailPicture: {
+    imagePath: string;
+  }[];
 }
-
 interface DayData {
   day: number;
   locations: LocationData[];
@@ -46,40 +47,29 @@ const TripDayDetail: React.FC = () => {
     const fetchDetails = async () => {
       try {
         const res = await api.get(`/trips/${tripId}/details`);
-        const details: Trip[] = res.data;
+        const details = res.data;
   
         const grouped: Record<number, LocationData[]> = {};
   
-        // ใช้ Promise.all เพื่อโหลดรูปพร้อมกัน
-        const detailsWithImages = await Promise.all(
-          details.map(async (item) => {
-            let images: string[] = [];
+        const detailsWithImages = (details as TripDetailFromAPI[]).map((item) => {
+          const images = (item.TripDetailPicture || []).map((img) =>
+            `${import.meta.env.VITE_API_URL}/uploads/image/${img.imagePath}`
+          );
+        
+          return {
+            day: item.day,
+            location: {
+              tripDetailId: item.id,
+              type: item.order === 0 ? "meeting_point" : "location",
+              name: item.Location?.name || "ไม่ระบุชื่อ",
+              address: item.Location?.address || "",
+              time: item.arriveTime,
+              description: item.description,
+              images,
+            },
+          };
+        });        
   
-            try {
-              const imgRes = await api.get(`/trips/${tripId}/details/${item.id}/images`);
-              images = (imgRes.data || []).map((img: { imagePath: string }) =>
-                `${import.meta.env.VITE_API_URL}/uploads/image/${img.imagePath.split(/[\\/]/).pop()}`
-              );              
-            } catch (err) {
-              console.error("❌ โหลดรูปไม่สำเร็จ:", err);
-            }
-  
-            return {
-              day: item.day,
-              location: {
-                tripDetailId: item.id,
-                type: item.order === 0 ? "meeting_point" : "location",
-                name: item.location?.name || "ไม่ระบุชื่อ",
-                address: item.location?.address || "",
-                time: item.arriveTime,
-                description: item.description,
-                images, // ⬅️ ใส่รูปตรงนี้
-              },
-            };
-          })
-        );
-  
-        // จัดกลุ่มตามวัน
         detailsWithImages.forEach(({ day, location }) => {
           if (!grouped[day]) grouped[day] = [];
           grouped[day].push(location);
@@ -97,8 +87,7 @@ const TripDayDetail: React.FC = () => {
     };
   
     fetchDetails();
-  }, [id, tripId]);
-  
+  }, [id, tripId]);  
 
   // เปิด modal รูป
   const openImageModal = async (location: LocationData, index: number) => {
