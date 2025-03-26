@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import * as TripController from '../controllers/trip.controller';
-import { authenticateUser, authorizeRoles } from 'middlewares';
+import { authenticateUser, authorizeRoles } from '../middlewares';
 
 const router = Router();
 
