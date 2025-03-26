@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "@/api"; // axios instance ที่ตั้งไว้แล้ว
+import api from "@/api";
 
 interface TripData {
   id: number;
@@ -13,6 +13,7 @@ interface TripData {
   ownerTripId: number;
   type: string;
   price: number;
+  image?: string; // เพิ่ม field สำหรับรูป
 }
 
 export default function MasonryGallery() {
@@ -21,8 +22,31 @@ export default function MasonryGallery() {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const res = await api.get("/trips"); // เรียก http://localhost:3000/api/trips
-        setTrips(res.data.data); // backend ส่งเป็น { data: [...] }
+        const res = await api.get("/trips");
+        const tripsData = res.data.data;
+
+        // ดึงรูปของแต่ละทริปจาก /trips/:id
+        const tripsWithImages = await Promise.all(
+          tripsData.map(async (trip: TripData) => {
+            try {
+              const tripDetailRes = await api.get(`/trips/${trip.id}`);
+              const tripDetail = tripDetailRes.data;
+              const tripImage = tripDetail.TripPicture?.[0]?.imagePath || "";
+              return {
+                ...trip,
+                image: tripImage,
+              };
+            } catch (error) {
+              console.error("Error fetching trip image for tripId", trip.id, error);
+              return {
+                ...trip,
+                image: "",
+              };
+            }
+          })
+        );
+
+        setTrips(tripsWithImages);
       } catch (error) {
         console.error("Error fetching trips:", error);
       }
@@ -42,14 +66,17 @@ export default function MasonryGallery() {
             className="block break-inside-avoid p-2 bg-white rounded-lg hover:shadow-xl transition-all duration-300 active:scale-95"
           >
             <img
-              src={`https://source.unsplash.com/random/400x300?temple&sig=${trip.id}`}
+              src={
+                trip.image ||
+                `https://source.unsplash.com/random/400x300?temple&sig=${trip.id}`
+              }
               alt={trip.title}
               className="w-full rounded-lg mb-2"
             />
             <h2 className="text-lg font-bold">{trip.title}</h2>
             <p className="text-sm text-gray-600">โดยผู้ใช้ #{trip.ownerTripId}</p>
             <p className="text-xs text-gray-400">
-              {new Date(trip.dateStart).toLocaleDateString()} -{" "}
+              {new Date(trip.dateStart).toLocaleDateString()} - {" "}
               {new Date(trip.dateEnd).toLocaleDateString()}
             </p>
           </a>
