@@ -26,7 +26,7 @@ const UserRoutes = () => {
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
           <Route path='/plan-trip' element={<PlanTrip />}></Route>
           <Route path='/temples/signup' element={<SignupTemple />} />
-          <Route path='/trip-detail' element={<TripDetail />} />
+          <Route path='/trip-detail/:id' element={<TripDetail />} />
           <Route path='/trips/purchaser' element={<PurchaserDetails />} />
           <Route path='/trips/payment' element={<PaymentDetails/>} />
           <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
