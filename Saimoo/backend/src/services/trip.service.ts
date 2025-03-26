@@ -1,6 +1,6 @@
 import prisma from "../models/prisma";
 
-import type { Trip, TripDetail } from "@prisma/client";
+import type { Prisma, Trip, TripDetail } from "@prisma/client";
 
 export interface TripData extends Trip {
     TripDetail: TripDetail[];
@@ -10,13 +10,14 @@ export const getTripAvailable = async (
     page: number = 1,
     pageSize: number = 10,
     sortBy: string = 'id',
-    sortOrder: 'asc' | 'desc' = 'desc'
+    sortOrder: 'asc' | 'desc' = 'desc',
+    where: Prisma.TripWhereInput = { status: 'waiting'}
 ) => {
     const skip = (page - 1) * pageSize;
 
     // Fetch trips   
     const trips = await prisma.trip.findMany({
-        where: { status: 'waiting' },
+        where,
         orderBy: { [sortBy]: sortOrder },
         skip,
         take: pageSize,
@@ -34,6 +35,12 @@ export const getTripAvailable = async (
             pageSize,
         },
     }
+}
+
+export const getAllTripByUser = async (userId: number) => {
+    return await prisma.trip.findMany({
+        where: { ownerTripId: userId }
+    });
 }
 
 export const getTripById = async (id: number) => {

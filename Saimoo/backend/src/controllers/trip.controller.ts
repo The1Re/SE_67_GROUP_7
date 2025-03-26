@@ -4,20 +4,33 @@ import logger from "../utils/logger";
 import type { TripData } from "../services/trip.service";
 
 import { TripService } from "../services";
+import { Prisma } from "@prisma/client";
 
 export const getAllTrips = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { page = '1', pageSize = '10', sortBy = 'id', sortOrder = 'desc' } = req.query;
+        const { page = '1', pageSize = '10', sortBy = 'id', sortOrder = 'desc', where = { status: 'wating' } } = req.query;
         const pageNumber = parseInt(page as string) || 1;
         const size = parseInt(pageSize as string) || 10;
 
-        const trips = await TripService.getTripAvailable(pageNumber, size, sortBy as string, sortOrder as 'asc' | 'desc');
+        const trips = await TripService.getTripAvailable(pageNumber, size, sortBy as string, sortOrder as 'asc' | 'desc', where as Prisma.TripWhereInput);
         return res.status(200).json(trips);
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: "Internal server error" });
     }
 } 
+
+export const getAllTripByUser = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { userId } = req.params;
+        const trips = await TripService.getAllTripByUser(Number(userId));
+        return res.status(200).json(trips);
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 
 export const getTrip = async (req: Request, res: Response): Promise<any> => {
     try {

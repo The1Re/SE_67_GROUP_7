@@ -56,7 +56,7 @@ export const getLocationTempleById = async (id: number) => {
     where: {
       id: id,
       type: 'temple',
-    },include: { Temple: true },
+    },include: { Province: true, Temple: true },
   });
 };
 
