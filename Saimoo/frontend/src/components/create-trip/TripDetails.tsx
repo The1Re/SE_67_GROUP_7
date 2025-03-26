@@ -3,6 +3,7 @@ import { XMarkIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import LocationModal from './LocationModal';
+import { getFile, sendFile } from '@/services/fileupload';
 
 const TripDetails = ({
     id,
@@ -16,16 +17,18 @@ const TripDetails = ({
 }) => {
     const [description, setDescription] = useState(initialDescription);
     const [time, setTime] = useState(initialArriveTime);
-    const [imageList, setImageList] = useState(images);
+    const [imageList, setImageList] = useState<string[]>(images);
     const fileInputRef = useRef(null);
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
     const [isOpenLocationModal, setIsOpenLocationModal] = useState(false);
 
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
-        const newImages = files.map(file => URL.createObjectURL(file as Blob));
+        const newImages = await Promise.all(files.map(async (file: File) => {
+            return (await sendFile(file)).file.path;
+        }));
         const updated = [...imageList, ...newImages];
         setImageList(updated);
         onUpdate(id, { TripDetailPicture: { imagePath: updated } });
@@ -112,7 +115,7 @@ const TripDetails = ({
                             className="relative cursor-pointer rounded-md overflow-hidden flex-shrink-0 transition-all"
                         >
                             <img
-                                src={image}
+                                src={getFile(image)}
                                 alt={`Thumbnail ${index + 1}`}
                                 className="h-16 w-16 object-cover"
                             />

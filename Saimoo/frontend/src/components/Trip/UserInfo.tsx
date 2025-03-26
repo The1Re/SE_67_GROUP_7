@@ -8,6 +8,7 @@ const UserInfo = () => {
   const handleCreateTrip = () => {
     console.log(`สร้างทริปสำเร็จ!`);
     console.log(trip);
+    sessionStorage.clear();
   };
 
   return (
@@ -22,24 +23,28 @@ const UserInfo = () => {
 
       <div className="flex flex-col items-end">
         <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-          <div className="inline-flex items-center rounded-md bg-gray-300 p-1">
-            <button
-              onClick={() => setTrip({ ...trip, type: "free", price: 0 })}
-              className={`cursor-pointer px-4 py-1 text-sm rounded-md font-bold transition-colors duration-300 ${
-                trip.type === "free" ? "bg-teal-400 text-white" : "text-black"
-              }`}
-            >
-              แชร์
-            </button>
-            <button
-              onClick={() => setTrip({ ...trip, type: "paid" })}
-              className={`cursor-pointer px-4 py-1 text-sm rounded-md font-bold transition-colors duration-300 ${
-                trip.type === "paid" ? "bg-teal-400 text-white" : "text-black"
-              }`}
-            >
-              ขาย
-            </button>
-          </div>
+          {
+            user.role === "guide" && (
+              <div className="inline-flex items-center rounded-md bg-gray-300 p-1">
+                <button
+                  onClick={() => setTrip({ ...trip, type: "free", price: 0 })}
+                  className={`cursor-pointer px-4 py-1 text-sm rounded-md font-bold transition-colors duration-300 ${
+                    trip.type === "free" ? "bg-teal-400 text-white" : "text-black"
+                  }`}
+                >
+                  แชร์
+                </button>
+                <button
+                  onClick={() => setTrip({ ...trip, type: "paid" })}
+                  className={`cursor-pointer px-4 py-1 text-sm rounded-md font-bold transition-colors duration-300 ${
+                    trip.type === "paid" ? "bg-teal-400 text-white" : "text-black"
+                  }`}
+                >
+                  ขาย
+                </button>
+              </div>
+            )
+          }
           <button 
             className="px-6 py-2 bg-teal-400 text-white rounded-lg font-bold hover:bg-teal-500 transition cursor-pointer"
             onClick={handleCreateTrip}
