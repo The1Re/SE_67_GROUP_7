@@ -1,14 +1,25 @@
+import api from "@/api";
 import { useAuth } from "@/context/AuthContext";
 import { useTrip } from "@/context/TripContext";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const UserInfo = () => {
   const { user } = useAuth();
   const { trip, setTrip } = useTrip();
+  const navigate = useNavigate();
 
   const handleCreateTrip = () => {
     setTrip({ ...trip, ownerTripId: user.id });
-    console.log(`สร้างทริปสำเร็จ!`);
-    console.log(trip);
+    console.log(trip)
+    api.post("/trips", trip, { headers: { Authorization: `Bearer ${user.token}` } })
+      .then(() => {
+        toast.success("สร้างทริปสำเร็จ");
+        navigate(`/trips`);
+      })
+      .catch(() => {
+        toast.error("สร้างทริปไม่สำเร็จ");
+      });
   };
 
   return (
