@@ -1,11 +1,12 @@
 import { Router } from 'express';
 
 import * as TripController from '../controllers/trip.controller';
+import { authenticateUser, authorizeRoles } from 'middlewares';
 
 const router = Router();
 
 router.get('/', TripController.getAllTrips);
-router.get('/history', TripController.getAllTripByUser);
+router.get('/history', authenticateUser, authorizeRoles('guide'), TripController.getAllTripByUser);
 router.get('/:id', TripController.getTrip);
 router.post('/', TripController.newTrip);
 router.put('/', TripController.updateTrip);
