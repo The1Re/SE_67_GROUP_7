@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', TripController.getAllTrips);
 router.get('/:id', TripController.getTrip);
-router.get('/user/:userId', TripController.getAllTripByUser);
+router.get('/history', TripController.getAllTripByUser);
 router.post('/', TripController.newTrip);
 router.put('/', TripController.updateTrip);
 router.delete('/', TripController.removeTrip);

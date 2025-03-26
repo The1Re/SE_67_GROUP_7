@@ -5,6 +5,7 @@ import type { TripData } from "../services/trip.service";
 
 import { TripService } from "../services";
 import { Prisma } from "@prisma/client";
+import { AuthRequest } from "middlewares";
 
 export const getAllTrips = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -20,9 +21,9 @@ export const getAllTrips = async (req: Request, res: Response): Promise<any> => 
     }
 } 
 
-export const getAllTripByUser = async (req: Request, res: Response): Promise<any> => {
+export const getAllTripByUser = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
-        const { userId } = req.params;
+        const userId = req.user?.id;
         const trips = await TripService.getAllTripByUser(Number(userId));
         return res.status(200).json(trips);
     } catch (error) {
