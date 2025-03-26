@@ -15,6 +15,7 @@ import Document from "@/pages/Guide/Document";
 import TripDetail from "@/pages/user/TripDetail";
 import TripCancellationPage from "@/pages/Guide/TripCancellationPage";
 import Wallet from "@/pages/user/Wallet";
+import PurchaserDetails from "@/pages/user/PurchaserDetails";
 const GuideRoutes = () => {
   return (
     <Routes>
@@ -24,7 +25,7 @@ const GuideRoutes = () => {
       <Route path="/trips" element={<Trips/>} />
       <Route path='/temples' element={<BrowseTempleWithGuest />} />
       <Route path='/plan-trip' element={<PlanTrip />}></Route>
-      <Route path='/Guides/check' element={<TripScreeningForm />} />
+      <Route path='/trips/purchaser' element={<PurchaserDetails />} />
       <Route path='/dashboard' element={<Dashboard />}/>
       <Route path='/historytrip' element={<HistoryTrip />}/>
       <Route path='/temples/profiletemple' element={<ProfileTemple />}></Route>
