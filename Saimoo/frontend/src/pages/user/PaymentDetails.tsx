@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TripSummary from "@/components/payment/TripSummary";
 import PaymentMethodSelector from "@/components/payment/PaymentMethodSelector";
 import api from "@/api";
@@ -12,6 +12,9 @@ function PaymentDetails() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [deductAmount, setDeductAmount] = useState(0);
+  const { tripId } = useParams<{ tripId: string }>();
+  const numericTripId = Number(tripId) || 2;
+
 
   // Function to receive deductAmount from TripSummary
   const handleDeductAmountChange = (amount: number) => {
@@ -51,16 +54,17 @@ function PaymentDetails() {
       setSuccess(true);
       setIsProcessing(false);
      
-      // navigate ไปยังหน้ายืนยันการชำระเงิน
-      navigate("/trips/confirm");
+      const savedOrderId = localStorage.getItem("orderId");
+      navigate(`/trips/${numericTripId}/${savedOrderId}/confirm`);
+
+      navigate(`/trips/${numericTripId}/${savedOrderId}/confirm`);
      
     } catch (error) {
       console.error("เกิดข้อผิดพลาดในการถอนเงิน:", error);
       setError("เกิดข้อผิดพลาดในการชำระเงิน กรุณาลองใหม่อีกครั้ง");
       setIsProcessing(false);
     }
-  };
- 
+  }; 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       {/* Tabs */}

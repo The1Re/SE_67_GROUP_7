@@ -29,7 +29,7 @@ const UserRoutes = () => {
           <Route path='/trips/:tripId' element={<TripDetail />} />
           <Route path='/trips/:tripId/purchase' element={<PurchaserDetails />} />
           <Route path='/trips/:tripId/:orderId/payment' element={<PaymentDetails/>} />
-          <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
+          <Route path='/trips/:tripId/:orderId/confirm' element={<ConfirmPayment/>} /> 
           <Route path='/Guides/signup' element={<SignupGuide />} />
           <Route path='/temple/profiletemple' element={<ProfileTemple />} />
           <Route path='history' element={<HistoryTrip/>}></Route>
