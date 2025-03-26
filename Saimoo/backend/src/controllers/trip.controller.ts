@@ -8,7 +8,7 @@ import { Prisma } from "@prisma/client";
 
 export const getAllTrips = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { page = '1', pageSize = '10', sortBy = 'id', sortOrder = 'desc', where = { status: 'wating' } } = req.query;
+        const { page = '1', pageSize = '10', sortBy = 'id', sortOrder = 'desc', where = { status: 'waiting' } } = req.query;
         const pageNumber = parseInt(page as string) || 1;
         const size = parseInt(pageSize as string) || 10;
 
