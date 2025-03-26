@@ -1,9 +1,21 @@
 import prisma from "../models/prisma";
 
-import type { Prisma, Trip, TripDetail } from "@prisma/client";
+import { Prisma, Trip, TripDetail, Location, Province } from "@prisma/client";
 
-export interface TripData extends Trip {
-    TripDetail: TripDetail[];
+export type TripDetailData = TripDetail & {
+    TripDetailPicture: {
+        imagePath: string[] | null,
+    }
+    Location?: Location & {
+        Provice: Province
+    },
+}
+
+export type TripData = Trip & {
+    TripPicture: {
+        imagePath: string | null,
+    }
+    TripDetail: TripDetailData[]
 }
 
 export const getTripAvailable = async (
@@ -53,26 +65,74 @@ export const getTripById = async (id: number) => {
     });
 }
 
+// export const createTrip = async (tripData: TripData) => {
+//     const tripDetail = tripData.TripDetail?.map((detail) => {
+//         const [hours, minutes] = String(detail.arriveTime).split(":");
+//         const date = new Date()
+//         date.setHours(Number(hours), Number(minutes));
+//         return {
+//             ...detail,
+//             arriveTime: date
+//         }
+//     });
+//     return await prisma.trip.create({
+//         data: {
+//             ...tripData,
+//             dateStart: new Date(tripData.dateStart),
+//             dateEnd: new Date(tripData.dateEnd),
+//             TripDetail: {
+//                 create: tripDetail
+//             }
+//         },
+//         include: { TripDetail: true }
+//     });
+// }
+
 export const createTrip = async (tripData: TripData) => {
-    const tripDetail = tripData.TripDetail?.map((detail) => {
-        const [hours, minutes] = String(detail.arriveTime).split(":");
-        const date = new Date()
-        date.setHours(Number(hours), Number(minutes));
-        return {
-            ...detail,
-            arriveTime: date
-        }
-    });
+    const { title, description, dateStart, dateEnd, vehicle, maxPerson, status, ownerTripId, type, price, TripPicture, TripDetail } = tripData;
+    
     return await prisma.trip.create({
         data: {
-            ...tripData,
-            dateStart: new Date(tripData.dateStart),
-            dateEnd: new Date(tripData.dateEnd),
+            title,
+            description,
+            dateStart: new Date(dateStart),
+            dateEnd: new Date(dateEnd),
+            vehicle,
+            maxPerson,
+            status,
+            ownerTripId,
+            type,
+            price,
+            TripPicture: {
+                create: {
+                    imagePath: TripPicture?.imagePath
+                }
+            },
             TripDetail: {
-                create: tripDetail
+                create: TripDetail.map((detail) => ({
+                    order: detail.order,
+                    day: detail.day,
+                    arriveTime: new Date(detail.arriveTime),
+                    description: detail.description,
+                    Location: {
+                        connectOrCreate: {
+                            where: { id: detail.locationId },
+                            create: {
+                                name: detail.Location?.name ?? "unknow location",
+                                latitude: detail.Location?.latitude,
+                                longitude: detail.Location?.longitude,
+                                type: detail.Location?.type,
+                            }
+                        }
+                    },
+                    TripDetailPicture: {
+                        create: TripDetail.map((detail) => ({
+                            imagePath: detail.TripDetailPicture?.imagePath
+                        }))
+                    }
+                }))
             }
-        },
-        include: { TripDetail: true }
+        }
     });
 }
 
