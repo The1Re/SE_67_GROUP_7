@@ -15,7 +15,7 @@ export const TempleTopbar: React.FC = () => {
 
   return (
     <>
-      <div className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
+      <div className="sticky top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
         {/* Sidebar Toggle Button */}
         <button className="cursor-pointer text-2xl" onClick={() => setIsSidebarOpen(true)}>
           <IoIosMenu />

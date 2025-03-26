@@ -7,7 +7,7 @@ const TempleRoutes = () => {
   return (
     <Routes>
       
-      <Route path="signup" element={<SignupForm/>} />
+      <Route path="/signup" element={<SignupForm/>} />
       
     </Routes>
   );

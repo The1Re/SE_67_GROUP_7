@@ -1,16 +1,17 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Profile from '../pages/user/Profile'
-import { Trips } from '@/pages/Trips'
+import { Trips } from '@/pages/user/Trips'
 import UserLayout from '@/layouts/UserLayout'
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
 import TempleDetail from "@/components/ฺbrowsetemple/TempleDetail";
 import SignupTemple from '@/pages/temple/SignupTemple';
-import TripDetail from '@/pages/TripDetail';
 import PurchaseDetails from '@/pages/user/PurchaseDetails';
+import TripDetail from '@/pages/user/TripDetail';
 import PaymentDetails from '@/pages/user/PaymentDetails';
 import ConfirmPayment from '@/pages/user/ConfirmPayment';
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
+import HistoryTrip from '@/pages/user/HistoryTrip';
 import Wallet from '@/pages/user/Wallet';
 import CreateTrip from '@/pages/CreateTrip';
 
@@ -34,6 +35,7 @@ const UserRoutes = () => {
           <Route path='/Guides/signup' element={<SignupGuide />} />
           <Route path='/temple/profiletemple' element={<ProfileTemple />} />
           <Route path='/create-trip' element={<CreateTrip />} />
+          <Route path='/history' element={<HistoryTrip/>}></Route>
       </Route>
     </Routes>
   );
