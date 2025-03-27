@@ -16,6 +16,7 @@ const UserInfo = () => {
       .then(() => {
         toast.success("สร้างทริปสำเร็จ");
         navigate(`/trips`);
+        sessionStorage.clear();
       })
       .catch(() => {
         toast.error("สร้างทริปไม่สำเร็จ");
