@@ -37,7 +37,7 @@ const TripContext = createContext(null);
 
 export const TripProvider = ({ children }) => {
     const { user } = useAuth();
-    const [trip, setTrip] = useState<Trip>(getSate() || {...initTripValue, ownerTripId: user?.id});
+    const [trip, setTrip] = useState<Trip>(getSate() || {...initTripValue, ownerTripId: user.id});
     const [numDay, setNumDay] = useState(1);
 
     const setTripDetail = useCallback((day: number, tripDetail: TripDetail[]) => {
