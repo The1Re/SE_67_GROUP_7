@@ -7,18 +7,19 @@ import TempleDetail from '@/components/ฺbrowsetemple/TempleDetail';
 
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
+import TripDetail from '@/pages/user/TripDetail';
 function GuestRoutes() {
   return (
     <Routes>
       <Route element={<GuestLayout />} >
           <Route path='/' element={<Navigate to="/trips" replace />} />
           <Route path='/trips' element={<Trips />}></Route>
+          <Route path='/trips/:tripId' element={<TripDetail />} />
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/temples/:id' element={<TempleDetail />} /> 
           <Route path='/guides/signup' element={<SignupGuide />} />
           <Route path='/temple/profiletemple' element={<ProfileTemple />} />
-         
       </Route>
     </Routes>
   );
