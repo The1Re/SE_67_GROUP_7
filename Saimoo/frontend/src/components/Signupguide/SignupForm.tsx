@@ -19,6 +19,8 @@ const SignupForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  const [showPopup, setShowPopup] = useState(false);  // เพิ่ม state สำหรับเปิด/ปิด Popup
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
