@@ -57,8 +57,13 @@ function HistoryTrip() {
                 });
                 tripTitles[order.tripId] = tripRes.data.title;
               } catch (error) {
-                tripTitles[order.tripId] = `ทริป #${order.tripId}`;
-              }
+                if (error instanceof Error) {
+                  console.error("โหลดข้อมูลผิดพลาด:", error.message);
+                  setError(error.message);
+                } else {
+                  setError("เกิดข้อผิดพลาด");
+                }
+              }              
             }
           })
         );
