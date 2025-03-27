@@ -1,82 +1,132 @@
 import api from "@/api";
 import { useEffect, useState } from "react";
 import DataLoading from "../DataLoading";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 export type Temple = {
   id?: number;
   name: string;
-  latitude?: number;
-  longtitude?: number;
+  latitude?: GLfloat;
+  longitude?: GLfloat;
   province: string;
-  description?: string;
-  like: number;
-}
+};
 
 const TempleTable = () => {
   const [temples, setTemples] = useState<Temple[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [newTemple, setNewTemple] = useState<Temple>({ name: "", province: "", description: "", like: 0 });
-  const [editTemple, setEditTemple] = useState<Temple>(null); // ✅ เก็บข้อมูลวัดที่กำลังแก้ไข
+  const [newTemple, setNewTemple] = useState<Temple>({ name: "", province: "", latitude: 0 , longitude: 0 });
+  const [editTemple, setEditTemple] = useState<Temple | null>(null); // Data of temple being edited
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10); // Number of temples per page
+  const [totalPages, setTotalPages] = useState(1); // Total number of pages
 
   const fetchData = async () => {
     setLoading(true);
-    const res = await api.get("/temples?sortOrder=asc");
-    const data = res.data.data;
-    setTemples(data.map((v) => {
-      return {
-        id: v.id,
-        name: v.name,
-        latitude: v.latitude,
-        longtitude: v.longitude,
-        province: v.Province.name,
-        description: v.Temple.description,
-        like: v.Temple.likes
-      }
-    }));
-    setLoading(false);
+    try {
+      const res = await api.get(`/temples?sortOrder=asc&page=${currentPage}&pageSize=${pageSize}`);
+      const data = res.data.data;
+      const total = res.data.pagination.totalPages;
+      setTemples(data.map((v) => {
+        return {
+          id: v.id,
+          name: v.name,
+          latitude: v.latitude,
+          longitude: v.longitude,
+          province: v.Province?.name || "ไม่ระบุจังหวัด", // Added optional chaining and fallback
+        };
+      }));
+      setTotalPages(total);
+    } catch (error) {
+      console.error("Error fetching temples:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentPage]);
 
-  // ✅ ลบวัด
-  const handleDelete = (id: number) => {
-    (async () => {
-      await api
-      .delete(`/temples/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-    })();
-    fetchData();
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
-  // ✅ เพิ่มวัดใหม่
-  const handleAddTemple = () => {
-    setTemples([...temples, { id: temples.length + 1, ...newTemple }]);
-    setShowForm(false);
-    setNewTemple({ name: "", location: "", phone: "", email: "" });
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
-  // ✅ เปิด Modal แก้ไข
-  const handleEdit = (temple) => {
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      title: "ยืนยันการลบ?",
+      text: "คุณต้องการลบข้อมูลวัดนี้ใช่หรือไม่?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ลบเลย",
+      cancelButtonText: "ยกเลิก",
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        await api.delete(`/temples/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+  
+        fetchData(); // Refetch after deletion
+  
+        toast.success("ลบข้อมูลวัดเรียบร้อยแล้ว!");
+      } catch (error) {
+        console.error("Error deleting temple:", error);
+        toast.error("เกิดข้อผิดพลาดในการลบข้อมูล!");
+      }
+    }
+  };
+
+  const handleAddTemple = async () => {
+    try {
+      const response = await api.post("/temples", newTemple);
+      setNewTemple({ name: "", province: "", latitude: 0, longitude: 0 });
+      setShowForm(false);
+      fetchData();
+      console.log("Temple added successfully:", response.data);
+      toast.success("ข้อมูลวัดถูกลบสำเร็จ!");
+    } catch (error) {
+      console.error("Error creating temple:", error);
+    }
+  };
+
+  const handleEdit = (temple: Temple) => {
     setEditTemple({ ...temple });
-    document.body.style.overflow = "hidden"; // ✅ ป้องกันการ Scroll ขณะ Popup เปิด
+    document.body.style.overflow = "hidden"; // Prevent scrolling when popup is open
   };
 
-  // ✅ ปิด Modal
   const handleClose = () => {
     setEditTemple(null);
-    document.body.style.overflow = "auto"; // ✅ เปิด Scroll กลับมา
+    document.body.style.overflow = "auto"; // Allow scrolling again
   };
 
-  // ✅ บันทึกข้อมูลที่แก้ไข
-  const handleSave = () => {
-    setTemples(temples.map(t => t.id === editTemple.id ? editTemple : t));
-    handleClose();
+  const handleSave = async () => {
+    if (editTemple) {
+      try {
+        await api.put(`/temples/${editTemple.id}`, editTemple);
+        setTemples(temples.map(t => t.id === editTemple.id ? editTemple : t)); // Update temple in the state
+        handleClose();
+        console.log("Temple updated successfully.");
+      } catch (error) {
+        console.error("Error updating temple:", error);
+      }
+    }
   };
 
   if (loading) {
@@ -92,19 +142,29 @@ const TempleTable = () => {
         </button>
       </div>
 
-      {/* ✅ ฟอร์มเพิ่มวัด */}
+      {/* Form for adding a new temple */}
       {showForm ? (
         <div className="border p-4 bg-gray-200 rounded-md">
           <label>ชื่อวัด</label>
           <input type="text" value={newTemple.name} onChange={(e) => setNewTemple({ ...newTemple, name: e.target.value })} className="w-full p-2 border rounded mb-2" />
           <label>พิกัด latitude</label>
-          <input type="text" value={newTemple.latitude} onChange={(e) => setNewTemple({ ...newTemple, latitude: Number(e.target.value) })} className="w-full p-2 border rounded mb-2" />
+          <input 
+            type="number" 
+            step="any" 
+            value={newTemple.latitude} 
+            onChange={(e) => setNewTemple({ ...newTemple, latitude: Number(e.target.value) })} 
+            className="w-full p-2 border rounded mb-2" 
+          />          
           <label>พิกัด longtitude</label>
-          <input type="text" value={newTemple.longtitude} onChange={(e) => setNewTemple({ ...newTemple, longtitude: Number(e.target.value) })} className="w-full p-2 border rounded mb-2" />
+          <input 
+            type="number" 
+            step="any" 
+            value={newTemple.longitude} 
+            onChange={(e) => setNewTemple({ ...newTemple, longitude: Number(e.target.value) })} 
+            className="w-full p-2 border rounded mb-2" 
+          />          
           <label>จังหวัด</label>
           <input type="text" value={newTemple.province} onChange={(e) => setNewTemple({ ...newTemple, province: e.target.value })} className="w-full p-2 border rounded mb-2" />
-          <label>คำอธิบาย</label>
-          <input type="text" value={newTemple.description} onChange={(e) => setNewTemple({ ...newTemple, description: e.target.value })} className="w-full p-2 border rounded mb-2" />
           <div className="flex justify-center mt-2">
             <button onClick={handleAddTemple} className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded mr-2">เพิ่มวัด</button>
             <button onClick={() => setShowForm(false)} className="cursor-pointer bg-red-500 text-white px-4 py-2 rounded">ยกเลิก</button>
@@ -119,8 +179,6 @@ const TempleTable = () => {
               <th className="border p-2">Latitude</th>
               <th className="border p-2">Longtitude</th>
               <th className="border p-2">Province</th>
-              <th className="border p-2">Discription</th>
-              <th className="border p-2">Like</th>
               <th className="border p-2">Actions</th>
             </tr>
           </thead>
@@ -130,10 +188,8 @@ const TempleTable = () => {
                 <td className="border p-2">{temple.id}</td>
                 <td className="border p-2">{temple.name}</td>
                 <td className="border p-2">{temple.latitude}</td>
-                <td className="border p-2">{temple.longtitude}</td>
+                <td className="border p-2">{temple.longitude}</td>
                 <td className="border p-2">{temple.province}</td>
-                <td className="border p-2">{temple.description}</td>
-                <td className="border p-2">{temple.like}</td>
                 <td className="border p-2">
                   <button className="cursor-pointer bg-yellow-400 px-3 py-1 rounded mr-2" onClick={() => handleEdit(temple)}>Edit</button>
                   <button className="cursor-pointer bg-red-500 text-white px-3 py-1 rounded" onClick={() => handleDelete(temple.id)}>Delete</button>
@@ -144,7 +200,28 @@ const TempleTable = () => {
         </table>
       )}
 
-      {/* ✅ Popup Modal สำหรับแก้ไขวัด */}
+      {/* Pagination controls */}
+      {!showForm && (
+        <div className="flex justify-between mt-4">
+          <button 
+            className="cursor-pointer bg-gray-500 text-white px-4 py-2 rounded" 
+            onClick={handlePrevPage} 
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="self-center">Page {currentPage} of {totalPages}</span>
+          <button 
+            className="cursor-pointer bg-gray-500 text-white px-4 py-2 rounded" 
+            onClick={handleNextPage} 
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {/* Edit Modal for updating temple data */}
       {editTemple && (
         <div 
           className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-10 backdrop-blur-lg transition-all duration-300"
@@ -162,15 +239,11 @@ const TempleTable = () => {
             </label>
             <label className="block mb-2">
               พิกัด longtitude:
-              <input type="number" className="w-full p-2 border rounded" value={editTemple.longtitude} onChange={(e) => setEditTemple({ ...editTemple, longtitude: Number(e.target.value) })} />
+              <input type="number" className="w-full p-2 border rounded" value={editTemple.longitude} onChange={(e) => setEditTemple({ ...editTemple, longitude: Number(e.target.value) })} />
             </label>
             <label className="block mb-2">
               จังหวัด:
               <input type="text" className="w-full p-2 border rounded" value={editTemple.province} onChange={(e) => setEditTemple({ ...editTemple, province: e.target.value })} />
-            </label>
-            <label className="block mb-2">
-              คำอธิบาย:
-              <input type="text" className="w-full p-2 border rounded" value={editTemple.description} onChange={(e) => setEditTemple({ ...editTemple, description: e.target.value })} />
             </label>
             <div className="mt-4 flex justify-end gap-2">
               <button className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded" onClick={handleSave}>Save</button>

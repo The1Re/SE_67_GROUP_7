@@ -20,22 +20,26 @@ const UserRoutes = () => {
   return (
     <Routes>
       <Route element={<UserLayout />} >
-          <Route path='/' element={<Navigate to="/trips" replace />}></Route>
-          <Route path='/profile' element={<Profile />}></Route>
-          <Route path='/trips' element={<Trips />}></Route>
-          <Route path='/wallet' element={<Wallet />} />
-          <Route path='/temples' element={<BrowseTempleWithGuest />} />
-          <Route path='/temples/:id' element={<TempleDetail />} /> {/* ✅ เพิ่มตรงนี้ */}
-          <Route path='/browse-temple' element={<BrowseTempleWithGuest />} /> 
-          <Route path='/temples/signup' element={<SignupTemple />} />
-          <Route path='/trip-detail' element={<TripDetail />} />
-          <Route path='/trips/purchase' element={<PurchaseDetails />} />
-          <Route path='/trips/payment' element={<PaymentDetails/>} />
-          <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
-          <Route path='/Guides/signup' element={<SignupGuide />} />
-          <Route path='/temple/profiletemple' element={<ProfileTemple />} />
-          <Route path='/create-trip' element={<CreateTrip />} />
-          <Route path='/history' element={<HistoryTrip/>}></Route>
+        <Route path='/' element={<Navigate to="/trips" replace />}></Route>
+        <Route path='/profile' element={<Profile />}></Route>
+        <Route path='/wallet' element={<Wallet />} />
+
+        <Route path='/trips' element={<Trips />}></Route>
+        <Route path='/trips/:tripId' element={<TripDetail />} />
+        <Route path='/trips/:tripId/purchase' element={<PurchaseDetails />} />
+        <Route path='/trips/:tripId/:orderId/payment' element={<PaymentDetails/>} />
+        <Route path='/trips/:tripId/:orderId/confirm' element={<ConfirmPayment/>} /> 
+        <Route path='/create-trip' element={<CreateTrip />} />
+        <Route path='/history' element={<HistoryTrip />}></Route>
+
+        <Route path='/temples' element={<BrowseTempleWithGuest />} />
+        <Route path='/temple/profiletemple' element={<ProfileTemple />} />
+        <Route path='/temples/:id' element={<TempleDetail />} /> {/* ✅ เพิ่มตรงนี้ */}
+        <Route path='/browse-temple' element={<BrowseTempleWithGuest />} />
+
+        <Route path='/temples/signup' element={<SignupTemple />} />
+        <Route path='/Guides/signup' element={<SignupGuide />} />
+        <Route path='/temples/signup' element={<SignupTemple />} />
       </Route>
     </Routes>
   );

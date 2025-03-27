@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { createTempleForNewtemple,deleteTemple,updateTempleDescription, updateTempleLike,getTempleImagesFront } from '../../services/temple.service';
+import { createTempleForNewtemple,deleteTemple,updateTempleDescription, updateTempleLike,deleteTempleLike } from '../../services/temple.service';
 import logger from '../../utils/logger';
 import { AuthRequest } from '../../middlewares/authenticateUser.middleware';
-import { getLocationsTemple,getLocationTempleById,getLocationTempleByProvinceId, getTempleIdFromLocationId,updateLocation} from '../../services/location.service';
+import { getLocationsTemple,getLocationTempleById,getLocationTempleByProvinceId, getTempleIdFromLocationId,updateLocation,getAllProvince} from '../../services/location.service';
 export const createTempleController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
         const { name, latitude, longitude, provinceId, description } = req.body;
@@ -93,14 +93,14 @@ export const updateTempleLikeController = async (req: Request, res: Response): P
     }
 };
 
-export const getTempleImagesFrontController = async (req: Request, res: Response): Promise<any> => {
+export const deleteTempleLikeController = async (req: Request, res: Response): Promise<any> => {
     try {
         const { templeId } = req.params;
-        const temple = await getTempleImagesFront(Number(templeId));
+        const temple = await deleteTempleLike(Number(templeId));
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);
-        return res.status(500).json({ message: 'Can not get' });
+        return res.status(500).json({ message: 'Can not delete like' });
     }
 };
 
@@ -116,3 +116,12 @@ export const updateLocationController = async (req: Request, res: Response): Pro
     }
 };
 
+export function getAllProvinceCotroler(req: Request, res: Response): void {
+    try {
+        const provinces = getAllProvince();
+        res.json(provinces);
+    } catch (error) {
+        logger.error(error);
+        res.status(500).json({ message: 'Can not get' });
+    }
+}

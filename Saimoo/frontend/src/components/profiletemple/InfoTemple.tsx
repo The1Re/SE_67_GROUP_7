@@ -23,7 +23,7 @@ interface TempleData {
   }[];
 }
 
-const InfoTemple: React.FC<{ templeId: number }> = ({ templeId }) => {
+const InfoTemple = ({ templeId, isCreateMode, callback }) => {
   const [templeData, setTempleData] = useState<TempleData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,6 +118,14 @@ const InfoTemple: React.FC<{ templeId: number }> = ({ templeId }) => {
                 : 0
             }
           </div>
+          
+          { isCreateMode && (
+            <div className="mt-6 text-gray-800 text-lg flex items-center justify-center md:justify-start">
+              <button className="px-6 py-2 bg-teal-400 text-white rounded-lg font-bold hover:bg-teal-500 transition cursor-pointer" onClick={callback}>
+                เพิ่มวัดเข้าทริป
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

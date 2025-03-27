@@ -2,9 +2,10 @@ import React, { useRef, useState } from "react";
 
 interface FileUploadProps {
   label: string;
+  callback: (fileUrl: string) => void;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ label }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ label, callback }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>("");
   const [fileUrl, setFileUrl] = useState<string | null>(null);
@@ -13,7 +14,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ label }) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       setFileName(file.name);
-      setFileUrl(URL.createObjectURL(file));
+      const url = URL.createObjectURL(file);
+      setFileUrl(url);
+
+      // เพิ่มบรรทัดนี้เพื่อส่ง URL กลับไปยัง parent
+      callback(url);
     }
   };
 

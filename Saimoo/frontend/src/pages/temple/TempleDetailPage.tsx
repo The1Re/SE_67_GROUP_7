@@ -9,6 +9,7 @@ import api from "../../api";
 import { env } from "@/config";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
+import DataLoading from "@/components/DataLoading";
 
 // Define temple data interface based on API response
 interface TempleData {
@@ -200,13 +201,13 @@ fetchTempleData();
 }, [templeId]);
 
 // แสดงสถานะกำลังโหลด
-if (loading) return <p className="flex justify-center items-center h-screen text-xl">กำลังโหลดข้อมูล...</p>;
+if (loading) return <DataLoading />;
 
 // แสดงข้อความถ้าไม่พบวัด
 if (!templeId) return <p className="flex justify-center items-center h-screen text-xl">คุณยังไม่มีวัดในระบบ</p>;
 
 // แสดงสถานะกำลังโหลดข้อมูลวัด
-if (!dataInitialized) return <p className="flex justify-center items-center h-screen text-xl">กำลังโหลดข้อมูลวัด...</p>;
+if (!dataInitialized) return <DataLoading />;
 
 const saveTempleData = async () => {
 try {
