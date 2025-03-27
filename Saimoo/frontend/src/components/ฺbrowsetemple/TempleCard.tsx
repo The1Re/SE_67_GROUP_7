@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/api";
+import DataLoading from "../DataLoading";
 
 export type Temple = {
   id?: number;
@@ -15,11 +16,13 @@ export type Temple = {
 
 const TempleCard = ({ isSelectMode = false }) => {
   const [temples, setTemples] = useState<Temple[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const res = await api.get("/temples");
         const data = res.data.data;
         setTemples(
@@ -34,6 +37,7 @@ const TempleCard = ({ isSelectMode = false }) => {
             imageUrl: v.imageUrl || null,
           }))
         );
+        setLoading(false)
       } catch (error) {
         console.error("Error fetching temples:", error);
       }
@@ -51,6 +55,10 @@ const TempleCard = ({ isSelectMode = false }) => {
       navigate(`/temples/${templeId}`);
     }
   };
+
+  if (loading) {
+    return <DataLoading />
+  }
 
   return (
     <div className="bg-white p-6">
