@@ -134,7 +134,7 @@ const AddPicture: React.FC<AddPictureProps> = ({
             </button>
           )}
           <button
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-lg cursor-pointer"
+            className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-700 text-lg cursor-pointer"
             onClick={handleSave}
             disabled={!imageUrl}
           >

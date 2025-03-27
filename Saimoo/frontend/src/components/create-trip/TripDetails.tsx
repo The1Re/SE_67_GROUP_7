@@ -68,7 +68,7 @@ const TripDetails = ({
                             ) : (
                                 <button
                                     onClick={() => setIsOpenLocationModal(true)}
-                                    className="cursor-pointer flex items-center justify-center w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 mb-4"
+                                    className="cursor-pointer flex items-center justify-center w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition-colors duration-200 mb-4"
                                 >
                                     <MapPinIcon className="h-5 w-5 mr-2" />
                                     เลือกสถานที่

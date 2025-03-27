@@ -36,7 +36,7 @@ function LocationModal({ tripDetailId, isOpen, setIsOpen, onUpdate }) {
                     <div>
                         <h2 className="mb-4">เลือกประเภทสถานที่</h2>
                         <button
-                            className="cursor-pointer w-full p-3 bg-blue-400 hover:bg-blue-500 rounded-lg text-white mb-2"
+                            className="cursor-pointer w-full p-3 bg-teal-400 hover:bg-teal-500 rounded-lg text-white mb-2"
                             onClick={handleTemple}
                         >
                             วัด
