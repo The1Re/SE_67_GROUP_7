@@ -1,4 +1,3 @@
-import { connect } from "http2";
 import prisma from "../models/prisma";
 
 import { Prisma, Trip, TripDetail, Location, Province } from "@prisma/client";
@@ -34,6 +33,11 @@ export const getTripAvailable = async (
         orderBy: { [sortBy]: sortOrder },
         skip,
         take: pageSize,
+        include: {
+            TripDetail: { include: {TripDetailPicture: true, Location: true} },
+            TripPicture: true,
+            User: true
+        }
     });
 
     // Get total count
@@ -61,7 +65,8 @@ export const getTripById = async (id: number) => {
         where: { id },
         include: {
             TripDetail: { include: { Location: true, TripDetailPicture: true } },
-            TripPicture: true
+            TripPicture: true,
+            User: true
         }
     });
 }
@@ -101,12 +106,14 @@ export const createTrip = async (tripData: TripData) => {
             vehicle,
             maxPerson,
             status,
-            ownerTripId,
             type,
             price,
+            User: {
+                connect: { id: ownerTripId }
+            },
             TripPicture: {
                 create: {
-                    imagePath: TripPicture?.imagePath
+                    imagePath: TripPicture?.imagePath ?? null
                 }
             },
             TripDetail: {
@@ -119,13 +126,13 @@ export const createTrip = async (tripData: TripData) => {
                         connect: { id: detail.locationId }
                     } : { create: {
                         name: detail.Location?.name ?? "unknow place",
-                        latitude: detail.Location?.latitude ?? 0,
-                        longitude: detail.Location?.longitude ?? 0,
+                        latitude: Number(detail.Location?.latitude) ?? null,
+                        longitude: Number(detail.Location?.longitude) ?? null,
                         type: detail.Location?.type ?? "place",
                     }},
                     TripDetailPicture: {
-                        create: TripDetail.map((detail) => ({
-                            imagePath: detail.TripDetailPicture?.imagePath
+                        create: detail.TripDetailPicture?.imagePath?.map((d) => ({
+                            imagePath: d ?? null
                         }))
                     }
                 }))
