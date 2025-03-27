@@ -1,83 +1,138 @@
-import React from 'react';
-import { PackageData } from '@/components/historyguidetrip/Types';
-import StatusLabel from '@/components/historyguidetrip/StatusLabel';
-import Button from '@/components/historyguidetrip/Button';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-interface PackageCardProps {
-  packageData: PackageData;
-  onViewTrip: (id: number) => void;
-  onCancelTrip: (id: number) => void;
-  onClone: (id: number) => void;
+interface Trip {
+  id: number;
+  title: string;
+  description: string;
+  dateStart: string;
+  dateEnd: string;
+  vehicle: string;
+  maxPerson: number;
+  status: string;
+  ownerTripId: number;
+  type: string;
+  price: number;
+  TripDetail: TripDetail[];
 }
 
-const PackageCard: React.FC<PackageCardProps> = ({ 
-  packageData, 
-  onCancelTrip, 
-  onClone 
-}) => {
-  const navigate = useNavigate();  // ✅ นำทางได้จริง
+interface TripDetail {
+  id: number;
+  tripId: number;
+  order: number;
+  arriveTime: string;
+  day: number;
+  description: string;
+  locationId: number;
+  TripDetailPicture: any[];
+  Location: Location;
+}
 
-  const { id, title, subtitle, image, status, date, description, showDetails } = packageData;
+interface Location {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+  type: string;
+  provinceId: number;
+}
 
-  // ✅ ฟังก์ชันนำทางไปยังหน้า Document ถูกต้อง
-  const handleViewTrip = () => {
-    navigate("/Document");
+const HistoryTrip: React.FC = () => {
+  const [trips, setTrips] = useState<Trip[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const fetchUserTrips = async () => {
+    try {
+      const response = await axios.get(`/api/trips/owner`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      setTrips(response.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.error('Error fetching trips:', err);
+      setError('ไม่สามารถโหลดข้อมูลทริปได้');
+      setIsLoading(false);
+    }
   };
 
-  return ( 
-    <div className="bg-white rounded-lg shadow-md overflow-hidden p-4 ">
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative w-full md:w-56 h-40 flex-shrink-0">
-          <img src={image} alt={title} className="w-full h-full object-cover rounded-md" />
-          <div className="absolute top-2 left-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs">
-            สุพรรณบุรี
-          </div>
-        </div>
+  useEffect(() => {
+    fetchUserTrips();
+  }, []);
 
-        <div className="flex-grow flex flex-col ">
-          <div className="mb-2">
-            <h3 className="text-lg font-medium text-gray-800">{title}</h3>
-            {subtitle && <span className="text-sm text-gray-600">{subtitle}</span>}
-          </div>
+  const handleCreateTrip = () => {
+    navigate("/create-trip");
+  };
 
-          {showDetails && (
-            <div className="mb-3">
-              <p className="text-sm font-medium mb-1">{date}</p>
-              <p className="text-sm text-gray-600">{description}</p>
+  const handleViewTripDetails = (tripId: number) => {
+    navigate(`/trip-details/${tripId}`);
+  };
+
+  const handleCloneTrip = (trip: Trip) => {
+    navigate("/plan-trip", { state: { clonedTrip: trip } });
+  };
+
+  if (isLoading) {
+    return <div>กำลังโหลดข้อมูล...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return (
+    <div>
+      <div className="grid gap-4">
+        {trips.map((trip) => (
+          <div 
+            key={trip.id} 
+            className="border rounded p-4 shadow-md"
+          >
+            <div className="grid gap-4">
+              <div 
+                key={trip.id} 
+                className="border rounded p-4 shadow-md"
+              >
+                <h2 className="text-xl font-semibold">{trip.title}</h2>
+                <p>สถานะ: {trip.status}</p>
+                <p>วันที่เริ่ม: {new Date(trip.dateStart).toLocaleDateString()}</p>
+                <p>ประเภท: {trip.type === 'paid' ? 'ทริปแบบชำระเงิน' : 'ทริปฟรี'}</p>
+                <p>ราคา: {trip.price} บาท</p>
+                <p>จำนวนผู้เข้าร่วม: {trip.maxPerson} คน</p>
+
+                <div className="mt-4 flex space-x-2">
+                  <button 
+                    onClick={() => handleViewTripDetails(trip.id)}
+                    className="bg-green-500 text-white px-3 py-1 rounded"
+                  >
+                    ดูรายละเอียด
+                  </button>
+                  <button 
+                    onClick={() => handleCloneTrip(trip)}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded"
+                  >
+                    คัดลอกทริป
+                  </button>
+                </div>
+              </div>
             </div>
-          )}
-
-          <div className="mt-auto flex justify-between items-center ">
-            <div className="flex items-center gap-2 ">
-              <span className="text-sm">สถานะ:</span>
-              <StatusLabel status={status} />
-            </div>
-
-            <div className="flex gap-2  ">
-              {!showDetails ? (
-                <>
-                  {/* ✅ เรียกฟังก์ชันนำทางได้ถูกต้อง */}
-                  <Button 
-                    type="primary" 
-                    text="ดูลูกทริป" 
-                    onClick={handleViewTrip} 
-                  />
-                  <Button 
-                    type="danger" 
-                    text="ยกเลิกทริป" 
-                    onClick={() => onCancelTrip(id)} 
-                  />
-                </>
-              ) : (
-                <Button type="primary" text="clone" onClick={() => onClone(id)} />
-              )}
-            </div>
           </div>
-        </div>
+        ))}
       </div>
+
+      <button 
+        onClick={handleCreateTrip}
+        className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+      >
+        สร้างทริปใหม่
+      </button>
     </div>
   );
 };
 
-export default PackageCard;
+export default HistoryTrip;

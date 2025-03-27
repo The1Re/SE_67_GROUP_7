@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import SearchFilter from "@/components/search/SearchFilter";
+import SearchBar from "@/components/Trips/SearchBar"; // ✅ แก้เป็น SearchBar
 import { useLocation } from "react-router-dom";
 import TempleCard from "@/components/ฺbrowsetemple/TempleCard";
-// ✅ แก้พาธให้ถูกต้อง
-// ✅ ตรวจสอบว่ามีการใช้งานหรือไม่
+
+ // ✅ แก้พาธให้ถูกต้อง
 
 const BrowseTempleWithGuest = () => {
   const location = useLocation();
@@ -11,21 +11,7 @@ const BrowseTempleWithGuest = () => {
 
   // ✅ สร้าง state สำหรับเก็บค่าค้นหาและฟิลเตอร์
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("ยอดนิยม");
-
-  // ✅ ฟังก์ชัน handle การค้นหา
-  const handleSearch = (term) => {
-    if (typeof term === "string") {
-      setSearchTerm(term);
-    }
-  };
-
-  // ✅ ฟังก์ชัน handle การเลือกฟิลเตอร์
-  const handleFilter = (filter) => {
-    if (typeof filter === "string") {
-      setSelectedFilter(filter);
-    }
-  };
+  const [selectedFilter, setSelectedFilter] = useState("recommended");
 
   return (
     <div className="bg-white min-h-screen text-gray-500 p-6">
@@ -33,8 +19,13 @@ const BrowseTempleWithGuest = () => {
         {isSelectMode ? "เลือกวัดสำหรับทริป" : "รายชื่อวัด"}
       </h1>
 
-      {/* ✅ ส่งฟังก์ชัน onSearch และ onFilter ให้ SearchFilter */}
-      <SearchFilter onSearch={handleSearch} onFilter={handleFilter} />
+      {/* ✅ ใช้ SearchBar แทน SearchFilter */}
+      <SearchBar
+        search={searchTerm}
+        setSearch={setSearchTerm}
+        selectedSort={selectedFilter}
+        setSelectedSort={setSelectedFilter}
+      />
 
       {/* ✅ ส่ง searchTerm และ selectedFilter ไปที่ TempleCard */}
       <TempleCard
