@@ -29,7 +29,7 @@ const SearchBar = ({ search, setSearch, selectedSort, setSelectedSort }) => {
           onClick={() => document.getElementById("sortDropdown").classList.toggle("hidden")}
         >
           <FaFilter className="text-gray-500" />
-          {sortOptions.find((opt) => opt.value === selectedSort)?.label || "เรียงลำดับ"}
+          {sortOptions.find((opt) => opt.value === selectedSort)?.label || "สำหรับคุณ"}
         </button>
 
         {/* Dropdown Options */}

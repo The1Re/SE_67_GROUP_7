@@ -3,7 +3,6 @@ import FileUpload from "./FileUpload";
 import toast from "react-hot-toast";
 import api from "@/api";
 import { useNavigate } from "react-router-dom";
-
 export type SignupFormData = {
   fullName: string;
   phone: string;

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSuitcaseRolling, FaUserCircle } from "react-icons/fa";
 import { FiLogOut, FiCreditCard } from "react-icons/fi";
-
 import { MdAddCircleOutline } from "react-icons/md";
 
 import { IoIosMenu, IoMdClose } from "react-icons/io";
