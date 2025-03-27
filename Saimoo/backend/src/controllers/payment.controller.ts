@@ -104,9 +104,9 @@ export const pay = async (req: AuthRequest, res: Response): Promise<any> => {
             }
         } else {
             // qrcode method
+            return res.status(400).json({ message: "qrcode not ready"})
         }
         
-        return res.status(201).json(payment);
     } catch (error) {
         logger.error(error);
         return res.status(400).json({ error: "Internal server error" });
