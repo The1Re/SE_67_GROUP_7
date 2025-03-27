@@ -1,41 +1,191 @@
-// pages/PurchaserDetails.tsx
+import api from "@/api";
 import ParticipantForm from "@/components/purchase/ParticipantForm";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-interface Participant {
-  name: string;
-  phone: string;
-  note: string;
-  ageUnder6: boolean;
-}
+import { OrderDetailRequest, OrderRequest } from "@/models/Order";
+import { Trip } from "@/models/Trip";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function PurchaseDetails() {
+  const { tripId } = useParams<{ tripId: string }>();
+  const numericTripId = Number(tripId)
+  const [trip, setTrip] = useState<Trip | null>(null);
+  const [participants, setParticipants] = useState<OrderDetailRequest[]>([]);
   const [numPeople, setNumPeople] = useState(1);
-  const [participants, setParticipants] = useState<Participant[]>(
-    Array(1).fill({ name: "", phone: "", note: "", ageUnder6: false })
-  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const navigate = useNavigate();
 
-  const navigator = useNavigate();
+  useEffect(() => {
+    const fetchTrip = async () => {
+      try {
+        const res = await api.get(`/trips/${numericTripId}`);
+        setTrip(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchTrip();
+  }, [numericTripId]);
+
+  useEffect(() => {
+    // Initialize with one empty participant if none exist
+    if (participants.length === 0) {
+      setParticipants([
+        {
+          order: 1,
+          fullName: "",
+          phone: null,
+          requirement: null,
+          isChild: 0
+        }
+      ]);
+    }
+  }, [participants.length]);
 
   const handleChange = (
     index: number,
-    field: keyof Participant,
+    field: keyof OrderDetailRequest,
     value: string | boolean
   ) => {
     const updated = [...participants];
-    updated[index] = { ...updated[index], [field]: value };
+    
+    // Convert boolean to number for isChild field
+    if (field === 'isChild') {
+      updated[index] = { 
+        ...updated[index], 
+        [field]: value ? 1 : 0 
+      };
+    } else if (field === 'phone') {
+      // For phone, only allow digits and limit to 10 characters
+      const phoneValue = typeof value === 'string' ? value.replace(/\D/g, '').slice(0, 10) : null;
+      updated[index] = { 
+        ...updated[index], 
+        [field]: phoneValue === "" ? null : phoneValue 
+      };
+    } else {
+      updated[index] = { 
+        ...updated[index], 
+        [field]: value === "" ? null : value 
+      };
+    }
+    
     setParticipants(updated);
+    // Clear validation errors when user makes changes
+    setValidationErrors([]);
   };
 
   const handleNumChange = (value: number) => {
     setNumPeople(value);
-    setParticipants(
-      Array(value).fill({ name: "", phone: "", note: "", ageUnder6: false })
-    );
+    const updated = [...participants];
     
+    if (value > updated.length) {
+      const diff = value - updated.length;
+      for (let i = 0; i < diff; i++) {
+        updated.push({
+          order: updated.length + 1,
+          fullName: "",
+          phone: null,
+          requirement: null,
+          isChild: 0
+        });
+      }
+    } else {
+      updated.length = value;
+    }
+    
+    setParticipants(updated);
+    // Clear validation errors when user changes number of participants
+    setValidationErrors([]);
   };
 
+  const validateData = () => {
+    const errors: string[] = [];
+    
+    // Check if all participants have a fullName
+    participants.forEach((participant, index) => {
+      if (!participant.fullName || participant.fullName.trim() === "") {
+        errors.push(`ผู้เข้าร่วมคนที่ ${index + 1} ยังไม่ได้กรอกชื่อ`);
+      }
+      
+      // Check phone format if provided
+      if (participant.phone && participant.phone.length !== 10) {
+        errors.push(`ผู้เข้าร่วมคนที่ ${index + 1} เบอร์โทรต้องมี 10 หลัก`);
+      }
+    });
+    
+    // Check if tripId is valid
+    if (!numericTripId || numericTripId <= 0) {
+      errors.push("ไม่พบข้อมูลทริป");
+    }
+    
+    setValidationErrors(errors);
+    return errors.length === 0;
+  };
+
+  const handleSubmit = async () => {
+    // Validate data before submitting
+    if (!validateData()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Ensure order numbers are sequential
+      const updatedParticipants = participants.map((p, index) => ({
+        ...p,
+        order: index + 1
+      }));
+
+      const orderData: OrderRequest = {
+        tripId: numericTripId,
+        amountPerson: updatedParticipants.length,
+        details: updatedParticipants
+      };      
+
+      console.log("Sending data to API:", orderData);
+
+      // Send data to API
+      const response = await api.post('/orders', orderData, { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } });
+
+      console.log("API response:", response.data);
+      
+      // Store order ID for payment page
+      if (response.data && response.data.id) {
+        localStorage.setItem('orderId', response.data.id.toString());
+        console.log("Order ID saved:", response.data.id);
+      }
+      
+      // Navigate to payment page
+      navigate(`/trips/${numericTripId}/${response.data.id}/payment`);
+    } catch (error: unknown) {
+      console.error("Error submitting order:", error);
+
+      // Show more detailed error information
+      if (error instanceof Error && 'response' in error) {
+        const axiosError = error as { response: { status: number; data?: { message?: string } } };
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Error response data:", axiosError.response.data);
+        console.error("Error response status:", axiosError.response.status);
+        setValidationErrors([
+          `เกิดข้อผิดพลาดจากเซิร์ฟเวอร์: ${axiosError.response.status}`,
+          axiosError.response.data?.message || "โปรดตรวจสอบข้อมูลและลองใหม่อีกครั้ง"
+        ]);
+      } else if (error instanceof Error && 'request' in error) {
+        // The request was made but no response was received
+        console.error("No response received:", (error as { request: unknown }).request);
+        setValidationErrors(["ไม่ได้รับการตอบกลับจากเซิร์ฟเวอร์ โปรดตรวจสอบการเชื่อมต่อ"]);
+      } else if (error instanceof Error) {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error message:", error.message);
+        setValidationErrors([`เกิดข้อผิดพลาด: ${error.message}`]);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  // Function to toggle debug information;
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       {/* Steps Tabs */}
@@ -51,23 +201,47 @@ function PurchaseDetails() {
         </button>
       </div>
 
+      {/* Validation Errors */}
+      {validationErrors.length > 0 && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 w-3/4 mx-auto">
+          <h3 className="font-bold">โปรดแก้ไขข้อผิดพลาดต่อไปนี้:</h3>
+          <ul className="list-disc pl-5">
+            {validationErrors.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Header Card */}
       <div className="bg-white p-6 rounded-lg shadow mb-6 w-3/4 mx-auto">
-        <h2 className="text-lg font-bold">ไหว้พระ สุพรรณ อิ่มบุญอิ่มใจ</h2>
-        <h3 className="mb-2">กำหนดการ 5 ธ.ค. 2568 [ 1 Day ]</h3>
-        <h2 className="text-3xl font-bold mb-4">1,899 ฿ / คน</h2>
-        <label className="block mb-1">จำนวนคนที่เข้าร่วมทริป</label>
-        <select
-          value={numPeople}
-          onChange={(e) => handleNumChange(Number(e.target.value))}
-          className="border rounded px-2 py-1 cursor-pointer"
-        >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
+        {trip ? (
+          <>
+            <h2 className="text-lg font-bold">{trip.title}</h2>
+            <h3 className="mb-2">
+              กำหนดการ{" "}
+              {new Date(trip.dateStart).toLocaleDateString("th-TH")} -{" "}
+              {new Date(trip.dateEnd).toLocaleDateString("th-TH")}
+            </h3>
+            <h2 className="text-3xl font-bold mb-4">
+              {trip.price.toLocaleString()} ฿ / คน
+            </h2>
+            <label className="block mb-1">จำนวนคนที่เข้าร่วมทริป</label>
+            <select
+              value={numPeople}
+              onChange={(e) => handleNumChange(Number(e.target.value))}
+              className="border rounded px-2 py-1 cursor-pointer"
+            >
+              {Array.from({ length: Math.min(trip.maxPerson || 10, 10) }, (_, i) => i + 1).map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </>
+        ) : (
+          <p>กำลังโหลดข้อมูลทริป...</p>
+        )}
       </div>
 
       {/* Participant Forms */}
@@ -81,12 +255,15 @@ function PurchaseDetails() {
       ))}
 
       {/* Continue Button */}
-      <div
-        onClick={() => navigator("/trips/payment")}
-        className="w-3/4 mx-auto flex justify-end"
-      >
-        <button className="bg-teal-500 text-white px-6 py-2 rounded hover:bg-teal-600 cursor-pointer">
-          ต่อไป
+      <div className="w-3/4 mx-auto flex justify-end">
+        <button 
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className={`${
+            isSubmitting ? "bg-gray-400" : "bg-teal-500 hover:bg-teal-600"
+          } text-white px-6 py-2 rounded cursor-pointer`}
+        >
+          {isSubmitting ? "กำลังดำเนินการ..." : "ต่อไป"}
         </button>
       </div>
     </div>

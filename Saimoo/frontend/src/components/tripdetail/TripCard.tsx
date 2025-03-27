@@ -16,7 +16,6 @@ const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    console.log("tripIdcard",tripId);
     const fetchTrip = async () => {
       try {
         const res = await api.get(`/trips/${tripId}`);
@@ -181,7 +180,7 @@ const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
     fetchParticipantCount();
   }, [trip?.id]);
   
-  const isTripFull = participantCount === (trip?.maxPerson || 0);
+  const isTripFull = participantCount >= (trip?.maxPerson || 0);
 
   const handleBuyTrip = (event: MouseEvent<HTMLButtonElement>) => {
     // ป้องกันการ reload หน้าเว็บ

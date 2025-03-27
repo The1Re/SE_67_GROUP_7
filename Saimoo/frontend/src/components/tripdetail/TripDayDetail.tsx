@@ -47,8 +47,7 @@ interface TripDayDetailProps {
 }
 
 const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
-  const { id } = useParams();
-  const tripId = Number(id);
+  const { tripId } = useParams();
   const [days, setDays] = useState<DayData[]>([]);
   const [activeTab, setActiveTab] = useState<number>(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -93,6 +92,7 @@ const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
         });
 
         detailsWithImages.forEach(({ day, location }) => {
+          console.log(day)
           if (!grouped[day]) grouped[day] = [];
           grouped[day].push(location);
         });
@@ -109,7 +109,7 @@ const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
     };
 
     fetchDetails();
-  }, [id, tripId]);
+  }, [tripId]);
 
   useEffect(() => {
     const activeDay = days.find((d) => d.day === activeTab);

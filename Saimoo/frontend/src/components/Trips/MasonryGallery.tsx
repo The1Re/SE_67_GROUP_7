@@ -3,6 +3,8 @@ import api from "@/api";
 import { getFile } from "@/services/fileupload";
 import DataLoading from "../DataLoading";
 
+
+
 export default function MasonryGallery() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ export default function MasonryGallery() {
         {trips.map((trip) => (
           <a
             key={trip.id}
-            href={`/trip-detail/${trip.id}`}
+            href={`/trips/${trip.id}`}
             rel="noopener noreferrer"
             className="block break-inside-avoid p-2 bg-white rounded-lg hover:shadow-xl transition-all duration-300 active:scale-95"
           >
