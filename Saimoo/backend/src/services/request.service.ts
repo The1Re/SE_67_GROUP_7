@@ -61,6 +61,15 @@ export const approveRequestTemple = async (requestId: number) => {
         return { message: "There is no request id to approved" };
     }
 
+    const temple = await prisma.location.findFirst({
+        where: { name: request.templeName ?? "" },
+        include: { Temple: true }
+    })
+
+    if (!temple) {
+        return { message: 'Failed to update temple account' };
+    }
+
     const newPassword = generatePassword(6);
     const existingUser = await UserService.getUserByUsername(request.templeName || '');
     if (existingUser) {
@@ -78,7 +87,13 @@ export const approveRequestTemple = async (requestId: number) => {
                 Request: {
                     connect: { id: request.id }
                 }
-            });
+            })
+
+            await prisma.temple.update({
+                data: { ownerId: existingUser.id },
+                where: { id: temple.Temple[0].id }
+            })
+
 
             await sendMail(
                 request.email || '', 
@@ -93,6 +108,8 @@ export const approveRequestTemple = async (requestId: number) => {
         }
     }
 
+    
+
     const newUserTemple = await UserService.createUser({
         username: request.templeName || '',
         email: request.email || '',
@@ -103,6 +120,11 @@ export const approveRequestTemple = async (requestId: number) => {
             connect: { id: request.id }
         }
     }, false);
+
+    await prisma.temple.update({
+        data: { ownerId: newUserTemple.id },
+        where: { id: temple.Temple[0].id }
+    })
 
     await sendMail(
         newUserTemple.email, 
