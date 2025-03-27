@@ -23,7 +23,7 @@ export const getLocationsTemple = async (
     orderBy: { [sortBy]: sortOrder },
     skip,
     take: pageSize,
-    include: { Province: true, Temple: true },
+    include: { Province: true, Temple: { include: {TempleImage: true}} },
   });
 
   const totalItems = await prisma.location.count({ where: { type: "temple" } });
