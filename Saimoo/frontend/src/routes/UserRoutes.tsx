@@ -2,17 +2,18 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Profile from '../pages/user/Profile'
 import { Trips } from '@/pages/user/Trips'
 import UserLayout from '@/layouts/UserLayout'
-import PlanTrip from '@/pages/user/PlanTrip';
 import BrowseTempleWithGuest from '@/pages/temple/BrowseTempleWithGuest';
+import TempleDetail from "@/components/ฺbrowsetemple/TempleDetail";
 import SignupTemple from '@/pages/temple/SignupTemple';
+import PurchaseDetails from '@/pages/user/PurchaseDetails';
 import TripDetail from '@/pages/user/TripDetail';
-import PurchaserDetails from '@/pages/user/PurchaserDetails';
 import PaymentDetails from '@/pages/user/PaymentDetails';
 import ConfirmPayment from '@/pages/user/ConfirmPayment';
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
 import HistoryTrip from '@/pages/user/HistoryTrip';
 import Wallet from '@/pages/user/Wallet';
+import CreateTrip from '@/pages/CreateTrip';
 
 
 const UserRoutes = () => {
@@ -24,15 +25,17 @@ const UserRoutes = () => {
           <Route path='/trips' element={<Trips />}></Route>
           <Route path='/wallet' element={<Wallet />} />
           <Route path='/temples' element={<BrowseTempleWithGuest />} />
-          <Route path='/plan-trip' element={<PlanTrip />}></Route>
+          <Route path='/temples/:id' element={<TempleDetail />} /> {/* ✅ เพิ่มตรงนี้ */}
+          <Route path='/browse-temple' element={<BrowseTempleWithGuest />} /> 
           <Route path='/temples/signup' element={<SignupTemple />} />
           <Route path='/trip-detail' element={<TripDetail />} />
-          <Route path='/trips/purchaser' element={<PurchaserDetails />} />
+          <Route path='/trips/purchase' element={<PurchaseDetails />} />
           <Route path='/trips/payment' element={<PaymentDetails/>} />
           <Route path='/trips/confirm' element={<ConfirmPayment/>} /> 
           <Route path='/Guides/signup' element={<SignupGuide />} />
           <Route path='/temple/profiletemple' element={<ProfileTemple />} />
-          <Route path='history' element={<HistoryTrip/>}></Route>
+          <Route path='/create-trip' element={<CreateTrip />} />
+          <Route path='/history' element={<HistoryTrip/>}></Route>
       </Route>
     </Routes>
   );

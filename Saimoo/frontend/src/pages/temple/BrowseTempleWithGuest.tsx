@@ -1,16 +1,18 @@
-
-import TempleCard from "../../components/ฺbrowsetemple/TempleCard";
-import SearchBar from "@/components/Trips/SearchBar";
+import SearchFilter from "@/components/search/SearchFilter";
+import TempleCard from "@/components/ฺbrowsetemple/TempleCard";
+import { useLocation } from "react-router-dom";
 
 const BrowseTempleWithGuest = () => {
+  const location = useLocation();
+  const isSelectMode = location.state?.createMode === true;
+
   return (
-    <div className="bg-white min-h-screen text-gray-500">
-      <SearchBar search="" setSearch={() => {}} selectedSort="recommended" setSelectedSort={() => {}} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredTrips.map((trip) => (
-          <TempleCard  />
-        ))}
-      </div>
+    <div className="bg-white min-h-screen text-gray-500 p-6">
+      <h1 className="text-xl font-bold text-gray-700 mb-4">
+        {isSelectMode ? "เลือกวัดสำหรับทริป" : "รายชื่อวัด"}
+      </h1>
+      <SearchFilter onSearch={null} onFilter={null} />
+      <TempleCard isSelectMode={isSelectMode} /> 
     </div>
   );
 };
