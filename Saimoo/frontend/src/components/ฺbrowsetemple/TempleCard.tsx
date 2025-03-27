@@ -67,7 +67,7 @@ const TempleCard = ({ isSelectMode = false }) => {
           temples.map((temple) => (
             <div
               key={temple.id}
-              onClick={() => handleClick(temple.id!)}
+              onClick={() => handleClick(temple.id)} // 
               className="bg-white p-4 cursor-pointer overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
             >
               {temple.imageUrl ? (
@@ -83,18 +83,19 @@ const TempleCard = ({ isSelectMode = false }) => {
               )}
 
               <h3 className="text-gray-800 font-bold mt-2">{temple.name}</h3>
-              <div className="flex justify-between items-center mt-1">
-                <p className="text-gray-600 text-sm truncate">
-                  {temple.description}
-                </p>
-                <p className="text-gray-600 text-sm flex items-center pr-5">
-                  ❤️ {temple.like}
-                </p>
-              </div>
+                <div className="flex justify-between items-center mt-1">
+                    <p className="text-gray-600 text-sm">
+                        {temple.description || "ไม่มีคำอธิบาย"}
+                    </p>
+                    <p className="text-gray-600 text-sm flex items-center pr-5">
+                        <span className="ml-1">{temple.like || 0}</span>
+                        <span className="ml-1">{temple.province || 0}</span>
+                    </p>
+                </div>
             </div>
           ))
         ) : (
-          <p className="text-gray-500">⛔️ ไม่พบข้อมูลวัด</p>
+          <p>ไม่มีข้อมูลวัด</p>
         )}
       </div>
     </div>

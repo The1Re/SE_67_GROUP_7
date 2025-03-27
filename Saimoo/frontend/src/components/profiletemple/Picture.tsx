@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import { env } from "@/config";
+import { useState } from "react";
 
-const Picture = ({ images }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
+// เพิ่ม interface เพื่อกำหนดโครงสร้างข้อมูลที่ชัดเจน
+interface ImageData {
+  imagePath: string;
+  title?: string;
+  description?: string;
+}
+
+const Picture = ({ images }: { images: ImageData[] }) => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // 🔹 ฟังก์ชันเปิดรูปภาพในโมดอล
   const openImage = (index) => {
     setCurrentIndex(index);
-    setSelectedImage(images[index]);
+    setSelectedImage(images[index].imagePath);
   };
 
   // 🔹 ฟังก์ชันปิดรูปภาพ
@@ -18,19 +26,17 @@ const Picture = ({ images }) => {
   // 🔹 ฟังก์ชันเลื่อนภาพไปทางซ้าย
   const prevImage = (e) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
-    setSelectedImage(
-      images[currentIndex > 0 ? currentIndex - 1 : images.length - 1]
-    );
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+    setCurrentIndex(newIndex);
+    setSelectedImage(images[newIndex].imagePath);
   };
 
   // 🔹 ฟังก์ชันเลื่อนภาพไปทางขวา
   const nextImage = (e) => {
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
-    setSelectedImage(
-      images[currentIndex < images.length - 1 ? currentIndex + 1 : 0]
-    );
+    const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+    setCurrentIndex(newIndex);
+    setSelectedImage(images[newIndex].imagePath);
   };
 
   return (
@@ -43,7 +49,7 @@ const Picture = ({ images }) => {
             onClick={() => openImage(index)}
           >
             <img
-              src={img}
+              src={env.API_URL + "/" + img.imagePath}
               alt={`Image ${index + 1}`}
               className="w-full h-auto aspect-[16/9] object-cover rounded-lg"
             />
@@ -54,7 +60,7 @@ const Picture = ({ images }) => {
       {/* 🔹 Modal แสดงรูปภาพขยายและเลื่อนได้ */}
       {selectedImage && (
         <div
-          className="fixed inset-0 flex justify-center items-center backdrop-blur-md bg-opacity-75  z-50"
+          className="fixed inset-0 flex justify-center items-center backdrop-blur-md bg-opacity-75 bg-black z-50"
           onClick={closeImage}
         >
           {/* ปุ่มย้อนกลับ */}
@@ -67,7 +73,7 @@ const Picture = ({ images }) => {
 
           {/* รูปภาพที่เลือก */}
           <img
-            src={selectedImage}
+            src={env.API_URL + "/" + selectedImage}
             alt="Expanded View"
             className="max-w-[70%] max-h-[70%] rounded-lg shadow-lg"
             onClick={(e) => e.stopPropagation()} // ป้องกันการปิด modal เมื่อกดที่ภาพ
