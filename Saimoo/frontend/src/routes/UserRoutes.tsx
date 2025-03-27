@@ -11,9 +11,10 @@ import PaymentDetails from '@/pages/user/PaymentDetails';
 import ConfirmPayment from '@/pages/user/ConfirmPayment';
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
-import HistoryTrip from '@/pages/user/HistoryTrip';
+
 import Wallet from '@/pages/user/Wallet';
 import CreateTrip from '@/pages/CreateTrip';
+import HistoryTrip from '@/pages/user/HistoryTrip';
 
 
 const UserRoutes = () => {
