@@ -7,19 +7,31 @@ import { TripService } from "../services";
 import { Prisma } from "@prisma/client";
 import { AuthRequest } from "middlewares";
 
-export const getAllTrips = async (req: Request, res: Response): Promise<any> => {
+export const getAllTrips = async (req: Request, res: Response) => {
     try {
-        const { page = '1', pageSize = '10', sortBy = 'id', sortOrder = 'desc', where = { status: 'waiting' } } = req.query;
-        const pageNumber = parseInt(page as string) || 1;
-        const size = parseInt(pageSize as string) || 10;
+        const {
+            page = '1',
+            pageSize = '10',
+            sortBy = 'id',
+            sortOrder = 'desc',
+            ...filters
+        } = req.query;
 
-        const trips = await TripService.getTripAvailable(pageNumber, size, sortBy as string, sortOrder as 'asc' | 'desc', where as Prisma.TripWhereInput);
-        return res.status(200).json(trips);
+
+        const result = await TripService.getTrips(
+            Number(page),
+            Number(pageSize),
+            sortBy as string,
+            sortOrder as 'asc' | 'desc',
+            filters
+        );
+
+        res.json(result);
     } catch (error) {
         logger.error(error);
-        return res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ error: "Internal Server Error" });
     }
-} 
+};
 
 export const getAllTripByUser = async (req: AuthRequest, res: Response): Promise<any> => {
     try {

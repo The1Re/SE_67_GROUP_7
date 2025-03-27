@@ -18,30 +18,38 @@ export type TripData = Trip & {
     TripDetail: TripDetailData[]
 }
 
-export const getTripAvailable = async (
+export const getTrips = async (
     page: number = 1,
     pageSize: number = 10,
     sortBy: string = 'id',
     sortOrder: 'asc' | 'desc' = 'desc',
-    where: Prisma.TripWhereInput = { status: 'waiting'}
+    filters: any = {}
 ) => {
     const skip = (page - 1) * pageSize;
 
-    // Fetch trips   
+    // กำหนด where filter
+    const where: Prisma.TripWhereInput = { ...filters };
+
+    // ถ้ามี filter title ให้ใช้ contains (ค้นหาคล้าย ๆ LIKE ใน SQL)
+    if (filters.title) {
+        where.title = { contains: filters.title }; // ค้นหาแบบ case-insensitive
+    }
+
+    // ดึงข้อมูล trips
     const trips = await prisma.trip.findMany({
         where,
         orderBy: { [sortBy]: sortOrder },
         skip,
         take: pageSize,
         include: {
-            TripDetail: { include: {TripDetailPicture: true, Location: true} },
+            TripDetail: { include: { TripDetailPicture: true, Location: true } },
             TripPicture: true,
             User: true
         }
     });
 
-    // Get total count
-    const totalItems = await prisma.trip.count({ where: { status: 'waiting' } });
+    // นับจำนวน trips ทั้งหมดตาม filter
+    const totalItems = await prisma.trip.count({ where });
 
     return {
         data: trips,
@@ -51,8 +59,9 @@ export const getTripAvailable = async (
             currentPage: page,
             pageSize,
         }
-    }
-}
+    };
+};
+
 
 export const getAllTripByUser = async (userId: number) => {
     return await prisma.trip.findMany({
