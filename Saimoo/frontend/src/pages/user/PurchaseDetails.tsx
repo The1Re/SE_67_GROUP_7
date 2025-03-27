@@ -1,11 +1,11 @@
 import api from "@/api";
-import ParticipantForm from "@/components/purchaser/ParticipantForm";
+import ParticipantForm from "@/components/purchase/ParticipantForm";
 import { OrderDetailRequest, OrderRequest } from "@/models/Order";
 import { Trip } from "@/models/Trip";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-function PurchaserDetails() {
+function PurchaseDetails() {
   const { tripId } = useParams<{ tripId: string }>();
   const numericTripId = Number(tripId)
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -270,4 +270,4 @@ function PurchaserDetails() {
   );
 }
 
-export default PurchaserDetails;
+export default PurchaseDetails;

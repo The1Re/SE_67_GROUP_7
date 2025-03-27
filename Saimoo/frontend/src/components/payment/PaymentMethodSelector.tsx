@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 interface PaymentMethodSelectorProps {
   selectedMethod: string;
   onSelect: (method: string) => void;

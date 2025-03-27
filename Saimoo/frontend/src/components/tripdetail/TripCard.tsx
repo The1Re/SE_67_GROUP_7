@@ -3,13 +3,14 @@ import { Trip } from "@/models/Trip";
 import { User } from "@/models/User";
 import { useEffect, useState } from "react";
 import { FaCar, FaClock } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { MouseEvent } from "react"; 
 
-const TripCard = () => {
-  const { tripId: tripIdParam } = useParams();
-  const tripId = Number(tripIdParam)
+interface TripCardProps {
+  tripId: number;
+}
 
+const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
   const navigate = useNavigate();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -204,7 +205,7 @@ const TripCard = () => {
   
 
   return (
-    <div className="max-w-full w-full mx-auto p-6 ">
+    <div className="max-w-full w-full mx-auto p-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:gap-0">
         {/* 🔹 ผู้สร้าง & วันที่สร้าง */}
         <div className="flex gap-4 px-2 sm:px-0">
@@ -235,6 +236,7 @@ const TripCard = () => {
             <div className="mt-2 flex w-fit items-center justify-start gap-1 text-[11px] text-gray-500">
               <span>เหลือเวลา {trip ? calculateRemainingDays() : 0} วัน</span>
             </div>
+
             {/* 🔹 รายละเอียดทริป */}
             <div className="mt-3">
               <h1 className="text-gray-700 font-bold">
@@ -265,10 +267,11 @@ const TripCard = () => {
             </div>
           </div>
         </div>
-        {/* 🔹 ปุ่มซื้อทริป*/}
+
+        {/* 🔹 ปุ่มซื้อทริป */}
         <div className="flex flex-col items-end gap-3">
         <button
-          className={`px-6 py-2 rounded-md font-semibold ${
+          className={`cursor-pointer px-6 py-2 rounded-md font-semibold ${
             isTripFull
               ? "bg-gray-400 cursor-not-allowed" // สีเทาและไม่สามารถกดได้เมื่อทริปเต็ม
               : "bg-teal-500 text-white hover:bg-teal-600" // สีปกติเมื่อยังมีที่ว่าง

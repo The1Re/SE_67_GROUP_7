@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import MyMap from "@/components/map/MyMap";
 import Image from "@/components/tripdetail/Image";
 import TripCard from "@/components/tripdetail/TripCard";
@@ -9,6 +10,8 @@ import api from "@/api";
 function TripDetail() {
   const { tripId } = useParams();
   const tripIdNumber = tripId ? parseInt(tripId) : undefined;
+  const [locations, setLocations] = useState<{ location: { lat: number; lng: number } }[]>([]);
+  
     useEffect(() => {
     const fetchTripDetails = async () => {
       if (!tripIdNumber) return;
@@ -24,21 +27,23 @@ function TripDetail() {
     fetchTripDetails();
   }, [tripIdNumber]);
 
+  // ✅ ห่อด้วย useCallback เพื่อความเสถียร
+  const handleDayLocationChange = useCallback((dayLocations: { location: { lat: number; lng: number } }[]) => {
+    setLocations(dayLocations);
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-4/6 flex flex-col">
-        <Image/>
+        <Image tripId={tripIdNumber} />
         <div className="w-full bg-white px-8">
-          {/* ส่ง tripId ไปให้ TripCard เพื่อใช้ในการดึงข้อมูล */}
-          <TripCard />
-          {/* ส่ง tripId ไปให้ TripDayDetail เพื่อใช้ในการดึงข้อมูล */}
-          <TripDayDetail />
+          <TripCard tripId={tripIdNumber} />
+          <TripDayDetail onChangeActiveDay={handleDayLocationChange} />
         </div>
       </div>
 
-      {/* คอลัมน์ขวา (แผนที่) ✅ ใช้ sticky ทำให้ไม่เลื่อนตาม */}
-      <div className="hidden md:flex w-2/6 h-screen bg-green-300 items-center justify-center sticky top-0">
-        <MyMap locations={undefined} />
+      <div className="hidden md:flex w-2/6 h-screen bg-gray-200 items-center justify-center sticky top-0">
+        <MyMap locations={locations} />
       </div>
     </div>
   );
