@@ -7,9 +7,8 @@ import { useState } from "react";
 function PlanTrip() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [locations, setLocations] = useState([]); // ✅ เก็บข้อมูลสถานที่ที่เพิ่ม
   const setDays = useState([])[1];
-
-
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -24,14 +23,13 @@ function PlanTrip() {
                 setEndDate={setEndDate} 
                 setDays={setDays} 
             />
-            <TripDay startDate={startDate} endDate={endDate} />
+            <TripDay startDate={startDate} endDate={endDate} setLocations={setLocations} /> {/* ✅ ส่ง setLocations */}
           </div>
-
       </div>
 
-      {/* คอลัมน์ขวา (แผนที่) ✅ ใช้ sticky ทำให้ไม่เลื่อนตาม */}
+      {/* คอลัมน์ขวา (แผนที่) */}
       <div className="hidden md:flex w-2/6 h-screen bg-green-500 items-center justify-center sticky top-0">
-          <MyMap />
+          <MyMap locations={locations} /> {/* ✅ ส่ง locations ไปให้ MyMap */}
       </div>
     </div>
   );

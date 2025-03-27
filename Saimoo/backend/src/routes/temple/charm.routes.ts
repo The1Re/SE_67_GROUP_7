@@ -1,13 +1,27 @@
-import { Router } from "express";
-
+import { Router,Request } from "express";
 import * as TempleCharmController from "../../controllers/temple/templeCharm.controller";
 
-const router = Router();
+declare module "express-serve-static-core" {
+    interface Request {
+        locationId?: string;
+    }
+    interface AuthRequest extends Request {
+        locationId?: string;
+    }
+}
 
-router.get('/', TempleCharmController.getTempleCharmController)
-router.get('/:charmId', TempleCharmController.getTempleCharmByIdController)
-router.post('/', TempleCharmController.newTempleCharmController);
-router.put('/', TempleCharmController.updateTempleCharmController);
-router.delete('/', TempleCharmController.deleteTempleCharmController);
+const router = Router();
+router.use((req, res, next) => {
+    const locationId = req.baseUrl.split('/').reverse()[1];
+    console.log("Extracted locationId:", locationId);
+    req.locationId = locationId;
+    console.log("Updated req.locationId:", req.locationId); // Debugging
+    next();
+});
+router.get('/', TempleCharmController.getTempleCharmController) //yes
+router.get('/:charmId', TempleCharmController.getTempleCharmByIdController) //yes
+router.post('/', TempleCharmController.newTempleCharmController); //yes
+router.put('/:charmId', TempleCharmController.updateTempleCharmController); //yes
+router.delete('/:charmId', TempleCharmController.deleteTempleCharmController); //yes
 
 export default router;

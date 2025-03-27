@@ -24,8 +24,7 @@ export default function MasonryGallery() {
         {trips.map((trip) => (
           <a
             key={trip.id}
-            href={trip.url || "#"}
-            target="_blank"
+            href={trip.url || "/trip-detail"}
             rel="noopener noreferrer"
             className="block break-inside-avoid p-2 bg-white rounded-lg
                        hover:shadow-xl hover:brightness-105 transition-all duration-300 

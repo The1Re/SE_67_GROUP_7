@@ -4,8 +4,8 @@ import { Outlet } from "react-router-dom";
 function GuestLayout() {
     return (
         <>
-         <GuestTopbar />
-            <main className="h-dvh pt-[75px] overflow-auto">
+            <GuestTopbar />
+            <main className="h-dvh overflow-auto">
                 <Outlet />
             </main>
         </>
