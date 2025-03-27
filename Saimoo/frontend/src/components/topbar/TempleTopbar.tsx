@@ -8,10 +8,9 @@ import { MdOutlineTempleBuddhist } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 export const TempleTopbar: React.FC = () => {
-  const { logout } = useAuth();
+  const { logout,user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -34,7 +33,7 @@ export const TempleTopbar: React.FC = () => {
 
         <div className="border-l border-gray-300 h-8 mx-2"></div>
         <h3 className="text-sm md:text-lg font-semibold text-black ml-3.5">
-          วัดศีรษะทอง
+          {user.username}
         </h3>
         {/* Login Button */}
       </div>
@@ -72,11 +71,12 @@ export const TempleTopbar: React.FC = () => {
                 icon={<FaRegEdit  />}
                 onClick={() => navigate("/temple/detail")}
               />
-              <SidebarItem className="text-red-500"
+              <SidebarItem 
+                className="text-red-500"
                 title="ออกจากระบบ"
                 icon={<FiLogOut />}
                 onClick={logout}
-                />
+              />
             </motion.div>
 
             {/* Overlay Effect */}
@@ -102,7 +102,7 @@ const SidebarItem: React.FC<{ title: string; icon: JSX.Element; className?: stri
   onClick
 }) => (
   <div 
-    className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className} cursor-pointer`}
+    className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${className || ''}`}
     onClick={onClick}
   >
     <span className="mr-3 text-lg">{icon}</span>

@@ -1,13 +1,24 @@
-import React from "react";
+import { env } from "@/config";
 
 const Activity = ({ activities }) => {
+  if (!activities || activities.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-gray-500 text-lg">ไม่พบข้อมูลกิจกรรม</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-6 cursor-pointer ">
+    <div className="grid grid-cols-3 md:grid-cols-3 gap-6">
       {activities.map((activity, idx) => (
-        <div key={idx} className="relative bg-white overflow-hidden transition-all duration-300 
-                     hover:shadow-lg hover:-translate-y-2 active:shadow-xl active:scale-105 cursor-pointer">
+        <div 
+          key={idx} 
+          className="relative bg-white overflow-hidden transition-all duration-300
+                   hover:shadow-lg hover:-translate-y-2 active:shadow-xl active:scale-105 cursor-pointer"
+        >
           <img
-            src={activity.image}
+            src={env.API_URL + "/" + activity.image}
             alt={activity.title}
             className="w-full h-56 object-cover rounded-t-lg"
           />
