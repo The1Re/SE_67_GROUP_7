@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Pencil, Save } from "lucide-react"; // เพิ่ม Save icon
+import { Save } from "lucide-react"; // ยังคง import Pencil ไว้
 
 const TempleInfo = ({ templeData, setTempleData, descImage, setDescImage, saveTempleData }) => {
-  const [isEditingName, setIsEditingName] = useState(false);
+  // ลบ state isEditingName ออก เนื่องจากไม่ต้องการให้แก้ไขชื่อวัด
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,24 +16,9 @@ const TempleInfo = ({ templeData, setTempleData, descImage, setDescImage, saveTe
     <div className="w-full p-6 flex flex-col items-center mt-4">
       <div className="max-w-5xl w-full p-6 bg-white rounded-lg shadow-md">
         
-        {/* ชื่อวัด + ไอคอนดินสอ */}
+        {/* ชื่อวัด - แสดงเป็นข้อความธรรมดา ไม่มีไอคอนดินสอและไม่สามารถแก้ไขได้ */}
         <div className="flex justify-center items-center gap-2 mb-6">
-          {isEditingName ? (
-            <input
-              type="text"
-              name="name"
-              value={templeData.name}
-              onChange={handleChange}
-              onBlur={() => setIsEditingName(false)}
-              className="text-6xl font-extrabold tracking-wide text-center border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-              autoFocus
-            />
-          ) : (
-            <div className="flex items-center space-x-2 cursor-pointer group" onClick={() => setIsEditingName(true)}>
-              <h1 className="text-4xl font-bold text-black">{templeData.name || "ชื่อวัด"}</h1>
-              <Pencil className="w-6 h-6 text-gray-500 group-hover:text-black transition duration-200" /> 
-            </div>
-          )}
+          <h1 className="text-4xl font-bold text-black">{templeData.name || "ชื่อวัด"}</h1>
         </div>
 
         {/* รูปภาพและข้อมูลวัด */}
@@ -53,15 +38,6 @@ const TempleInfo = ({ templeData, setTempleData, descImage, setDescImage, saveTe
                   }
                 }} 
               />
-              {descImage ? (
-                <img 
-                  src={descImage} 
-                  alt="Uploaded" 
-                  className="w-auto h-auto max-h-[400px] max-w-full object-contain rounded-lg"
-                />
-              ) : (
-                <span className="text-gray-600 text-3xl">+</span>
-              )}
             </label>
           </div>
 

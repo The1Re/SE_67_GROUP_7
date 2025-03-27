@@ -22,21 +22,21 @@ interface CharmData {
   avalibleDate: string;
   status: number;
   detail: string;
-  templeId: number;
+  templeId?: number;
 }
 
 interface ImageData {
-  id: number;
+  id?: number;
   imagePath: string;
   description: string;
-  templeId: number;
+  templeId?: number;
 }
 
-const TempleTab: React.FC<{ templeId: number }> = ({ templeId = 1 }) => {
+const TempleTab: React.FC<{ templeId: number }> = ({ templeId }) => {
   const [activeTab, setActiveTab] = useState("Activity");
   const [activities, setActivities] = useState<ActivityData[]>([]);
   const [charms, setCharms] = useState<CharmData[]>([]);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<ImageData[]>([]);
 
   useEffect(() => {
     const fetchTempleData = async () => {
@@ -51,9 +51,8 @@ const TempleTab: React.FC<{ templeId: number }> = ({ templeId = 1 }) => {
 
         // Fetch images
         const imagesResponse = await api.get(`/temples/${templeId}/images`);
-        // Extract image paths from the response
-        const imagePaths = imagesResponse.data.map((img: ImageData) => img.imagePath);
-        setImages(imagePaths);
+        setImages(imagesResponse.data);
+
       } catch (error) {
         console.error("Error fetching temple data:", error);
       }
@@ -84,17 +83,22 @@ const TempleTab: React.FC<{ templeId: number }> = ({ templeId = 1 }) => {
     detail: charm.detail
   }));
 
+  const formattedImages = images.map(image => ({
+    title: image.description || "" ,
+    imagePath: image.imagePath  // เปลี่ยนจาก image เป็น imagePath ให้ตรงกับที่ใช้ใน Picture.tsx
+  }));
+
   return (
-    <div className="mt-6">
+    <div className="mt-6 bg-white rounded-lg shadow-sm">
       {/* 🔹 เมนูแท็บ */}
-      <div className="relative flex justify-center border-b border-gray-300">
+      <div className="relative flex justify-center border-b border-gray-300 bg-gray-50">
         {["Activity", "Charm", "Picture"].map((tab) => (
           <button
             key={tab}
             className={`relative py-3 pb-2 px-6 text-xl font-semibold transition-all duration-300 ${
               activeTab === tab
-                ? "text-black after:content-[''] after:absolute after:left-0 after:bottom-[-3px] after:w-full after:h-[3px] after:bg-black"
-                : "text-gray-500 hover:text-black"
+                ? "text-black bg-white after:content-[''] after:absolute after:left-0 after:bottom-[-3px] after:w-full after:h-[3px] after:bg-black"
+                : "text-gray-500 hover:text-black hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -104,10 +108,10 @@ const TempleTab: React.FC<{ templeId: number }> = ({ templeId = 1 }) => {
       </div>
 
       {/* 🔹 แสดงเฉพาะข้อมูลของแท็บที่เลือก */}
-      <div className="p-4">
+      <div className="p-4 bg-white">
         {activeTab === "Activity" && <Activity activities={formattedActivities} />}
         {activeTab === "Charm" && <Charm charms={formattedCharms} />}
-        {activeTab === "Picture" && <Picture images={images} />}
+        {activeTab === "Picture" && <Picture images={formattedImages} />}
       </div>
     </div>
   );

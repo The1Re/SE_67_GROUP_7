@@ -1,52 +1,112 @@
 import { useState, useEffect } from "react";
+import api from "@/api";
+import { env } from "@/config";
 
-const AddPicture = ({ show, onClose, onSave, imageToEdit, onDelete }) => {
-  const [imageUrl, setImageUrl] = useState(imageToEdit || null);
-  const [confirmDelete, setConfirmDelete] = useState(false); // ✅ แจ้งเตือนก่อนลบ
+interface Picture {
+  id?: number;
+  templeId: number;
+  imagePath: string;
+  description?: string;
+}
 
-  if (!show) return null; // ❌ ไม่แสดง Pop-up ถ้า show = false
+interface AddPictureProps {
+  show: boolean;
+  onClose: () => void;
+  onSave: (picture: Picture) => void;
+  onDelete: (id: number) => void;
+  imageToEdit: Picture | null;
+  callback: (path: string) => void;
+}
 
-  // ✅ ตั้งค่าใหม่เมื่อมีการแก้ไขภาพ
+const AddPicture: React.FC<AddPictureProps> = ({ 
+  show, 
+  onClose, 
+  onSave, 
+  imageToEdit, 
+  onDelete, 
+  callback 
+}) => {
+  const [imageUrl, setImageUrl] = useState<string | null>(imageToEdit?.imagePath || null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [description, setDescription] = useState<string>(imageToEdit?.description || "");
+
+  const sendFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await api.post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Upload response:", response.data);
+
+      if (response.status === 200) {
+        const data = response.data.file;
+        console.log("File data:", data);
+        if (data && data.path) {
+          setImageUrl(data.path);
+          callback(data.path);
+        } else {
+          console.error("Invalid response format - missing path:", data);
+        }
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  }
+
+  if (!show) return null;
+
+  // Reset state when editing a different image
   useEffect(() => {
-    setImageUrl(imageToEdit || null);
+    setImageUrl(imageToEdit?.imagePath || null);
+    setDescription(imageToEdit?.description || "");
   }, [imageToEdit]);
 
-  // ✅ อัปโหลดรูปใหม่
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const newUrl = URL.createObjectURL(file);
-      console.log("🖼 รูปที่อัปโหลด:", newUrl);
-      setImageUrl(newUrl);
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      sendFile(event.target.files[0]);
     }
   };
 
-  // ✅ ฟังก์ชันลบรูป
   const handleDelete = () => {
     if (imageToEdit) {
       console.log("กำลังลบรูป:", imageToEdit);
-      onDelete(imageToEdit); // ✅ เรียกฟังก์ชันลบรูป
-      setImageUrl(null); // ✅ ลบรูปออกจาก UI
+      onDelete(imageToEdit.id); // Pass just the ID instead of the whole Picture object
+      setImageUrl(null);
       setConfirmDelete(false);
-      onClose(); // ✅ ปิด popup
+      onClose();
+    }
+  };
+  const handleSave = () => {
+    if (imageUrl) {
+      const pictureData: Picture = {
+        id: imageToEdit?.id,
+        templeId: imageToEdit?.templeId || 0, // You might want to pass templeId as a prop
+        imagePath: imageUrl,
+        description: description
+      };
+      onSave(pictureData);
     }
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50"
-      onClick={onClose} // ✅ กดข้างนอกให้ปิด popup
+      onClick={onClose}
     >
-      <div 
+      <div
         className="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl w-full text-center"
-        onClick={(e) => e.stopPropagation()} // ❌ ป้องกันปิดเมื่อคลิกที่ตัว Popup
+        onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl font-bold text-[#44AFB6]">
           {imageToEdit ? "Edit Picture" : "Add Picture"}
         </h2>
 
-        {/* ✅ แสดงรูปที่อัปโหลดหรือรูปเดิม โดยรักษาสัดส่วน */}
-        <label className="w-full flex justify-center items-center bg-gray-300 rounded-lg cursor-pointer mt-4 overflow-hidden relative ">
+        <label className="w-full flex justify-center items-center bg-gray-300 rounded-lg cursor-pointer mt-4 overflow-hidden relative">
           <input
             type="file"
             accept="image/*"
@@ -54,9 +114,9 @@ const AddPicture = ({ show, onClose, onSave, imageToEdit, onDelete }) => {
             onChange={handleImageUpload}
           />
           {imageUrl ? (
-            <img 
-              src={imageUrl} 
-              alt="Uploaded" 
+            <img
+              src={env.API_URL + "/" + imageUrl}
+              alt="Uploaded"
               className="w-auto h-auto max-h-[500px] max-w-full object-contain aspect-auto rounded-lg"
             />
           ) : (
@@ -75,7 +135,7 @@ const AddPicture = ({ show, onClose, onSave, imageToEdit, onDelete }) => {
           )}
           <button
             className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 text-lg cursor-pointer"
-            onClick={() => onSave(imageUrl)}
+            onClick={handleSave}
             disabled={!imageUrl}
           >
             {imageToEdit ? "Save Changes" : "Add"}
@@ -83,7 +143,6 @@ const AddPicture = ({ show, onClose, onSave, imageToEdit, onDelete }) => {
         </div>
       </div>
 
-      {/* ✅ แจ้งเตือนยืนยันการลบ */}
       {confirmDelete && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">

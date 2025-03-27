@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { env } from "@/config";
+import api from "@/api";
+import toast from "react-hot-toast";
 
 // ปรับ interface ให้ตรงกับ API
 interface Activity {
@@ -11,11 +14,23 @@ interface Activity {
   endDate: Date | string;
   imagePath?: string;
   templeId?: number;
-  image?: File; // เก็บไฟล์รูปภาพที่อัปโหลด (ไม่ส่งไป API)
-  imagePreview?: string; // เก็บ URL สำหรับแสดงตัวอย่างรูปภาพ (ไม่ส่งไป API)
 }
 
-const AddActivity = ({ show, onClose, onSave, editingActivity }) => {
+interface AddActivityProps {
+  show: boolean;
+  onClose: () => void;
+  onSave: (activity: Activity) => void;
+  editingActivity: Activity | null;
+  callback: (path: string) => void;
+}
+
+const AddActivity: React.FC<AddActivityProps> = ({ 
+  show, 
+  onClose, 
+  onSave, 
+  editingActivity,
+  callback 
+}) => {
   // ปรับ state ให้ตรงกับ API
   const [activityData, setActivityData] = useState<Activity>(
     editingActivity || { 
@@ -26,6 +41,25 @@ const AddActivity = ({ show, onClose, onSave, editingActivity }) => {
       imagePath: "",
     }
   );
+  
+  const [imageUrl, setImageUrl] = useState<string | null>(editingActivity?.imagePath || null);
+
+  // Reset state when editing a different activity
+  useEffect(() => {
+    if (editingActivity) {
+      setActivityData(editingActivity);
+      setImageUrl(editingActivity.imagePath || null);
+    } else {
+      setActivityData({ 
+        name: "", 
+        description: "",  
+        startDate: new Date(), 
+        endDate: new Date(), 
+        imagePath: "",
+      });
+      setImageUrl(null);
+    }
+  }, [editingActivity]);
 
   const handleChange = (e) => {
     setActivityData({ ...activityData, [e.target.name]: e.target.value });
@@ -47,27 +81,58 @@ const AddActivity = ({ show, onClose, onSave, editingActivity }) => {
       });
     }
   };
-  
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // เก็บไฟล์ไว้สำหรับส่งไปยัง API
-      setActivityData({ 
-        ...activityData, 
-        image: file,
-        imagePreview: URL.createObjectURL(file),
-        // ไม่ต้องกำหนด imagePath ตรงนี้ เพราะจะได้จาก API หลังจากอัปโหลดสำเร็จ
+  const sendFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await api.post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
+
+      if (response.status === 200) {
+        const data = response.data.file;
+        if (data && data.path) {
+          setImageUrl(data.path);
+          setActivityData({ ...activityData, imagePath: data.path });
+          callback(data.path);
+        } else {
+          console.error("Invalid response format - missing path:", data);
+        }
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      sendFile(event.target.files[0]);
     }
   };
 
   const handleSave = () => {
     if (!activityData.name.trim() || !activityData.description.trim()) {
-      alert("กรุณากรอกชื่อและรายละเอียดกิจกรรม");
+      toast.error("กรุณากรอกชื่อและรายละเอียดกิจกรรม");
       return;
     }
-    onSave(activityData);
+    
+    // ตรวจสอบว่ามีรูปภาพหรือไม่
+    if (!imageUrl) {
+      toast.error("กรุณาอัพโหลดรูปภาพกิจกรรม");
+      return;
+    }
+    
+    // อัปเดต imagePath ก่อนส่งข้อมูล
+    const updatedActivity = {
+      ...activityData,
+      imagePath: imageUrl
+    };
+    
+    onSave(updatedActivity);
   };
 
   if (!show) return null;
@@ -83,33 +148,25 @@ const AddActivity = ({ show, onClose, onSave, editingActivity }) => {
       >
         {/* ส่วนของรูปภาพ (ซ้าย) */}
         <div className="w-1/3 flex flex-col items-center">
-          <label className="w-full h-40 bg-gray-200 flex items-center justify-center rounded-lg cursor-pointer overflow-hidden border-dashed border-2 border-gray-400">
-            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-            {(activityData.imagePreview || activityData.imagePath) ? (
-              <div className="relative w-full h-full">
-                <img 
-                  src={activityData.imagePreview || activityData.imagePath}
-                  alt="Activity Upload" 
-                  className="w-full h-full object-cover rounded-lg" 
-                />
-                <button
-                  className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-red-700"
-                  onClick={() => setActivityData({ 
-                    ...activityData, 
-                    image: undefined,
-                    imagePreview: undefined,
-                    imagePath: undefined
-                  })}
-                >
-                  Delete
-                </button>
-              </div>
+          <label className="w-full flex justify-center items-center bg-gray-300 rounded-lg cursor-pointer h-40 overflow-hidden relative">
+            <input
+              type="file"
+              accept="image/*"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={handleImageUpload}
+            />
+            {imageUrl ? (
+              <img
+                src={env.API_URL + "/" + imageUrl}
+                alt="Activity Upload" 
+                className="w-full h-full object-cover rounded-lg" 
+              />
             ) : (
-              <span className="text-3xl text-gray-500">+</span>
+              <span className="text-4xl text-gray-600">+</span>
             )}
           </label>
         </div>
-
+        
         {/* ส่วนของฟอร์ม (ขวา) */}
         <div className="w-2/3">
           <h2 className="text-2xl font-bold text-[#44AFB6] text-center mb-4">
@@ -182,4 +239,5 @@ const AddActivity = ({ show, onClose, onSave, editingActivity }) => {
     </div>
   );
 };
+
 export default AddActivity;
