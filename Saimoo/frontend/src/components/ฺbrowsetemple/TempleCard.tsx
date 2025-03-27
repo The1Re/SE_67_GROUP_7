@@ -25,6 +25,7 @@ const TempleCard = ({ isSelectMode = false }) => {
         setLoading(true);
         const res = await api.get("/temples");
         const data = res.data.data;
+        console.log(data);
         setTemples(
           data.map((v) => ({
             id: v.id,
