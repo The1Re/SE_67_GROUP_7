@@ -12,7 +12,7 @@ export type Transaction = {
     createdAt: Date,
 }
 
-export type WithdrawRequest = {
-    amount: number; ///wallets/withdraw
-  }
-  
+export type PaymentRequest = {
+    orderId: number,
+    method: "wallet" | "qrcode",
+} 

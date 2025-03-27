@@ -146,6 +146,7 @@ function PurchaseDetails() {
       console.log("Sending data to API:", orderData);
 
       // Send data to API
+      console.log("orderData: ", orderData);
       const response = await api.post('/orders', orderData, { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } });
 
       console.log("API response:", response.data);
