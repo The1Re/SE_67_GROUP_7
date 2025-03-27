@@ -1,12 +1,16 @@
 import api from "@/api";
 import { useAuth } from "@/context/AuthContext";
 import { useTrip } from "@/context/TripContext";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { User } from '@/models/User'
+import { convertDateTimeToThaiFormat } from '@/utils/TimeFormat'
 
 const UserInfo = () => {
   const { user } = useAuth();
   const { trip, setTrip } = useTrip();
+  const [ userData, setUserData ] = useState<User>(null);
   const navigate = useNavigate();
 
   const handleCreateTrip = () => {
@@ -23,13 +27,24 @@ const UserInfo = () => {
       });
   };
 
+  useEffect(() => {
+    api.get(`/users/${user.id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      .then((res) => {
+        console.log(res.data)
+        setUserData(res.data);
+      })
+      .catch(() => {
+        toast.error("ไม่สามารถดึงข้อมูลผู้ใช้ได้");
+      });
+  }, [user])
+
   return (
     <div className="flex items-center justify-between w-full p-4 bg-white rounded-lg shadow-md ">
       <div className="flex items-center space-x-4">
         <div className="w-12 h-12 bg-gray-300 rounded-full" />
         <div>
           <p className="font-bold">{user.username}</p>
-          <p className="text-gray-500 text-sm">สร้างเมื่อ 28 ต.ค. 2566</p>
+          <p className="text-gray-500 text-sm">สร้างเมื่อ {convertDateTimeToThaiFormat(new Date(userData?.createdAt ?? Date()), false)}</p>
         </div>
       </div>
 
