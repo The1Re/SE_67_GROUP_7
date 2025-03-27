@@ -52,7 +52,12 @@ export const getTripAvailable = async (
 
 export const getAllTripByUser = async (userId: number) => {
     return await prisma.trip.findMany({
-        where: { ownerTripId: userId }
+        where: { ownerTripId: userId },
+        include: {
+            TripDetail: { include: { Location: true, TripDetailPicture: true } },
+            TripPicture: true,
+            User: true
+        }
     });
 }
 
