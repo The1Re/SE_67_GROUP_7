@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TripRow from "@/components/history/TripRow";
 import TripDetailModal from "@/components/status/TripDetailModal";
 import api from "@/api";
+import { OrderResponse } from "@/models/Order";
 
 interface Trip {
   id: number;
@@ -12,20 +13,13 @@ interface Trip {
 
 function convertStatus(status: string) {
   switch (status) {
-    case "paid":
-      return "จ่ายแล้ว";
-    case "pending":
-      return "รอดำเนินการ";
-    case "claimed":
-      return "เครมแล้ว";
-    case "in_progress":
-      return "กำลังอยู่ในทริป";
-    case "success":
-      return "สำเร็จ";
-    case "canceled":
-      return "ยกเลิกแล้ว";
-    default:
-      return "ไม่ทราบสถานะ";
+    case "paid": return "จ่ายแล้ว";
+    case "pending": return "รอดำเนินการ";
+    case "claimed": return "เครมแล้ว";
+    case "in_progress": return "กำลังอยู่ในทริป";
+    case "success": return "สำเร็จ";
+    case "canceled": return "ยกเลิกแล้ว";
+    default: return "ไม่ทราบสถานะ";
   }
 }
 
@@ -47,29 +41,45 @@ function HistoryTrip() {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Token not found");
 
-        const res = await api.get("/orders", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await api.get<OrderResponse[]>("/orders", {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("📦 ข้อมูลคำสั่งซื้อ:", res.data);
+        const orders: OrderResponse[] = res.data;
+        const tripTitles: Record<number, string> = {};
 
-        const transformed = res.data.map((order: any) => ({
+        await Promise.all(
+          orders.map(async (order) => {
+            if (!tripTitles[order.tripId]) {
+              try {
+                const tripRes = await api.get<{ title: string }>(`/trips/${order.tripId}`, {
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                tripTitles[order.tripId] = tripRes.data.title;
+              } catch (error) {
+                tripTitles[order.tripId] = `ทริป #${order.tripId}`;
+              }
+            }
+          })
+        );
+
+        const transformed: Trip[] = orders.map((order) => ({
           id: order.id,
-          name: `ทริป #${order.tripId}`,
+          name: tripTitles[order.tripId],
           date: new Date(order.createdAt).toLocaleDateString("th-TH", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
+            year: "numeric", month: "long", day: "numeric",
           }),
           status: convertStatus(order.status),
         }));
 
         setTrips(transformed);
-      } catch (err: any) {
-        console.error("❌ โหลดข้อมูลผิดพลาด:", err);
-        setError(err.message || "เกิดข้อผิดพลาด");
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error("❌ โหลดข้อมูลผิดพลาด:", err.message);
+          setError(err.message);
+        } else {
+          setError("เกิดข้อผิดพลาด");
+        }
       } finally {
         setLoading(false);
       }
