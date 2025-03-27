@@ -32,7 +32,7 @@ const TransactionHistory = (
                                         <TypeBadge type={transaction.type} />
                                     </td>
                                     <td className="py-4 px-4 text-sm text-gray-900">
-                                        {transaction.type === 'topup' ? (
+                                        {transaction.type === 'topup' || transaction.type === 'refund' ? (
                                             <span className="text-green-600 font-medium">
                                                 +{transaction.amount.toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท
                                             </span>
