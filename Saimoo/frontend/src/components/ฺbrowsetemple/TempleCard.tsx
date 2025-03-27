@@ -14,7 +14,7 @@ export type Temple = {
   imageUrl?: string;
 };
 
-const TempleCard = ({ isSelectMode = false }) => {
+const TempleCard = ({ isSelectMode = false, searchTerm, selectedFilter }) => {
   const [temples, setTemples] = useState<Temple[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -46,6 +46,31 @@ const TempleCard = ({ isSelectMode = false }) => {
     fetchData();
   }, []);
 
+  // Inside TempleCard.tsx
+  const filteredTemples = temples
+  .filter((temple) => {
+    // กรองตามชื่อวัด
+    if (
+      searchTerm &&
+      !temple.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return false;
+    }
+    return true;
+  })
+  .sort((a, b) => {
+    // ✅ เรียงลำดับตามยอดนิยม
+    if (selectedFilter === "ยอดนิยม") {
+      return b.like - a.like; // เรียงจากมากไปน้อย
+    }
+    // ✅ เรียงลำดับตามใหม่ล่าสุด
+    if (selectedFilter === "ใหม่ล่าสุด") {
+      return b.id! - a.id!;
+    }
+    return 0;
+  });
+
+// Then use filteredTemples instead of temples in your rendering
   const handleClick = (templeId: number) => {
     if (isSelectMode) {
       navigate(`/temples/${templeId}`, {
@@ -63,8 +88,8 @@ const TempleCard = ({ isSelectMode = false }) => {
   return (
     <div className="bg-white p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {temples.length > 0 ? (
-          temples.map((temple) => (
+        {filteredTemples.length > 0 ? (
+          filteredTemples.map((temple) => (
             <div
               key={temple.id}
               onClick={() => handleClick(temple.id!)}
@@ -81,7 +106,7 @@ const TempleCard = ({ isSelectMode = false }) => {
                   <span className="text-gray-500">ไม่มีรูปภาพ</span>
                 </div>
               )}
-
+  
               <h3 className="text-gray-800 font-bold mt-2">{temple.name}</h3>
               <div className="flex justify-between items-center mt-1">
                 <p className="text-gray-600 text-sm truncate">
@@ -98,7 +123,7 @@ const TempleCard = ({ isSelectMode = false }) => {
         )}
       </div>
     </div>
-  );
+  );  
 };
 
 export default TempleCard;
