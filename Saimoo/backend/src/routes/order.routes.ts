@@ -9,6 +9,7 @@ routes.get('/:id', OrderController.getOrderById);
 routes.post('/', OrderController.createOrder);
 routes.patch('/', OrderController.updateOrder);
 routes.get('/trips/:id', OrderController.getOrderByTripId);
+routes.put('/:id/refunds', OrderController.refundOrder);
 
 routes.use('/:id/details', Router({ mergeParams: true })
     .get('/', OrderController.getAllOrderDetail)

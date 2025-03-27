@@ -3,7 +3,8 @@ import { Prisma } from "@prisma/client";
 import { AuthRequest } from "../middlewares";
 import logger from "../utils/logger";
 
-import { OrderService, OrderDetailService } from "../services";
+import { OrderService, OrderDetailService, TripService } from "../services";
+import prisma from "models/prisma";
 
 export const createOrder = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
@@ -123,6 +124,41 @@ export const updateOrder = async (req: AuthRequest, res: Response): Promise<any>
 
         await OrderService.updateOrder(id, data);
         return res.status(200).json({ message: "Order updated" });
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const refundOrder = async (req: AuthRequest, res: Response): Promise<any> => {
+    try {
+        const { id } = req.params;
+        const userId = req.user?.id;
+        if (!id) {
+            return res.status(400).json({ message: "id is required" });
+        }
+
+        const order = await OrderService.getOrderById(Number(id));
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        const trip = await prisma.trip.findUnique({ where: { id: order.tripId } });
+        if (trip?.status !== "waiting") {
+            return res.status(400).json({ message: "Order can't refunds" });
+        }
+
+        if (order.status === "claims") {
+            return res.status(400).json({ message: "Order already refunded" });
+        }else if (order.status === "pending") {
+            return res.status(400).json({ message: "Order can't refund" });
+        }
+
+        const success = await OrderService.refundOrder(order, Number(userId));
+        if (!success) {
+            return res.status(400).json({ message: "Refund failed" });
+        }
+        return res.status(200).json({ message: "Order refunded" });
     } catch (error) {
         logger.error(error);
         return res.status(500).json({ message: "Internal server error" });
