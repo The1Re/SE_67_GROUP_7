@@ -15,8 +15,9 @@ const UserInfo = () => {
 
   const handleCreateTrip = () => {
     setTrip({ ...trip, ownerTripId: user.id });
+    console.log("ownerTrip: ", user.id)
     console.log(trip)
-    api.post("/trips", trip, { headers: { Authorization: `Bearer ${user.token}` } })
+    api.post("/trips", trip, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
       .then(() => {
         toast.success("สร้างทริปสำเร็จ");
         navigate(`/trips`);
