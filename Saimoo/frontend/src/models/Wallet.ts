@@ -11,3 +11,8 @@ export type Transaction = {
     status: 'pending' | 'completed' | 'failed',
     createdAt: Date,
 }
+
+export type PaymentRequest = {
+    orderId: number,
+    method: "wallet" | "qrcode",
+} 

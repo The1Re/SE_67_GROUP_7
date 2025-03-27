@@ -1,3 +1,6 @@
 /Saimoo/db
 /**/.vscode
 *.sql
+
+node_modules/
+package-lock.json

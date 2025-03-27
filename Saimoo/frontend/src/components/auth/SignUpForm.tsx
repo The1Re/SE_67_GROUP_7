@@ -2,6 +2,7 @@ import { useState } from "react";
 import Input from "./Input";
 import api from "@/api";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 export type SignUpData = {
 	username: string;
@@ -27,15 +28,21 @@ function SignupForm({ setIsModalOpen }) {
 		e.preventDefault();
 
 		const postData = async () => {
-			const res = await api.post("/auth/register", { ...formData, fullname: `${formData.firstname} ${formData.surname}` });
-			if (res.status === 201) {
-				const loginRes = await api.post("/auth/login", { username: formData.username, password: formData.password });
-				if (loginRes.status === 200) {
-					setIsModalOpen(null);
-					
-					login(loginRes.data);
+			try {
+				const res = await api.post("/auth/register", { ...formData, fullname: `${formData.firstname} ${formData.surname}` });
+				if (res.status === 201) {
+					const loginRes = await api.post("/auth/login", { username: formData.username, password: formData.password });
+					if (loginRes.status === 200) {
+						setIsModalOpen(null);
+						
+						login(loginRes.data);
+					} 
 				}
+			}catch(e) {
+				console.error(e)
+				toast.error("username or email already exists");
 			}
+			
 		}
 
 		await postData();

@@ -7,9 +7,14 @@ export const Trips = () => {
   const [selectedSort, setSelectedSort] = useState("recommended");
 
   return (
-    <div >
-      <SearchBar search={search} setSearch={setSearch} selectedSort={selectedSort} setSelectedSort={setSelectedSort} />
-      <MasonryGallery/>
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+        selectedSort={selectedSort}
+        setSelectedSort={setSelectedSort}
+      />
+      <MasonryGallery />
     </div>
   );
 };

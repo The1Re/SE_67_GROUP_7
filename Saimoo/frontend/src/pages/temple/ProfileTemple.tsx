@@ -3,6 +3,7 @@ import InfoTemple from "../../components/profiletemple/InfoTemple";
 import TempleTab from "../../components/profiletemple/TempleTab";
 import { useAuth } from "../../context/AuthContext";
 import api from "@/api";
+import DataLoading from "@/components/DataLoading";
 
 const TemplePage: React.FC = () => {
   const { user } = useAuth();
@@ -66,7 +67,7 @@ const TemplePage: React.FC = () => {
     fetchAllTemples();
   }, [user]);
 
-  if (loading) return <p>กำลังโหลดข้อมูล...</p>;
+  if (loading) return <DataLoading />;
   if (!templeId) return <p>คุณยังไม่มีวัดในระบบ</p>;
 
   return (
