@@ -127,8 +127,8 @@ export const createTrip = async (tripData: TripData) => {
                     day: detail.day,
                     arriveTime: new Date(detail.arriveTime),
                     description: detail.description,
-                    Location: detail.locationId ? {
-                        connect: { id: detail.locationId }
+                    Location: detail.Location?.type == 'temple' ? {
+                        connect: { id: detail.Location.id }
                     } : { create: {
                         name: detail.Location?.name ?? "unknow place",
                         latitude: Number(detail.Location?.latitude) ?? null,
