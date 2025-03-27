@@ -1,7 +1,6 @@
-import { useState } from "react";
-import StatusClaimed from "./StatusClaimed";
-import StatusInProgress from "./StatusInProgress";
-import StatusPaid from "./StatusPaid";
+import { useEffect, useState } from "react";
+import api from "@/api";
+import { OrderResponse } from "@/models/Order";
 
 interface Trip {
   id: number;
@@ -17,52 +16,32 @@ interface TripDetailModalProps {
 }
 
 const TripDetailModal = ({ isOpen, onClose, trip }: TripDetailModalProps) => {
+  const [order, setOrder] = useState<OrderResponse | null>(null);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      if (!trip) return;
+      try {
+        const res = await api.get<OrderResponse>(`/orders/${trip.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setOrder(res.data);
+      } catch (err) {
+        console.error("❌ โหลดข้อมูล order ไม่สำเร็จ:", err);
+      }
+    };
+
+    fetchOrder();
+  }, [trip]);
+
   if (!isOpen || !trip) return null;
 
-  // Mock pricing
   const pricePerPerson = 1899;
-  const peopleCount = 2;
-  const childrenCount = 1; // mock เด็ก 1 คน
-  const walletDiscount = 500; // mock ส่วนลด ถ้า 0 จะไม่แสดง
+  const peopleCount = order?.TripOrderDetail.filter((p) => p.isChild === 0).length || 0;
+  const childrenCount = order?.TripOrderDetail.filter((p) => p.isChild === 1).length || 0;
   const total = pricePerPerson * peopleCount;
-  const discountedTotal = total - walletDiscount;
-
-  const [rating, setRating] = useState(0);
-
-  const renderStatusContent = () => {
-    switch (trip.status) {
-      case "สำเร็จ":
-        return (
-          <div>
-            <label className="font-semibold">ให้คะแนนไกด์</label>
-            <div className="flex gap-1 text-2xl my-2">
-              {Array.from({ length: 5 }).map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setRating(idx + 1)}
-                  className={rating >= idx + 1 ? "text-yellow-400 cursor-pointer" : "text-gray-400 cursor-pointer"}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
-            <textarea
-              placeholder="review"
-              className="w-full border rounded p-2"
-              rows={3}
-            />
-          </div>
-        );
-      case "จ่ายแล้ว":
-        return <StatusPaid />;
-      case "กำลังอยู่ในทริป":
-        return <StatusInProgress />;
-      case "เครมแล้ว":
-        return <StatusClaimed />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
@@ -81,27 +60,21 @@ const TripDetailModal = ({ isOpen, onClose, trip }: TripDetailModalProps) => {
         <div className="flex justify-between mt-4">
           <div>
             <p>จำนวนคนที่เข้าร่วมทริป (ผู้ใหญ่): {peopleCount} คน</p>
-            {walletDiscount > 0 && <p>เงินคงเหลือในกระเป๋า</p>}
             {childrenCount > 0 && <p>เด็ก: {childrenCount} คน (0 ฿)</p>}
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-600">
               {pricePerPerson} x {peopleCount} = {total.toLocaleString()} ฿
             </p>
-            {walletDiscount > 0 && (
-              <p className="text-sm text-red-500 mb-7 mt-1">
-                -{walletDiscount.toLocaleString()} ฿
-              </p>
-            )}
-            <h1 className="text-2xl font-bold mt-2">รวม {discountedTotal.toLocaleString()} ฿</h1>
+            <h1 className="text-2xl font-bold mt-2">รวม {total.toLocaleString()} ฿</h1>
           </div>
         </div>
 
         <hr className="my-4" />
-        {renderStatusContent()}
       </div>
     </div>
   );
 };
+
 
 export default TripDetailModal;
