@@ -1,6 +1,6 @@
 import { Prisma, TripOrder } from "@prisma/client";
 import prisma from "../models/prisma";
-import { WalletService } from "services";
+import { WalletService } from "../services";
 
 export const createOrder = async (data: Prisma.TripOrderCreateInput) => {
     const order = await prisma.tripOrder.create({
