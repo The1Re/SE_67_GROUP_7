@@ -44,7 +44,8 @@ const SignupForm: React.FC = () => {
       {["fullName", "email", "templeName"].map((field, index) => (
         <div key={index} className="grid grid-cols-3 gap-4 items-center">
           <label className="text-gray-700 text-lg font-medium">
-            {field === "name" ? "ชื่อ - นามสกุล" : field === "email" ? "อีเมล" : "ชื่อวัด"}
+            {field === "fullName" ? "ชื่อ - นามสกุล " : field === "email" ? "อีเมล" : "ชื่อวัด"}
+            
           </label>
 
           <input
