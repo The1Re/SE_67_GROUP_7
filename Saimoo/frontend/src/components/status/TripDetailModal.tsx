@@ -78,15 +78,14 @@ const TripDetailModal = ({ isOpen, onClose, trip }: TripDetailModalProps) => {
           </div>
         );
       case "จ่ายแล้ว":
-        return <StatusPaid />;
-      case "กำลังอยู่ในทริป":
-        return <StatusInProgress />;
+        return orderData && <StatusInProgress orderId={orderData.id} />;
       case "เครมแล้ว":
         return <StatusClaimed />;
       default:
         return null;
     }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">

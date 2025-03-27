@@ -1,28 +1,53 @@
-import { useState } from "react";
-import ClaimForm from "./ClaimForm";
-const StatusInProgress = () => {
-  const [showCode, setShowCode] = useState<string | null>(null);
+import { useEffect, useState } from "react";
+import api from "@/api";
 
-  // Mock data รายชื่อลูกทริป
-  const participants = [
-    { name: "นางสาว ก ", code: "GUSGs" },
-    { name: "นางสาว ข ", code: "ABC12" },
-  ];
+interface Participant {
+  fullName: string;
+  identityCode: string;
+}
+
+interface StatusInProgressProps {
+  orderId: number;
+}
+
+const StatusInProgress = ({ orderId }: StatusInProgressProps) => {
+  const [showCode, setShowCode] = useState<string | null>(null);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await api.get(`/orders/${orderId}/details`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setParticipants(res.data);
+      } catch (err) {
+        console.error("❌ โหลดข้อมูลผู้ร่วมทริปล้มเหลว:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParticipants();
+  }, [orderId]);
 
   return (
-    <div>
-      {/* รายชื่อแนวตั้ง */}
-      <div className="mt-4 pt-4">
-        <h3 className="font-semibold mb-2">รายชื่อ</h3>
+    <div className="mt-4 pt-4">
+      <h3 className="font-semibold mb-2">รายชื่อ</h3>
+      {loading ? (
+        <p className="text-gray-500">กำลังโหลดข้อมูล...</p>
+      ) : (
         <div className="flex flex-col gap-2">
           {participants.map((p, idx) => (
             <div key={idx} className="flex justify-between items-center px-4 py-2 rounded">
-              <div>
-                <p>{p.name}</p>
-                <p className="text-sm text-gray-500"></p>
-              </div>
+              <p>{p.fullName}</p>
               <button
-                onClick={() => setShowCode(p.code)}
+                onClick={() => setShowCode(p.identityCode)}
                 className="bg-teal-500 text-white px-3 py-1 rounded hover:bg-teal-600 cursor-pointer"
               >
                 ดู code
@@ -30,10 +55,15 @@ const StatusInProgress = () => {
             </div>
           ))}
 
-          <ClaimForm />
-
+          {/* ปุ่มยกเลิก */}
+          <button
+            className="bg-red-500 text-white px-4 py-2 mt-4 rounded hover:bg-red-600 transition"
+            onClick={() => alert("ยกเลิกทริปเรียบร้อย")} // แก้ให้เชื่อม API ได้ภายหลัง
+          >
+            ยกเลิก
+          </button>
         </div>
-      </div>
+      )}
 
       {/* Popup แสดง code */}
       {showCode && (
