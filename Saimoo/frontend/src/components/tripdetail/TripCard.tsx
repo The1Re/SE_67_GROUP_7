@@ -8,7 +8,7 @@ import { MouseEvent } from "react";
 
 const TripCard = () => {
   const { tripId: tripIdParam } = useParams();
-  const tripId = Number(tripIdParam) || 2;
+  const tripId = Number(tripIdParam)
 
   const navigate = useNavigate();
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -179,7 +179,7 @@ const TripCard = () => {
     fetchParticipantCount();
   }, [trip?.id]);
   
-  const isTripFull = participantCount === (trip?.maxPerson || 0);
+  const isTripFull = participantCount >= (trip?.maxPerson || 0);
 
   const handleBuyTrip = (event: MouseEvent<HTMLButtonElement>) => {
     // ป้องกันการ reload หน้าเว็บ

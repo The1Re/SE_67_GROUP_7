@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 function PurchaserDetails() {
   const { tripId } = useParams<{ tripId: string }>();
-  const numericTripId = Number(tripId) || 2;
+  const numericTripId = Number(tripId)
   const [trip, setTrip] = useState<Trip | null>(null);
   const [participants, setParticipants] = useState<OrderDetailRequest[]>([]);
   const [numPeople, setNumPeople] = useState(1);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TripSummary from "@/components/payment/TripSummary";
 import PaymentMethodSelector from "@/components/payment/PaymentMethodSelector";
@@ -12,9 +12,30 @@ function PaymentDetails() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [deductAmount, setDeductAmount] = useState(0);
+  const [walletBalance, setWalletBalance] = useState(0);
   const { tripId } = useParams<{ tripId: string }>();
-  const numericTripId = Number(tripId) || 2;
+  const numericTripId = Number(tripId);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Fetch wallet balance when component mounts
+  useEffect(() => {
+    const fetchWalletBalance = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get('/wallets', {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
+        setWalletBalance(response.data.balance || 0);
+      } catch (error) {
+        console.error("Error fetching wallet balance:", error);
+        setError("ไม่สามารถดึงข้อมูลกระเป๋าเงินได้");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchWalletBalance();
+  }, []);
 
   // Function to receive deductAmount from TripSummary
   const handleDeductAmountChange = (amount: number) => {
@@ -25,46 +46,62 @@ function PaymentDetails() {
     try {
       setIsProcessing(true);
       setError(null);
-     
-      if (deductAmount <= 0) {
-        setError("ไม่มีเงินที่จะถอน");
-        setIsProcessing(false);
-        return;
-      }
+      
+      // If the trip is free (price is 0), skip the withdrawal process
+      if (deductAmount > 0) {
+        // Check if user has enough balance
+        if (walletBalance < deductAmount) {
+          setError("ยอดเงินในกระเป๋าไม่เพียงพอ กรุณาเติมเงินก่อนทำรายการ");
+          setIsProcessing(false);
+          return;
+        }
 
-      if (!paymentMethod) {
-        setError("กรุณาเลือกวิธีการชำระเงิน");
-        setIsProcessing(false);
-        return;
+        if (!paymentMethod) {
+          setError("กรุณาเลือกวิธีการชำระเงิน");
+          setIsProcessing(false);
+          return;
+        }
+        
+        // สร้าง request body
+        const withdrawRequest: WithdrawRequest = {
+          amount: deductAmount
+        };
+        
+        // เรียกใช้ API เฉพาะเมื่อราคาไม่ใช่ 0
+        const response = await api.post('/wallets/withdraw', withdrawRequest, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
+        
+        console.log("ถอนเงินสำเร็จ:", response.data);
+      } else {
+        console.log("ทริปฟรี ไม่ต้องถอนเงิน");
       }
-     
-      // สร้าง request body
-      const withdrawRequest: WithdrawRequest = {
-        amount: deductAmount
-      };
-     
-      // เรียกใช้ API
-      const response = await api.post('/wallets/withdraw', withdrawRequest, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      });
-     
-      console.log("ถอนเงินสำเร็จ:", response.data);
-     
+      
       // ทำการชำระเงินหรือดำเนินการขั้นตอนถัดไป
       setSuccess(true);
       setIsProcessing(false);
-     
+      
       const savedOrderId = localStorage.getItem("orderId");
       navigate(`/trips/${numericTripId}/${savedOrderId}/confirm`);
-
-      navigate(`/trips/${numericTripId}/${savedOrderId}/confirm`);
-     
+      
     } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการถอนเงิน:", error);
+      console.error("เกิดข้อผิดพลาดในการชำระเงิน:", error);
       setError("เกิดข้อผิดพลาดในการชำระเงิน กรุณาลองใหม่อีกครั้ง");
       setIsProcessing(false);
     }
-  }; 
+  };
+
+  // Show loading state while fetching wallet balance
+  if (isLoading) {
+    return (
+      <div className="p-6 bg-gray-100 min-h-screen flex justify-center items-center">
+        <p>กำลังโหลดข้อมูล...</p>
+      </div>
+    );
+  }
+
+  const insufficientFunds = deductAmount > 0 && walletBalance < deductAmount;
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       {/* Tabs */}
@@ -87,20 +124,55 @@ function PaymentDetails() {
         </div>
       )}
 
+      {/* Wallet Balance */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6 w-3/4 mx-auto">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">ยอดเงินในกระเป๋า</h2>
+          <span className={`text-xl font-bold ${insufficientFunds ? 'text-red-500' : 'text-green-500'}`}>
+            {walletBalance.toLocaleString()} บาท
+          </span>
+        </div>
+        
+        {insufficientFunds && (
+          <div className="mt-2 text-red-500">
+            *ยอดเงินไม่เพียงพอสำหรับการชำระค่าทริป ({deductAmount.toLocaleString()} บาท)
+            <button 
+              onClick={() => window.open('/wallet', '_blank')}
+              className="ml-2 text-blue-500 underline"
+            >
+              เติมเงิน
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Components */}
       <TripSummary onDeductAmountChange={handleDeductAmountChange} />
-      <PaymentMethodSelector selectedMethod={paymentMethod} onSelect={setPaymentMethod} />
+      
+      {/* Only show payment method selector if the price is not 0 */}
+      {deductAmount > 0 && (
+        <PaymentMethodSelector selectedMethod={paymentMethod} onSelect={setPaymentMethod} />
+      )}
 
       {/* Continue Button */}
       <div className="flex justify-end w-3/4 mx-auto">
         <button
           onClick={handlePayment}
-          disabled={isProcessing}
+          disabled={isProcessing || (deductAmount > 0 && !paymentMethod) || insufficientFunds}
           className={`${
-            isProcessing ? 'bg-gray-400' : 'bg-teal-500 hover:bg-teal-600'
+            isProcessing || (deductAmount > 0 && !paymentMethod) || insufficientFunds 
+              ? 'bg-gray-400' 
+              : 'bg-teal-500 hover:bg-teal-600'
           } text-white px-6 py-2 rounded cursor-pointer`}
         >
-          {isProcessing ? 'กำลังดำเนินการ...' : 'ชำระเงิน'}
+          {isProcessing 
+            ? 'กำลังดำเนินการ...' 
+            : insufficientFunds 
+              ? 'ยอดเงินไม่เพียงพอ' 
+              : deductAmount > 0 
+                ? 'ชำระเงิน' 
+                : 'ยืนยันการจอง'
+          }
         </button>
       </div>
     </div>
