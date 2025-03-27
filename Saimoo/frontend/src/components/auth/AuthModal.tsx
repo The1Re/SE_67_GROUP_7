@@ -14,7 +14,7 @@ function AuthModal({ type, setIsModalOpen }) {
     const titles = {
         login: "Sign In",
         signup: "Sign Up",
-        forgot: "Forgot Password"
+        // forgot: "Forgot Password"
     };
 
     return (
