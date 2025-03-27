@@ -79,6 +79,7 @@ const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
             day: item.day,
             location: {
               tripDetailId: item.id,
+              order: item.order,
               type: item.order === 0 ? "meeting_point" : "location",
               name: item.Location?.name || "ไม่ระบุชื่อ",
               address: item.Location?.address || "",
@@ -99,8 +100,9 @@ const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
 
         const dayArray: DayData[] = Object.entries(grouped).map(([day, locations]) => ({
           day: Number(day),
-          locations,
+          locations: locations.sort((a, b) => b.tripDetailId - a.tripDetailId),
         }));
+        console.log("📌 กลุ่มวันและสถานที่:", dayArray);
 
         setDays(dayArray);
       } catch (error) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/api";
 import DataLoading from "../DataLoading";
+import { getFile } from "@/services/fileupload";
 
 export type Temple = {
   id?: number;
@@ -25,6 +26,7 @@ const TempleCard = ({ isSelectMode = false, searchTerm, selectedFilter }) => {
         setLoading(true);
         const res = await api.get("/temples");
         const data = res.data.data;
+        console.log(data);
         setTemples(
           data.map((v) => ({
             id: v.id,
@@ -32,9 +34,9 @@ const TempleCard = ({ isSelectMode = false, searchTerm, selectedFilter }) => {
             latitude: v.latitude,
             longtitude: v.longitude,
             province: v.Province?.name || "ไม่ระบุ",
-            description: v.Temple?.[0]?.description || "ไม่มีคำอธิบาย",
-            like: v.Temple?.[0]?.likes || 0,
-            imageUrl: v.imageUrl || null,
+            description: v.Temple[0]?.description || "ไม่มีคำอธิบาย",
+            like: v.Temple[0]?.likes || 0,
+            imageUrl: v.Temple[0]?.TempleImage[0]?.imagePath || null,
           }))
         );
         setLoading(false)
@@ -92,12 +94,12 @@ const TempleCard = ({ isSelectMode = false, searchTerm, selectedFilter }) => {
           filteredTemples.map((temple) => (
             <div
               key={temple.id}
-              onClick={() => handleClick(temple.id!)}
+              onClick={() => handleClick(temple.id)} // 
               className="bg-white p-4 cursor-pointer overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
             >
               {temple.imageUrl ? (
                 <img
-                  src={temple.imageUrl}
+                  src={temple.imageUrl ? getFile(temple.imageUrl) : ""}
                   alt={temple.name}
                   className="w-full h-40 object-cover rounded-lg"
                 />
@@ -108,18 +110,19 @@ const TempleCard = ({ isSelectMode = false, searchTerm, selectedFilter }) => {
               )}
   
               <h3 className="text-gray-800 font-bold mt-2">{temple.name}</h3>
-              <div className="flex justify-between items-center mt-1">
-                <p className="text-gray-600 text-sm truncate">
-                  {temple.description}
-                </p>
-                <p className="text-gray-600 text-sm flex items-center pr-5">
-                  ❤️ {temple.like}
-                </p>
-              </div>
+                <div className="flex justify-between items-center mt-1">
+                    <p className="text-gray-600 text-sm">
+                        {temple.description || "ไม่มีคำอธิบาย"}
+                    </p>
+                    <p className="text-gray-600 text-sm flex items-center pr-5">
+                        <span className="ml-1">❤️ {temple.like || 0}</span>
+                    </p>
+                </div>
+                <span className="text-sm text-gray-600">{temple.province || 0}</span>
             </div>
           ))
         ) : (
-          <p className="text-gray-500">⛔️ ไม่พบข้อมูลวัด</p>
+          <p>ไม่มีข้อมูลวัด</p>
         )}
       </div>
     </div>

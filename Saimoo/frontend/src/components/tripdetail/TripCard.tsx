@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { FaCar, FaClock } from "react-icons/fa";
 import { useNavigate} from "react-router-dom";
 import { MouseEvent } from "react"; 
+import toast from "react-hot-toast";
 
 interface TripCardProps {
   tripId: number;
@@ -185,7 +186,12 @@ const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
   const handleBuyTrip = (event: MouseEvent<HTMLButtonElement>) => {
     // ป้องกันการ reload หน้าเว็บ
     event.preventDefault();
-    
+
+    if (!user) {
+      toast.error("กรุณาเข้าสู่ระบบก่อนซื้อทริป");
+      return;
+    }
+
     // ตรวจสอบว่าทริปเต็มหรือไม่
     if (isTripFull) {
       return; // ไม่ทำอะไรถ้าทริปเต็มแล้ว
@@ -270,17 +276,17 @@ const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
 
         {/* 🔹 ปุ่มซื้อทริป */}
         <div className="flex flex-col items-end gap-3">
-        <button
-          className={`cursor-pointer px-6 py-2 rounded-md font-semibold ${
-            isTripFull
-              ? "bg-gray-400 cursor-not-allowed" // สีเทาและไม่สามารถกดได้เมื่อทริปเต็ม
-              : "bg-teal-500 text-white hover:bg-teal-600" // สีปกติเมื่อยังมีที่ว่าง
-          }`}
-          onClick={handleBuyTrip}
-          disabled={isTripFull} // ปิดการใช้งานปุ่มเมื่อทริปเต็ม
-        >
-          {isTripFull ? "ทริปเต็มแล้ว" : "ซื้อทริป"}
-        </button>
+          <button
+            className={`cursor-pointer px-6 py-2 rounded-md font-semibold ${
+              isTripFull
+                ? "bg-gray-400 cursor-not-allowed" // สีเทาและไม่สามารถกดได้เมื่อทริปเต็ม
+                : "bg-teal-500 text-white hover:bg-teal-600" // สีปกติเมื่อยังมีที่ว่าง
+            }`}
+            onClick={handleBuyTrip}
+            disabled={isTripFull} // ปิดการใช้งานปุ่มเมื่อทริปเต็ม
+          >
+            {isTripFull ? "ทริปเต็มแล้ว" : "ซื้อทริป"}
+          </button>
 
           <div className="flex flex-col items-end gap-1">
             <p className="text-2xl font-extrabold text-black">

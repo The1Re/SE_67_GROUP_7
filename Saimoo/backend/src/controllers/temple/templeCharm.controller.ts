@@ -2,12 +2,16 @@ import { Request, Response } from 'express';
 import { createTempleCharm,getTempleCharm,updateTempleCharm,deleteTempleCharm,getTempleCharmById} from '../../services/temple.service';
 import logger from '../../utils/logger';
 import { AuthRequest } from '../../middlewares/authenticateUser.middleware';
+import { getTempleIdFromLocationId } from '../../services/location.service';
 
 export const newTempleCharmController = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
-        const { name, imagePath,price,avalibleDate,status,detail,templeId} = req.body;
+        const locationId = req.locationId;
+
+        const templeId = await getTempleIdFromLocationId(Number(locationId));
+        const { name, imagePath,price,avalibleDate,status,detail} = req.body;
         const templeCharm = await createTempleCharm({
-            name, imagePath, price, avalibleDate, status, detail, templeId});
+            name, imagePath, price, avalibleDate, status, detail },Number(templeId) );
         return res.status(201).json(templeCharm);
     } catch (error) {
         logger.error(error);
@@ -17,18 +21,33 @@ export const newTempleCharmController = async (req: AuthRequest, res: Response):
 
 export const getTempleCharmController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const templeCharm = await getTempleCharm();
+        console.log("Request params:", req.locationId); // Debugging
+
+        const locationId = req.locationId;
+        if (!locationId) {
+            return res.status(400).json({ message: 'Location ID is required' });
+        }
+
+        const templeId = await getTempleIdFromLocationId(Number(locationId));
+        if (!templeId) {
+            return res.status(404).json({ message: 'Temple not found' });
+        }
+
+        const templeCharm = await getTempleCharm(templeId);
         return res.status(200).json(templeCharm);
     } catch (error) {
         logger.error(error);
-        return res.status(500).json({ message: 'Can not get' });
+        return res.status(500).json({ message: 'Cannot get temple charm' });
     }
 };
 
+
 export const getTempleCharmByIdController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const {id } = req.params;
-        const templeCharm = await getTempleCharmById(Number(id));
+        const { charmId } = req.params;
+        const locationId = req.locationId;
+        const templeId = await getTempleIdFromLocationId(Number(locationId));
+        const templeCharm = await getTempleCharmById(Number(charmId), Number(templeId));
         return res.status(200).json(templeCharm);
     } catch (error) {
         logger.error(error);
@@ -38,19 +57,36 @@ export const getTempleCharmByIdController = async (req: Request, res: Response):
 
 export const updateTempleCharmController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id, name, imagePath,price,avalibleDate,status,detail,templeId} = req.body;
-        const templeCharm = await updateTempleCharm(id, { name, imagePath, price, avalibleDate, status, detail, templeId});
-        return res.status(201).json(templeCharm);
+        const charmId = parseInt(req.params.charmId, 10);
+        if (isNaN(charmId)) {
+            return res.status(400).json({ message: "Invalid charm ID" }); 
+        }
+
+        const { name, imagePath, price, avalibleDate, status, detail, templeId } = req.body;
+
+        const parsedTempleId = templeId ? parseInt(templeId, 10) : undefined;
+
+        const templeCharm = await updateTempleCharm(charmId, {
+            name,
+            imagePath,
+            price,
+            avalibleDate,
+            status,
+            detail,
+            templeId: parsedTempleId,
+        });
+
+        return res.status(200).json(templeCharm); 
     } catch (error) {
-        logger.error(error);
-        return res.status(500).json({ message: 'Can not update' });
+        console.error(error);
+        return res.status(500).json({ message: "Cannot update charm" });
     }
 };
 
 export const deleteTempleCharmController = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.params;
-        const templeCharm = await deleteTempleCharm(Number(id));
+        const { charmId } = req.params;
+        const templeCharm = await deleteTempleCharm(Number(charmId));
         return res.status(201).json(templeCharm);
     } catch (error) {
         logger.error(error);
