@@ -1,25 +1,36 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import api from "@/api";
 
 const TempleDetail = () => {
-  const { id } = useParams(); // ✅ ดึงค่า ID จาก URL
+  const { id } = useParams();
   const [temple, setTemple] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isCreateMode = location.state?.createMode === true;
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchTempleDetail = async () => {
       try {
-        const res = await api.get(`temples/${id}`); // ✅ ดึงข้อมูลวัดตาม ID
+        const res = await api.get(`/temples/${id}`);
+        console.log(res)
         setTemple(res.data);
       } catch (error) {
         console.error("Error fetching temple detail:", error);
       }
     };
 
-    if (id) fetchTempleDetail();
+    fetchTempleDetail();
   }, [id]);
 
-  if (!temple) {
+  const handleSelectTemple = () => {
+    navigate("/create-trip", { replace: true, state: { temple }});
+  };
+
+  if (!id || !temple) {
     return <p className="text-center text-gray-500">กำลังโหลดข้อมูล...</p>;
   }
 
@@ -39,9 +50,22 @@ const TempleDetail = () => {
         </div>
       )}
 
-      <p className="text-gray-600 mt-4">{temple.Temple[0].description || "ไม่มีคำอธิบาย"}</p>
-      <p className="text-gray-500 text-sm mt-2">จังหวัด: {temple.Province[0].name }</p>
-      <p className="text-gray-500 text-sm">ถูกใจ: {temple.Temple[0].likes || 0}</p>
+      <p className="text-gray-600 mt-4">
+        {temple.Temple?.[0]?.description || "ไม่มีคำอธิบาย"}
+      </p>
+      <p className="text-gray-500 text-sm mt-2">จังหวัด: {temple.province}</p>
+      <p className="text-gray-500 text-sm mb-4">
+        ถูกใจ: {temple.Temple?.[0]?.likes ?? 0}
+      </p>
+
+      {isCreateMode && (
+        <button
+          onClick={handleSelectTemple}
+          className="px-4 py-2 bg-green-500 text-white rounded-lg mt-4"
+        >
+          ✅ เพิ่มวัดนี้ในแผนทริป
+        </button>
+      )}
     </div>
   );
 };

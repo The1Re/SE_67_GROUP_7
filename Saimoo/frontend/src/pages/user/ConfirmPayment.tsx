@@ -1,12 +1,15 @@
-import TripSummaryCard from "@/components/payment/TripSummaryCard";
+import TripSummary from "@/components/payment/TripSummary";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const tripPrice = 1899;
-const peopleCount = 2;
-const walletBalance = 500;
 
 function ConfirmPayment() {
     const navigate = useNavigate();
+    const [, setDeductAmount] = useState(0);
+
+   const handleDeductAmountChange = (amount: number) => {
+    setDeductAmount(amount);
+  };
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
       {/* Tabs */}
@@ -22,12 +25,7 @@ function ConfirmPayment() {
       </div>
 
       {/* Trip Summary Card */}
-      <TripSummaryCard
-        tripPrice={tripPrice}
-        peopleCount={peopleCount}
-        walletBalance={walletBalance}
-      />
-
+      <TripSummary onDeductAmountChange={handleDeductAmountChange} />
       {/* กลับหน้าแรก */}
       <a
           onClick={() => navigate("/trips")}

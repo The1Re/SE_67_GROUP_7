@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Modal from "react-modal";
 import { DropResult } from "react-beautiful-dnd";
-Modal.setAppElement("#root");
+import { useNavigate, useLocation } from "react-router-dom";
+
 // ✅ กำหนดโครงสร้างของข้อมูล Location (แต่ละสถานที่)
 interface Location {
     id: string;
@@ -16,46 +17,171 @@ interface Location {
     time?: string;
 }
 
-const TripDay = ({ startDate, endDate, setLocations }) => {
-    const [days, setDays] = useState([]);
+const TripDay = ({ startDate, endDate, setLocations, days, setDays }) => {
     const [activeTab, setActiveTab] = useState(1);
     const [selectedImage, setSelectedImage] = useState(null);
     const [popupLocation, setPopupLocation] = useState(null);
     const [customLocation, setCustomLocation] = useState({ name: "", address: "", lat: "", lng: "" });
+    const navigate = useNavigate();
+    const location = useLocation();
+    const hasInitialized = useRef(false);
+    const isNavigatingBack = useRef(false);
+    const daysRef = useRef(days);
 
+    console.log(location.state)
+    
     useEffect(() => {
-        if (!startDate || !endDate) return;
+        daysRef.current = days;
+    }, [days]);
     
-        const diffTime = Math.abs(endDate - startDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    // ✅ รวมโลจิกการโหลดจาก sessionStorage ให้เป็นฟังก์ชั่นเดียว
+    useEffect(() => {
+        // Only run this when coming back from temple selection
+        if (location.state?.fromTemple) {
+            const savedTemple = sessionStorage.getItem("selectedTemple");
+            if (savedTemple) {
+                try {
+                    const selectedTemple = JSON.parse(savedTemple);
+                    
+                    // Make a deep copy of days to avoid reference issues
+                    setDays(prevDays => {
+                        const newDays = JSON.parse(JSON.stringify(prevDays));
+                        
+                        // Find the day matching activeTab
+                        const dayIndex = newDays.findIndex(day => day.id === activeTab);
+                        if (dayIndex !== -1) {
+                            // Add temple to the locations array
+                            newDays[dayIndex].locations.push({
+                                id: `${activeTab}-temple-${Date.now()}`,
+                                name: selectedTemple.name,
+                                address: selectedTemple.address || "",
+                                lat: selectedTemple.lat,
+                                lng: selectedTemple.lng,
+                                images: [],
+                                thumbnail: null,
+                                description: "",
+                                time: "",
+                            });
+                        }
+                        
+                        return newDays;
+                    });
+                    
+                    // Clear the temple data after adding it
+                    sessionStorage.removeItem("selectedTemple");
+                } catch (err) {
+                    console.error("❌ ไม่สามารถเพิ่มวัดได้", err);
+                }
+            }
+        }
+    }, [location.state, activeTab,setDays]);
     
-        setDays(prevDays => {
-            if (prevDays.length === diffDays) return prevDays; // ถ้าจำนวนวันเท่าเดิมไม่ต้องรีเซ็ต
-            return Array.from({ length: diffDays }, (_, i) => ({
-                id: i + 1,
-                locations: prevDays[i]?.locations || (i === 0 
-                    ? [{ id: "meet", type: "meeting_point", images: [], thumbnail: null, description: "", time: "" }] 
-                    : [])
-            }));
-        });
-    }, [startDate, endDate]);
-
+    // ✅ อัปเดต locations เมื่อ activeTab หรือ days เปลี่ยน
     useEffect(() => {
         const currentDay = days.find(day => day.id === activeTab);
         if (!currentDay) return;
-    
+        
         const updatedLocations = currentDay.locations
             .filter((loc: Location) => loc.lat !== undefined && loc.lng !== undefined)
             .map((loc: Location) => ({
                 key: loc.name ?? "ไม่ระบุชื่อ",
                 location: { lat: loc.lat!, lng: loc.lng! }
             }));
+            
+        setLocations(updatedLocations);
+    }, [activeTab, days, setLocations]);
     
-        console.log("📌 อัปเดตแผนที่ตามวัน: ", updatedLocations);
+    // ✅ จัดการเพิ่มวัดจาก sessionStorage
+    useEffect(() => {
+        if (!hasInitialized.current) return;
+        
+        const savedTemple = sessionStorage.getItem("selectedTemple");
+        if (!savedTemple) return;
+        
+        try {
+            const selectedTemple = JSON.parse(savedTemple);
+            
+            // เพิ่มวัดเข้าไปใน day ที่เลือก
+            setDays((prevDays) => {
+                // สร้าง array ใหม่เพื่อไม่ให้มีการ mutate state เดิม
+                return prevDays.map((day) => {
+                    if (day.id === activeTab) {
+                        return {
+                            ...day,
+                            locations: [
+                                ...day.locations,
+                                {
+                                    id: `${day.id}-temple-${Date.now()}`,
+                                    name: selectedTemple.name,
+                                    address: selectedTemple.address || "",
+                                    lat: selectedTemple.lat,
+                                    lng: selectedTemple.lng,
+                                    images: [],
+                                    thumbnail: null,
+                                    description: "",
+                                    time: "",
+                                },
+                            ],
+                        };
+                    }
+                    return day;
+                });
+            });
+            
+            // ลบข้อมูลวัดจาก sessionStorage หลังจากใช้งานเสร็จ
+            sessionStorage.removeItem("selectedTemple");
+        } catch (err) {
+            console.error("❌ ไม่สามารถเพิ่มวัดได้", err);
+        }
+    }, [activeTab, setDays]);
     
-        setLocations(updatedLocations); // ✅ อัปเดต locations อัตโนมัติเมื่อเปลี่ยนวัน
-    }, [activeTab, days, setLocations]); // ✅ เพิ่ม `setLocations` เข้าไป
+    // ✅ บันทึก days ไปยัง sessionStorage เมื่อมีการเปลี่ยนแปลง
+    useEffect(() => {
+        if (days.length === 0) {
+            console.warn("⚠️ days ว่าง ไม่บันทึกลง sessionStorage");
+            return;
+        }
+        
+        // บันทึกข้อมูลลง sessionStorage
+        console.log("📦 บันทึก days ลง sessionStorage:", days);
+        sessionStorage.setItem("tripDays", JSON.stringify(days));
+    }, [days]);
     
+    // ✅ เก็บสถานะการนำทางเมื่อจะไปเลือกวัด
+    const goToBrowseTemple = (dayId, locId) => {
+        // บันทึกสถานะปัจจุบันก่อนนำทางไปหน้าอื่น
+        sessionStorage.setItem("currentFormState", JSON.stringify({
+            activeTab,
+            popupLocation: { dayId, locId }
+        }));
+        
+        // นำทางไปยังหน้าเลือกวัด
+        navigate("/browse-temple", {
+            state: {
+                fromTripDay: true,
+                dayId,
+                locId,
+            }
+        });
+    };
+    
+    // ✅ โหลดสถานะกลับมาเมื่อกลับจากหน้าเลือกวัด
+    useEffect(() => {
+        if (isNavigatingBack.current) {
+            try {
+                const savedState = sessionStorage.getItem("currentFormState");
+                if (savedState) {
+                    const { activeTab: savedTab } = JSON.parse(savedState);
+                    setActiveTab(savedTab);
+                    sessionStorage.removeItem("currentFormState");
+                }
+            } catch (err) {
+                console.error("❌ ไม่สามารถโหลดสถานะฟอร์มกลับมาได้", err);
+            }
+            
+            isNavigatingBack.current = false;
+        }
+    }, [location]);
     
     const addLocation = (dayId) => {
         setDays(prevDays => 
@@ -74,7 +200,6 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
         );
     };
     
-
     const handleUploadImage = (event, dayId, locId, index = null, isThumbnail = false) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -110,7 +235,6 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
         reader.readAsDataURL(file);
     };
     
-
     const handleDeleteImage = (dayId, locId, index) => {
         setDays(days.map(day => {
             if (day.id === dayId) {
@@ -139,6 +263,7 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
             return day;
         }));
     };
+    
     const handleSelectLocationType = (dayId, locId, type) => {
         if (type === "สถานที่อื่นๆ") {
             setPopupLocation({ dayId, locId, type: "custom" });
@@ -185,7 +310,7 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
         }));
     
         // ✅ อัปเดต locations ให้ MyMap
-        setLocations((prev: Location[]) => [
+        setLocations((prev) => [
             ...prev,
             { key: customLocation.name, location: { lat: latitude, lng: longitude } }
         ]);
@@ -194,8 +319,6 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
         setCustomLocation({ name: "", address: "", lat: "", lng: "" });
     };
     
-    
-
     const onDragEnd = (result: DropResult) => {
         if (!result.destination) return;
     
@@ -239,30 +362,31 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
             })
         );
     };
-    
-    
 
     return (
         <div className="bg-white rounded-lg p-4">
-            <div className="flex space-x-2 mb-4">
+            <div className="flex space-x-2 mb-4 overflow-x-auto">
+            <div className="flex flex-nowrap">
                 {days.map((day) => (
-                    <button
-                        key={day.id}
-                        className={`cursor-pointer px-4 py-2 rounded-lg ${activeTab === day.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                        onClick={() => setActiveTab(day.id)} // ✅ เมื่อกดเปลี่ยนวัน, `useEffect` จะอัปเดตแผนที่ทันที
-                    >
-                        Day {day.id}
-                    </button>
+                <button
+                    key={day.id}
+                    className={`cursor-pointer px-4 py-2 mr-2 rounded-lg whitespace-nowrap ${
+                    activeTab === day.id ? "bg-blue-500 text-white" : "bg-gray-200"
+                    }`}
+                    onClick={() => setActiveTab(day.id)}
+                >
+                    Day {day.id}
+                </button>
                 ))}
             </div>
-
+            </div>
             <DragDropContext onDragEnd={onDragEnd}>
                 {days.map((day) => (
                     activeTab === day.id && (
                         <Droppable key={day.id} droppableId={`droppable-${day.id}`}>
                             {(provided) => (
                                 <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-4 p-4 bg-gray-50 rounded-lg shadow-md">
-                                    {day.locations.map((location, index) => (
+                                    {day.locations && day.locations.map((location, index) => (
                                         <Draggable key={location.id} draggableId={location.id} index={index}>
                                             {(provided) => (
                                                 <div
@@ -371,7 +495,7 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
                     </button>
                 </Modal>
             )}
-             {popupLocation && (
+            {popupLocation && (
                 <Modal
                     isOpen={!!popupLocation}
                     onRequestClose={() => setPopupLocation(null)}
@@ -381,8 +505,10 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
                     <h2 className="mb-4">เลือกประเภทสถานที่</h2>
                     <button 
                         className="w-full p-3 bg-blue-400 rounded-lg text-white mb-2" 
-                        onClick={() => handleSelectLocationType(popupLocation.dayId, popupLocation.locId, "วัด")}
-                    >วัด</button>
+                        onClick={() => goToBrowseTemple(popupLocation.dayId, popupLocation.locId)}
+                    >
+                        วัด
+                    </button>
                     <button 
                         className="w-full p-3 bg-gray-400 rounded-lg text-white" 
                         onClick={() => handleSelectLocationType(popupLocation.dayId, popupLocation.locId, "สถานที่อื่นๆ")}
@@ -433,9 +559,7 @@ const TripDay = ({ startDate, endDate, setLocations }) => {
                     <button className="w-full p-3 bg-gray-500 text-white rounded-lg" onClick={() => setPopupLocation(null)}>ยกเลิก</button>
                 </Modal>
             )}
-
         </div>
-        
     );
 };
 

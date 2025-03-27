@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ ใช้สำหรับเปลี่ยนหน้า
+import { useNavigate } from "react-router-dom";
 import api from "@/api";
+import DataLoading from "../DataLoading";
 
 export type Temple = {
   id?: number;
@@ -13,13 +14,15 @@ export type Temple = {
   imageUrl?: string;
 };
 
-const TempleCard = () => {
+const TempleCard = ({ isSelectMode = false }) => {
   const [temples, setTemples] = useState<Temple[]>([]);
-  const navigate = useNavigate(); // ✅ ใช้สำหรับเปลี่ยนหน้า
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const res = await api.get("/temples");
         const data = res.data.data;
         setTemples(
@@ -28,12 +31,13 @@ const TempleCard = () => {
             name: v.name,
             latitude: v.latitude,
             longtitude: v.longitude,
-            province: v.Province[0]?.name || "ไม่ระบุ",
-            description: v.Temple[0]?.description || "ไม่มีคำอธิบาย",
-            like: v.Temple[0]?.likes || 0,
-            imageUrl: v.Temple?.imageUrl || null,
+            province: v.Province?.name || "ไม่ระบุ",
+            description: v.Temple?.[0]?.description || "ไม่มีคำอธิบาย",
+            like: v.Temple?.[0]?.likes || 0,
+            imageUrl: v.imageUrl || null,
           }))
         );
+        setLoading(false)
       } catch (error) {
         console.error("Error fetching temples:", error);
       }
@@ -42,6 +46,20 @@ const TempleCard = () => {
     fetchData();
   }, []);
 
+  const handleClick = (templeId: number) => {
+    if (isSelectMode) {
+      navigate(`/temples/${templeId}`, {
+        state: { createMode: true },
+      });
+    } else {
+      navigate(`/temples/${templeId}`);
+    }
+  };
+
+  if (loading) {
+    return <DataLoading />
+  }
+
   return (
     <div className="bg-white p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -49,7 +67,7 @@ const TempleCard = () => {
           temples.map((temple) => (
             <div
               key={temple.id}
-              onClick={() => navigate(`/temples/${temple.id}`)} // 
+              onClick={() => handleClick(temple.id)} // 
               className="bg-white p-4 cursor-pointer overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
             >
               {temple.imageUrl ? (
