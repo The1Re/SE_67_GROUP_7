@@ -31,7 +31,7 @@ function CreateTripForm() {
                         Array.from({ length: numDay }, (_, index) => (
                             <button 
                                 key={index} 
-                                className={`cursor-pointer m-2 p-2 ${selectedDay === index+1 ? 'bg-blue-500' : 'bg-gray-400'} text-white rounded`}
+                                className={`cursor-pointer m-2 p-2 ${selectedDay === index+1 ? 'bg-teal-600' : 'bg-teal-500'} text-white rounded`}
                                 onClick={() => setSelectedDay(index + 1)}
                             >
                                 Day {index + 1}

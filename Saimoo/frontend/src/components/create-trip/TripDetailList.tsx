@@ -98,7 +98,7 @@ function TripDetailList({ day }: { day: number }) {
                 ))}
             </SortableContext>
             <button 
-                className="cursor-pointer mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                className="cursor-pointer mt-4 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg"
                 onClick={newTripDetail}
             >
                 + เพิ่มสถานที่
