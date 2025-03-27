@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export const Trips = () => {
   const [search, setSearch] = useState("");
-  const [selectedSort, setSelectedSort] = useState("recommended");
+  const [selectedSort, setSelectedSort] = useState("lastest");
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
