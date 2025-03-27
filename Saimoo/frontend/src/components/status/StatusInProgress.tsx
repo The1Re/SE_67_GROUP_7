@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "@/api";
+import toast from "react-hot-toast";
 
 interface Participant {
   fullName: string;
@@ -36,6 +37,21 @@ const StatusInProgress = ({ orderId }: StatusInProgressProps) => {
     fetchParticipants();
   }, [orderId]);
 
+  const handleCancelTrip = () => {
+    console.log(localStorage.getItem("token")); 
+    api.put(`/orders/${orderId}/refunds`, {}, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }).then(() => {
+      toast.success("ยกเลิกทริปสำเร็จ");
+      window.location.reload();
+    }).catch((err) => {
+      console.error("❌ ยกเลิกทริปไม่สำเร็จ:", err);
+      toast.error("ยกเลิกทริปไม่สำเร็จ");
+    });
+  };
+
   return (
     <div className="mt-4 pt-4">
       <h3 className="font-semibold mb-2">รายชื่อ</h3>
@@ -58,7 +74,7 @@ const StatusInProgress = ({ orderId }: StatusInProgressProps) => {
           {/* ปุ่มยกเลิก */}
           <button
             className="bg-red-500 text-white px-4 py-2 mt-4 rounded hover:bg-red-600 transition"
-            onClick={() => alert("ยกเลิกทริปเรียบร้อย")} // แก้ให้เชื่อม API ได้ภายหลัง
+            onClick={handleCancelTrip} // แก้ให้เชื่อม API ได้ภายหลัง
           >
             ยกเลิก
           </button>

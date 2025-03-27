@@ -80,7 +80,11 @@ function PaymentDetails() {
         
         console.log("ชำระสำเร็จ:", res.data);
       } else {
-        console.log("ทริปฟรี ไม่ต้องถอนเงิน");
+        const response = await api.post('/payments/', { orderId: Number(orderId), method: "wallet" }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
+        const res = await api.post(`/payments/${response.data.id}/pay`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+        console.log("ชำระสำเร็จ:", res.data);
       }
       
       // ทำการชำระเงินหรือดำเนินการขั้นตอนถัดไป

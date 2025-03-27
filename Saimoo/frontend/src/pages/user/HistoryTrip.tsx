@@ -15,10 +15,8 @@ function convertStatus(status: string) {
   switch (status) {
     case "paid": return "จ่ายแล้ว";
     case "pending": return "รอดำเนินการ";
-    case "claimed": return "เครมแล้ว";
-    case "in_progress": return "กำลังอยู่ในทริป";
-    case "success": return "สำเร็จ";
-    case "canceled": return "ยกเลิกแล้ว";
+    case "claims": return "เครมแล้ว";
+    case "cancel": return "ยกเลิกแล้ว";
     default: return "ไม่ทราบสถานะ";
   }
 }
@@ -44,7 +42,7 @@ function HistoryTrip() {
         const res = await api.get<OrderResponse[]>("/orders", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+        console.log(res.data);
         const orders: OrderResponse[] = res.data;
         const tripTitles: Record<number, string> = {};
 
