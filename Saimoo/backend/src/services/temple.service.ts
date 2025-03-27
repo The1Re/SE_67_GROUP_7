@@ -54,6 +54,17 @@ export const updateTempleLike = async (id: number) => {
     });
 };
 
+export const deleteTempleLike = async (id: number) => {
+    await prisma.temple.update({
+        where: { id },
+        data: {
+            likes: {
+                decrement: 1, // ลดค่า likes ลงทีละ 1
+            },
+        },
+    });
+};
+
 export const deleteTemple = async (id : number) => {
     logger.info("Deleting temple with id: ", id);
     await prisma.temple.deleteMany({

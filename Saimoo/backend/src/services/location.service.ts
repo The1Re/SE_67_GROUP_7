@@ -85,4 +85,21 @@ export const getTempleIdFromLocationId = async (locationId: number) => {
   return templeId !== undefined ? Number(templeId) : null;
 };
 
+export const getAllProvince = async () => {
+  return await prisma.province.findMany();
+};
+
+export const getProvinceById = async (id: number) => {
+  return await prisma.province.findUnique({
+    where: { id },
+  });
+};
+
+export const updateLocation = async (id: number, locationData: Partial<Location>) => {
+  return await prisma.location.update({
+    where: { id },
+    data: locationData,
+  });
+};
+
 
