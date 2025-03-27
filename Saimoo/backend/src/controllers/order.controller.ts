@@ -4,7 +4,7 @@ import { AuthRequest } from "../middlewares";
 import logger from "../utils/logger";
 
 import { OrderService, OrderDetailService, TripService } from "../services";
-import prisma from "models/prisma";
+import prisma from "../models/prisma";
 
 export const createOrder = async (req: AuthRequest, res: Response): Promise<any> => {
     try {
