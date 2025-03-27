@@ -28,7 +28,7 @@ function LocationForm({ onSubmit }) {
                 value={location.longitude}
             />
             <button
-                className="cursor-pointer w-full p-3 bg-blue-400 hover:bg-blue-500 rounded-lg text-white"
+                className="cursor-pointer w-full p-3 bg-teal-400 hover:bg-teal-500 rounded-lg text-white"
                 onClick={() => onSubmit(location)}
             >
                 เพิ่มสถานที่

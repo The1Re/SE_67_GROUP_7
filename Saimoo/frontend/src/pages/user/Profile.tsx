@@ -49,7 +49,7 @@ function Profile() {
                         แก้ไขโปรไฟล์
                     </button>
                     <button 
-                        className="bg-blue-500 text-white py-2 px-4 rounded cursor-pointer hover:bg-blue-700 transition duration-300"
+                        className="bg-teal-500 text-white py-2 px-4 rounded cursor-pointer hover:bg-teal-700 transition duration-300"
                         onClick={() => alert('ขอเป็นไกด์ clicked')}
                     >
                         ขอเป็นไกด์

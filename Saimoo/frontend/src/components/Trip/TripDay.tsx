@@ -371,7 +371,7 @@ const TripDay = ({ startDate, endDate, setLocations, days, setDays }) => {
                 <button
                     key={day.id}
                     className={`cursor-pointer px-4 py-2 mr-2 rounded-lg whitespace-nowrap ${
-                    activeTab === day.id ? "bg-blue-500 text-white" : "bg-gray-200"
+                    activeTab === day.id ? "bg-teal-500 text-white" : "bg-gray-200"
                     }`}
                     onClick={() => setActiveTab(day.id)}
                 >
@@ -440,7 +440,7 @@ const TripDay = ({ startDate, endDate, setLocations, days, setDays }) => {
                                                                 />
                                                                 <label 
                                                                     htmlFor={`edit-image-${day.id}-${location.id}-${i}`} 
-                                                                    className="absolute top-0 left-0 bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs cursor-pointer"
+                                                                    className="absolute top-0 left-0 bg-teal-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs cursor-pointer"
                                                                 >
                                                                     ✎
                                                                 </label>
@@ -504,7 +504,7 @@ const TripDay = ({ startDate, endDate, setLocations, days, setDays }) => {
                 >
                     <h2 className="mb-4">เลือกประเภทสถานที่</h2>
                     <button 
-                        className="w-full p-3 bg-blue-400 rounded-lg text-white mb-2" 
+                        className="w-full p-3 bg-teal-400 rounded-lg text-white mb-2" 
                         onClick={() => goToBrowseTemple(popupLocation.dayId, popupLocation.locId)}
                     >
                         วัด
