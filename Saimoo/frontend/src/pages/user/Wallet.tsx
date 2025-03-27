@@ -14,7 +14,7 @@ function Wallet() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [qrModalOpen, setQrModalOpen] = useState<boolean>(false);
-    const [transactionType, setTransactionType] = useState<'topup' | 'withdraw'>('topup');
+    const [transactionType, setTransactionType] = useState<'topup' | 'withdraw' | 'payment'>('topup');
     const token = localStorage.getItem('token');
 
     const fetchWalletData = useCallback(async () => {
