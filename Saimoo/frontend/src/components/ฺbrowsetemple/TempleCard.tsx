@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/api";
 import DataLoading from "../DataLoading";
+import { getFile } from "@/services/fileupload";
 
 export type Temple = {
   id?: number;
@@ -33,9 +34,9 @@ const TempleCard = ({ isSelectMode = false }) => {
             latitude: v.latitude,
             longtitude: v.longitude,
             province: v.Province?.name || "ไม่ระบุ",
-            description: v.Temple?.[0]?.description || "ไม่มีคำอธิบาย",
-            like: v.Temple?.[0]?.likes || 0,
-            imageUrl: v.imageUrl || null,
+            description: v.Temple[0]?.description || "ไม่มีคำอธิบาย",
+            like: v.Temple[0]?.likes || 0,
+            imageUrl: v.Temple[0]?.TempleImage[0]?.imagePath || null,
           }))
         );
         setLoading(false)
@@ -73,7 +74,7 @@ const TempleCard = ({ isSelectMode = false }) => {
             >
               {temple.imageUrl ? (
                 <img
-                  src={temple.imageUrl}
+                  src={temple.imageUrl ? getFile(temple.imageUrl) : ""}
                   alt={temple.name}
                   className="w-full h-40 object-cover rounded-lg"
                 />
@@ -89,10 +90,10 @@ const TempleCard = ({ isSelectMode = false }) => {
                         {temple.description || "ไม่มีคำอธิบาย"}
                     </p>
                     <p className="text-gray-600 text-sm flex items-center pr-5">
-                        <span className="ml-1">{temple.like || 0}</span>
-                        <span className="ml-1">{temple.province || 0}</span>
+                        <span className="ml-1">❤️ {temple.like || 0}</span>
                     </p>
                 </div>
+                <span className="text-sm text-gray-600">{temple.province || 0}</span>
             </div>
           ))
         ) : (
