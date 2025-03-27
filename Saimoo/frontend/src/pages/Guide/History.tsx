@@ -3,26 +3,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PackageCard from "@/components/historyguidetrip/PackageCard";
 import { useAuth } from "@/context/AuthContext";
+import { Trip } from "@/models/Trip";
 
-interface Trip {
-  id: number;
-  title: string;
-  image: string;
-  status: string;
-  showDetails: boolean;
-  ownerTripId?: number;
-  subtitle?: string;
-  date?: string;
-  description?: string;
-  type?: string;
-  price?: number;
-  TripDetail?: any[];
-}
 
 const HistoryTrip: React.FC = () => {
-  const [packages, setPackages] = useState<Trip[]>([]); // ✅ ใช้ข้อมูลจาก API
+  const [packages, setPackages] = useState([]); // ✅ ใช้ข้อมูลจาก API
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [trip, setTrip] = useState([]);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -44,9 +32,9 @@ const HistoryTrip: React.FC = () => {
 
       // Filter trips where ownerTripId matches the current user's ID
       const filteredTrips = res.data.data.filter(
-        (trip: any) => trip.ownerTripId === userId
+        (trip) => trip.ownerTripId === userId
       );
-
+      setTrip(filteredTrips)
       console.log("📚 ข้อมูลหลังการกรอง:", filteredTrips);
 
       const formattedData = filteredTrips.map((trip: any) => ({
@@ -54,7 +42,7 @@ const HistoryTrip: React.FC = () => {
         title: trip.title,
         image:
           trip.TripPicture?.length > 0
-            ? `https://rkhgjh4q-3000.asse.devtunnels.ms/${trip.TripPicture[0].imagePath}`
+            ? `${trip.TripPicture[0].imagePath}`
             : "/assets/imagetemple/8.jpg",
         status: trip.status,
         date: new Date(trip.dateStart).toLocaleDateString(),
@@ -93,7 +81,8 @@ const HistoryTrip: React.FC = () => {
   // ✅ ฟังก์ชันคัดลอกทริปและส่งข้อมูลไป create-trip
   const handleCloneTrip = (trip: Trip) => {
     console.log("📋 กำลังคัดลอกทริป:", trip);
-    navigate("/create-trip", { state: { clonedTrip: trip } });
+    const d: Trip = {...trip, TripPicture: trip.TripPicture[0]} // ✅ คัดลอกข้อมูลทริป
+    navigate("/create-trip", { state: { clonedTrip: d } });
   };
 
   // ✅ ฟังก์ชันยกเลิกทริป
@@ -133,7 +122,7 @@ const HistoryTrip: React.FC = () => {
               packageData={pkg}
               onViewTrip={() => handleViewTrip(pkg.id)}
               onCancelTrip={handleCancelTrip}
-              onClone={() => handleCloneTrip(pkg)} // ✅ คัดลอกทริปพร้อมข้อมูล
+              onClone={() => handleCloneTrip(trip.find(v => v.id === pkg.id))} // ✅ คัดลอกทริปพร้อมข้อมูล
               onCreateTrip={handleCreateTrip}
             />
           ))

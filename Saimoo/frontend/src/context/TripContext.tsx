@@ -21,22 +21,8 @@ const initTripValue: Trip = {
 };
 
 // ✅ ตรวจสอบการแปลง dateStart และ dateEnd ให้เป็น Date เสมอ
-const getState = (clonedTrip: Trip | null) => {
-  if (clonedTrip) {
-    return {
-      ...clonedTrip,
-      dateStart: clonedTrip.dateStart
-        ? new Date(clonedTrip.dateStart)
-        : new Date(),
-      dateEnd: clonedTrip.dateEnd ? new Date(clonedTrip.dateEnd) : new Date(),
-      TripDetail: clonedTrip.TripDetail.map((detail) => ({
-        ...detail,
-        arriveTime: detail.arriveTime ? new Date(detail.arriveTime) : new Date(),
-      })),
-    };
-  }
-
-  const state = JSON.parse(sessionStorage.getItem("trip")) as Trip;
+const getState = (clonedTrip) => {
+  const state = clonedTrip || JSON.parse(sessionStorage.getItem("trip")) as Trip;
   if (state) {
     state.dateStart = new Date(state.dateStart);
     state.dateEnd = new Date(state.dateEnd);
@@ -69,6 +55,7 @@ export const TripProvider = ({ children }) => {
       };
       return updatedTrip;
     });
+    console.log(trip);
   }, []);
 
   const saveState = () => {

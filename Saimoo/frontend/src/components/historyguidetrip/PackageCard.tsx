@@ -1,3 +1,4 @@
+import { getFile } from "@/services/fileupload";
 import React from "react";
 
 interface PackageCardProps {
@@ -28,7 +29,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
   return (
     <div className="border rounded p-4 shadow-md bg-white">
       <img
-        src={packageData.image}
+        src={getFile(packageData.image)}
         alt={packageData.title}
         className="w-full h-48 object-cover rounded-md mb-4"
       />
