@@ -3,6 +3,9 @@ import ImageModal from "./ImageModal";
 import DaySelector from "./DaySelector";
 import api from "@/api";
 import { useParams } from "react-router-dom";
+import { getFile } from "@/services/fileupload";
+import { env } from "@/config";
+import { convertDateTimeToThaiFormat } from "@/utils/TimeFormat";
 
 interface TripDetailFromAPI {
   id: number;
@@ -70,7 +73,7 @@ const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
               const fullPath = normalized.startsWith("uploads/image/")
                 ? normalized
                 : `uploads/image/${normalized}`;
-              return `${import.meta.env.VITE_API_URL}/${fullPath}`;
+              return getFile(fullPath);
             });
 
           return {
@@ -124,7 +127,7 @@ const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
         const res = await api.get(`/trips/${tripId}/details/${location.tripDetailId}/images`);
         const rawImages = res.data || [];
         const fullPaths = rawImages.map((img: { imagePath: string }) =>
-          `${import.meta.env.VITE_API_URL}/${img.imagePath.replace(/\\/g, "/")}`
+          `${env.API_URL}/${img.imagePath.replace(/\\/g, "/")}`
         );
         images = fullPaths;
       } catch (err) {
@@ -172,7 +175,7 @@ const TripDayDetail: React.FC<TripDayDetailProps> = ({ onChangeActiveDay }) => {
                     📍 {location.name}
                   </h2>
                   {location.address && <p className="text-gray-600 text-sm">{location.address}</p>}
-                  <p className="text-gray-500 text-sm flex items-center gap-2">🕓 {location.time}</p>
+                  <p className="text-gray-500 text-sm flex items-center gap-2">🕓 {convertDateTimeToThaiFormat(new Date(location.time))}</p>
                   <p className="text-gray-600 text-sm mt-2 ml-8">{location.description}</p>
 
                   {location.images.length > 0 && (

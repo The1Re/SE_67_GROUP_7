@@ -1,64 +1,41 @@
 import { useEffect, useState } from "react";
 import api from "@/api";
-
-const BASE_URL = import.meta.env.VITE_API_URL; // ✅ ดึงจาก .env เช่น http://localhost:3000
-
-interface TripData {
-  id: number;
-  title: string;
-  description: string;
-  dateStart: string;
-  dateEnd: string;
-  vehicle: string;
-  maxPerson: number;
-  status: string;
-  ownerTripId: number;
-  type: string;
-  price: number;
-  image?: string;
-}
+import { getFile } from "@/services/fileupload";
+import DataLoading from "../DataLoading";
 
 export default function MasonryGallery() {
-  const [trips, setTrips] = useState<TripData[]>([]);
+  const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
+        setLoading(true);
         const res = await api.get("/trips");
         const tripsData = res.data.data;
 
-        const tripsWithImages = await Promise.all(
-          tripsData.map(async (trip: TripData) => {
-            try {
-              const tripDetailRes = await api.get(`/trips/${trip.id}`);
-              const tripDetail = tripDetailRes.data;
-              const rawImage = tripDetail.TripPicture?.[0]?.imagePath || "";
-
-              let image = "";
-              if (rawImage.startsWith("http://") || rawImage.startsWith("https://")) {
-                image = rawImage;
-              } else if (rawImage) {
-                image = `${BASE_URL}/${rawImage.replace(/\\/g, "/")}`; // ✅ แปลงเป็น URL
-              }
-
-              console.log(`📸 Trip ID ${trip.id} image:`, image);
-
-              return { ...trip, image };
-            } catch (error) {
-              console.error("❌ Error fetching trip image for tripId", trip.id, error);
-              return { ...trip, image: "" };
+        tripsData.forEach((trip) => {
+          trip.TripPicture.forEach((picture) => {
+            let image = picture?.imagePath || '';
+            if (!image.startsWith("http://") && !image.startsWith("https://")) {
+              image = getFile(image);
             }
-          })
-        );
+            picture.imagePath = image;
+          });
+        });
 
-        setTrips(tripsWithImages);
+        setTrips(tripsData);
+        setLoading(false)
       } catch (error) {
-        console.error("❌ Error fetching trips:", error);
+        console.error("Error loading trips:", error);
       }
     };
-
     fetchTrips();
   }, []);
+
+  if (loading) {
+    return <DataLoading/>;
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -72,14 +49,14 @@ export default function MasonryGallery() {
           >
             <img
               src={
-                trip.image ||
+                trip.TripPicture[0]?.imagePath ||
                 `https://source.unsplash.com/random/400x300?temple&sig=${trip.id}`
               }
               alt={trip.title}
               className="w-full rounded-lg mb-2"
             />
             <h2 className="text-lg font-bold">{trip.title}</h2>
-            <p className="text-sm text-gray-600">โดยผู้ใช้ #{trip.ownerTripId}</p>
+            <p className="text-sm text-gray-600">โดยผู้ใช้ #{trip.User.username}</p>
             <p className="text-xs text-gray-400">
               {new Date(trip.dateStart).toLocaleDateString()} -{" "}
               {new Date(trip.dateEnd).toLocaleDateString()}

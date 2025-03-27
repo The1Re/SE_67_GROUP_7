@@ -39,7 +39,7 @@ const UserTopbar: React.FC = () => {
   return (
     <>
       {/* Topbar */}
-      <div className="top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200 sticky">
+      <div className="sticky top-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow-md border-b border-gray-200">
         <button className="cursor-pointer text-2xl" onClick={() => setIsSidebarOpen(true)}>
           <IoIosMenu />
         </button>
@@ -106,7 +106,7 @@ const UserTopbar: React.FC = () => {
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
-                  onClick={() => {setIsDropdownOpen(false); navigate("/plan-trip")}}
+                  onClick={() => {setIsDropdownOpen(false); navigate("/create-trip")}}
                 />
                 <DropdownItem 
                   icon={<FiCreditCard />} 

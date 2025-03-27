@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "@/api";
+import { env } from "@/config";
 
 interface TripPicture {
   id: number;
@@ -16,7 +17,7 @@ interface ImageProps {
   tripId: number;
 }
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = env.API_URL;
 
 const ImageComponent: React.FC<ImageProps> = ({ tripId }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);

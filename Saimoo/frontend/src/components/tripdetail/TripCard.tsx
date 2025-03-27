@@ -206,7 +206,7 @@ const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
   
 
   return (
-    <div className="max-w-full w-full mx-auto p-6 ">
+    <div className="max-w-full w-full mx-auto p-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:gap-0">
         {/* 🔹 ผู้สร้าง & วันที่สร้าง */}
         <div className="flex gap-4 px-2 sm:px-0">
@@ -237,6 +237,7 @@ const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
             <div className="mt-2 flex w-fit items-center justify-start gap-1 text-[11px] text-gray-500">
               <span>เหลือเวลา {trip ? calculateRemainingDays() : 0} วัน</span>
             </div>
+
             {/* 🔹 รายละเอียดทริป */}
             <div className="mt-3">
               <h1 className="text-gray-700 font-bold">
@@ -267,10 +268,11 @@ const TripCard: React.FC<TripCardProps> = ({ tripId }) => {
             </div>
           </div>
         </div>
-        {/* 🔹 ปุ่มซื้อทริป*/}
+
+        {/* 🔹 ปุ่มซื้อทริป */}
         <div className="flex flex-col items-end gap-3">
         <button
-          className={`px-6 py-2 rounded-md font-semibold ${
+          className={`cursor-pointer px-6 py-2 rounded-md font-semibold ${
             isTripFull
               ? "bg-gray-400 cursor-not-allowed" // สีเทาและไม่สามารถกดได้เมื่อทริปเต็ม
               : "bg-teal-500 text-white hover:bg-teal-600" // สีปกติเมื่อยังมีที่ว่าง
