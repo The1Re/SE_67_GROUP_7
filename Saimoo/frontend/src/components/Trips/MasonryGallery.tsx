@@ -1,39 +1,8 @@
-import { useEffect, useState } from "react";
-import api from "@/api";
-import { getFile } from "@/services/fileupload";
 import DataLoading from "../DataLoading";
 
 
 
-export default function MasonryGallery() {
-  const [trips, setTrips] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTrips = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get("/trips");
-        const tripsData = res.data.data;
-
-        tripsData.forEach((trip) => {
-          trip.TripPicture.forEach((picture) => {
-            let image = picture?.imagePath || '';
-            if (!image.startsWith("http://") && !image.startsWith("https://")) {
-              image = getFile(image);
-            }
-            picture.imagePath = image;
-          });
-        });
-
-        setTrips(tripsData);
-        setLoading(false)
-      } catch (error) {
-        console.error("Error loading trips:", error);
-      }
-    };
-    fetchTrips();
-  }, []);
+export default function MasonryGallery({ trips, loading }) {
 
   if (loading) {
     return <DataLoading/>;

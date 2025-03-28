@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
 import TripRow from "@/components/history/TripRow";
 import TripDetailModal from "@/components/status/TripDetailModal";
+import api from "@/api";
+import { OrderResponse } from "@/models/Order";
 
 interface Trip {
   id: number;
   name: string;
   date: string;
   status: string;
+}
+
+function convertStatus(status: string) {
+  switch (status) {
+    case "paid": return "จ่ายแล้ว";
+    case "pending": return "รอดำเนินการ";
+    case "claims": return "เครมแล้ว";
+    case "cancel": return "ยกเลิกแล้ว";
+    default: return "ไม่ทราบสถานะ";
+  }
 }
 
 function HistoryTrip() {
@@ -24,13 +36,50 @@ function HistoryTrip() {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const res = await fetch("/assets/fakeHistory.json");
-        if (!res.ok) throw new Error("ไม่สามารถโหลดข้อมูลได้");
-        const data = await res.json();
-        setTrips(data);
-      } catch (err: unknown) {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("Token not found");
+
+        const res = await api.get<OrderResponse[]>("/orders", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log(res.data);
+        const orders: OrderResponse[] = res.data;
+        const tripTitles: Record<number, string> = {};
+
+        await Promise.all(
+          orders.map(async (order) => {
+            if (!tripTitles[order.tripId]) {
+              try {
+                const tripRes = await api.get<{ title: string }>(`/trips/${order.tripId}`, {
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                tripTitles[order.tripId] = tripRes.data.title;
+              } catch (error) {
+                if (error instanceof Error) {
+                  console.error("โหลดข้อมูลผิดพลาด:", error.message);
+                  setError(error.message);
+                } else {
+                  setError("เกิดข้อผิดพลาด");
+                }
+              }
+            }
+          })
+        );
+
+        const transformed: Trip[] = orders.map((order) => ({
+          id: order.id,
+          name: tripTitles[order.tripId],
+          date: new Date(order.createdAt).toLocaleDateString("th-TH", {
+            year: "numeric", month: "long", day: "numeric",
+          }),
+          status: convertStatus(order.status),
+        }));
+
+        setTrips(transformed);
+      } catch (err) {
         if (err instanceof Error) {
-          setError(err.message || "เกิดข้อผิดพลาด");
+          console.error("❌ โหลดข้อมูลผิดพลาด:", err.message);
+          setError(err.message);
         } else {
           setError("เกิดข้อผิดพลาด");
         }
@@ -63,18 +112,13 @@ function HistoryTrip() {
             </thead>
             <tbody>
               {trips.map((trip) => (
-                <TripRow
-                  key={trip.id}
-                  {...trip}
-                  onView={() => handleView(trip)}
-                />
+                <TripRow key={trip.id} {...trip} onView={() => handleView(trip)} />
               ))}
             </tbody>
           </table>
         </div>
       )}
 
-      {/* ✅ Modal แสดงรายละเอียด */}
       <TripDetailModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

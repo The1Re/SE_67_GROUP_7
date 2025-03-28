@@ -10,10 +10,12 @@ import { convertDateTimeToThaiFormat } from '@/utils/TimeFormat'
 const UserInfo = () => {
   const { user } = useAuth();
   const { trip, setTrip } = useTrip();
+  const [isProcessing, setIsProcessing] = useState(false);
   const [ userData, setUserData ] = useState<User>(null);
   const navigate = useNavigate();
 
   const handleCreateTrip = () => {
+    setIsProcessing(true);
     setTrip({ ...trip, ownerTripId: user.id });
     console.log("ownerTrip: ", user.id)
     console.log(trip)
@@ -25,7 +27,9 @@ const UserInfo = () => {
       })
       .catch(() => {
         toast.error("สร้างทริปไม่สำเร็จ");
-      });
+      }).finally(() => {
+        setIsProcessing(false);
+      })
   };
 
   useEffect(() => {
@@ -77,7 +81,7 @@ const UserInfo = () => {
             className="px-6 py-2 bg-teal-400 text-white rounded-lg font-bold hover:bg-teal-500 transition cursor-pointer"
             onClick={handleCreateTrip}
           >
-            สร้าง
+            {isProcessing ? "กำลังสร้าง..." : "สร้าง"}
           </button>
         </div>
         {

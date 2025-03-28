@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import TripSummary from "@/components/payment/TripSummary";
 import PaymentMethodSelector from "@/components/payment/PaymentMethodSelector";
 import api from "@/api";
-import { WithdrawRequest } from "@/models/Wallet";
+import { PaymentRequest } from "@/models/Wallet";
 
 function PaymentDetails() {
+  const { orderId } = useParams();
   const [paymentMethod, setPaymentMethod] = useState("");
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -63,18 +64,27 @@ function PaymentDetails() {
         }
         
         // สร้าง request body
-        const withdrawRequest: WithdrawRequest = {
-          amount: deductAmount
+        const withdrawRequest: PaymentRequest = {
+          orderId: Number(orderId),
+          method: paymentMethod === "wallet" ? "wallet" : "qrcode",
         };
         
         // เรียกใช้ API เฉพาะเมื่อราคาไม่ใช่ 0
-        const response = await api.post('/wallets/withdraw', withdrawRequest, {
+        const response = await api.post('/payments/', withdrawRequest, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         });
+
+        console.log("create payment: ", response.data);
+
+        const res = await api.post(`/payments/${response.data.id}/pay`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
         
-        console.log("ถอนเงินสำเร็จ:", response.data);
+        console.log("ชำระสำเร็จ:", res.data);
       } else {
-        console.log("ทริปฟรี ไม่ต้องถอนเงิน");
+        const response = await api.post('/payments/', { orderId: Number(orderId), method: "wallet" }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
+        const res = await api.post(`/payments/${response.data.id}/pay`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+        console.log("ชำระสำเร็จ:", res.data);
       }
       
       // ทำการชำระเงินหรือดำเนินการขั้นตอนถัดไป

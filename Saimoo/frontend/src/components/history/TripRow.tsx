@@ -10,14 +10,10 @@ interface TripRowProps {
 
 const getStatusStyle = (status: string) => {
   switch (status) {
-    case "สำเร็จ":
+    case "จ่ายแล้ว":
       return "bg-green-100 text-green-800";
     case "ยกเลิกแล้ว":
       return "bg-red-100 text-red-800";
-    case "กำลังอยู่ในทริป":
-      return "bg-blue-100 text-blue-800";
-    case "จ่ายแล้ว":
-      return "bg-yellow-100 text-yellow-800";
     case "เครมแล้ว":
       return "bg-purple-100 text-purple-800";
     default:
