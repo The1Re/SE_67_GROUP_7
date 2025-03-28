@@ -17,10 +17,10 @@ const menuItems = [
       { name: "ไกด์", path: "/admin/registrations/guide" }
     ],
   },
-  {
-    title: "ตรวจสอบการเงิน",
-    subItems: [{ name: "การขอเคลม", path: "/admin/transactions" }],
-  },
+  // {
+  //   title: "ตรวจสอบการเงิน",
+  //   subItems: [{ name: "การขอเคลม", path: "/admin/transactions" }],
+  // },
 ];
 
 export default function AdminSidebar() {
