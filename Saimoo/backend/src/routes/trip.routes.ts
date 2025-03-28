@@ -11,6 +11,7 @@ router.get('/:id', TripController.getTrip);
 router.post('/', TripController.newTrip);
 router.put('/', TripController.updateTrip);
 router.delete('/', TripController.removeTrip);
+router.put('/:id/cancel', TripController.cancelTrip);
 
 router.use('/:tripId/images', Router({ mergeParams: true })
     .get('/', TripController.getImages)

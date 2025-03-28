@@ -238,3 +238,14 @@ export const removeTripDetailImage = async (req: Request, res: Response): Promis
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
+export const cancelTrip = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { id } = req.params;
+        await TripService.cancelTrip(Number(id));
+        return res.status(200).json({ message: "Trip canceled" });
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}

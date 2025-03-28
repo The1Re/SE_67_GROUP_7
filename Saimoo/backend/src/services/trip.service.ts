@@ -249,3 +249,40 @@ export const updateTripDetailImage = async (id: number, imagePath: string) => {
 export const removeTripDetailImage = async (id: number) => {
     return await prisma.tripDetailPicture.delete({ where: { id } });
 }
+
+export const cancelTrip = async (id: number) => {
+    await prisma.trip.update({
+        where: { id },
+        data: { status: 'cancel' }
+    })
+
+    await prisma.tripOrder.updateMany({
+        where: { tripId: id },
+        data: { status: 'cancel' }
+    })
+
+    const orderList = await prisma.tripOrder.findMany({
+        where: { tripId: id },
+        include: { User: { include: { Wallet: true } } }
+    })
+
+    orderList.forEach(async (v) => {
+        const wallet = v.User.Wallet[0];
+        await prisma.payment.updateMany({
+            where: { orderId: v.id },
+            data: { status: 'refund' } 
+        })
+        await prisma.transaction.create({
+            data: {
+                amount: v.totalPrice!,
+                type: "refund",
+                status: "completed",
+                Wallet: {
+                    connect: { id: wallet.id }
+                }
+            }
+        })
+        await prisma.wallet.update({ where: { id: wallet.id }, data: { balance: wallet?.balance! + v.totalPrice! } });
+        await prisma.payment.updateMany({ where: { orderId: v.id }, data: { status: "refund" } })
+    })
+}
