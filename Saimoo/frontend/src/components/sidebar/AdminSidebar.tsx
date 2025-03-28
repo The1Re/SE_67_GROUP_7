@@ -35,7 +35,10 @@ export default function AdminSidebar() {
   return (
     <div className="w-64 h-screen bg-white p-4 border-r border-gray-300 flex flex-col">
       <div className="flex justify-between items-center text-lg font-bold mb-4">
-        <span className="text-blue-600">SAIMOO</span>
+      <h2 className="text-sm md:text-lg font-semibold text-black">
+          SAIM<span className="text-red-500">O</span>
+          <span className="text-blue-500">O</span>
+        </h2>
         <span className="text-gray-500 text-sm">{user.username}@Admin</span>
       </div>
       <p className="text-gray-500 font-semibold mb-2">แถบเมนู</p>

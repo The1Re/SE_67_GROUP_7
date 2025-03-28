@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SearchBar from "@/components/Trips/SearchBar"; // ✅ แก้เป็น SearchBar
 import { useLocation } from "react-router-dom";
 import TempleCard from "@/components/ฺbrowsetemple/TempleCard";
@@ -15,9 +15,9 @@ const BrowseTempleWithGuest = () => {
 
   return (
     <div className="bg-white min-h-screen text-gray-500 p-6">
-      <h1 className="text-xl font-bold text-gray-700 mb-4">
+      {/* <h1 className="text-xl font-bold text-gray-700 mb-4">
         {isSelectMode ? "เลือกวัดสำหรับทริป" : "รายชื่อวัด"}
-      </h1>
+      </h1> */}
 
       {/* ✅ ใช้ SearchBar แทน SearchFilter */}
       <SearchBar
