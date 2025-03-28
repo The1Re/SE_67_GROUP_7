@@ -40,7 +40,7 @@ const GuideRoutes = () => {
       
       {/* extend route for guide */}
       <Route path='/history' element={<History />}/>
-      <Route path='/Document' element={<Document/>}></Route>
+      <Route path="/document/:tripId" element={<Document />} />
       <Route path='/trip-detail' element={<TripDetail />} />
       <Route path='/TripCancel' element={<TripCancel/>} />
       </Route>
