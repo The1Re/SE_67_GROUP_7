@@ -74,7 +74,7 @@ const GuideTopbar: React.FC = () => {
               </div>
               <div className="py-2">
                 <DropdownItem icon={<FaUserCircle />} text="โปรไฟล์" onClick={() => {setIsDropdownOpen(false); navigate("/profile")}}/>
-                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน" onClick={() => {setIsDropdownOpen(false); navigate("/history")}} />
+                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน" onClick={() => {setIsDropdownOpen(false); navigate("/mytrip")}} />
                 <DropdownItem icon={<MdAddCircleOutline />} text="สร้างทริปของฉัน" onClick={() => {setIsDropdownOpen(false); navigate("/create-trip")}} />
                 <DropdownItem icon={<FiCreditCard />} text="กระเป๋าตัง" onClick={() => {setIsDropdownOpen(false); navigate("/wallet")}}/>
               </div>

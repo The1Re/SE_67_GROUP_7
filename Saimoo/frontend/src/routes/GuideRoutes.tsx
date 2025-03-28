@@ -40,10 +40,10 @@ const GuideRoutes = () => {
       <Route path='/browse-temple' element={<BrowseTempleWithGuest />} />
       
       {/* extend route for guide */}
-      <Route path='/history' element={<History />}/>
+      <Route path='/mytrip' element={<History />}/>
       <Route path="/document/:tripId" element={<Document />} />
       <Route path='/trip-detail' element={<TripDetail />} />
-      <Route path='/TripCancel' element={<TripCancel/>} />
+      <Route path='/TripCancel/:tripId' element={<TripCancel/>} />
       </Route>
     </Routes>
   );
