@@ -71,8 +71,8 @@ const UserTopbar: React.FC = () => {
           <div className="border-l border-gray-300 h-8 mx-2"></div>
 
           <div className="relative" ref={dropdownRef}>
-            <FaUserCircle
-              className={`text-3xl cursor-pointer transition-transform duration-300 ${
+            <img src={`https://i.pravatar.cc/45?u=${user.id}`}
+              className={`rounded-full object-cover cursor-pointer transition-transform duration-300 ${
                 isDropdownOpen
                   ? "text-gray-700 scale-110"
                   : "text-gray-500 hover:text-gray-700"
@@ -93,7 +93,7 @@ const UserTopbar: React.FC = () => {
               style={{ pointerEvents: isDropdownOpen ? "auto" : "none" }}
             >
               <div className="px-2 py-4 text-center">
-                <FaUserCircle className="text-4xl text-gray-500 mx-auto mb-3" />
+                <img src={`https://i.pravatar.cc/45?u=${user.id}`} className="rounded-full object-cover mx-auto mb-3" />
                 <p className="text-sm font-semibold">{user.username}</p>
                 <div className="w-3/4 mx-auto border-b border-gray-300 mt-2 py-1"></div>
               </div>

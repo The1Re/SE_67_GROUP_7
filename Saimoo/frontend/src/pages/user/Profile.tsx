@@ -27,7 +27,7 @@ function Profile() {
     return (
         <div className="flex flex-col items-center justify-center p-4 h-full -translate-y-22 gap-4">
             <img
-              src="https://i.pravatar.cc/45"
+              src={`https://i.pravatar.cc/150?u=${user.id}`}
               alt="fernfunnys.journey"
               className="rounded-full object-cover w-40 h-40"
             />
