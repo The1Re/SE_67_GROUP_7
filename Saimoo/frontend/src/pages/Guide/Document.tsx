@@ -8,6 +8,7 @@ import Header from "@/components/Tableguide/Header";
 import SubmitPopup from "@/pages/Guide/SubmitPop";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import DataLoading from "@/components/DataLoading";
 
 // ✅ Define button type to enforce type safety
 type ButtonType = "refresh" | "form-code";
@@ -143,7 +144,7 @@ const DocumentPage = () => {
           {loading ? (
             <TableRow>
               <TableCell colSpan={3} align="center">
-                ⏳ กำลังโหลดข้อมูล...
+                <DataLoading />
               </TableCell>
             </TableRow>
           ) : documents.length > 0 ? (

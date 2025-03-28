@@ -40,7 +40,7 @@ const TripCancellationPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center ">
+    <div className="min-h-screen flex items-center justify-center ">
       <div className="bg-white shadow-2xl rounded-2xl w-full max-w-xl overflow-hidden">
         {/* Header with Back and Close Buttons */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 flex justify-between items-center">

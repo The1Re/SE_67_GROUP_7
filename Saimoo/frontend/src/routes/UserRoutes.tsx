@@ -16,7 +16,9 @@ import Wallet from '@/pages/user/Wallet';
 import CreateTrip from '@/pages/CreateTrip';
 import HistoryTrip from '@/pages/user/HistoryTrip';
 
-import History from '@/pages/user/History';
+import History from '@/pages/Guide/History';
+import Document from "@/pages/Guide/Document"
+import TripCancel from "@/pages/Guide/TripCancel";
 
 
 const UserRoutes = () => {
@@ -43,6 +45,9 @@ const UserRoutes = () => {
         <Route path='/temples/signup' element={<SignupTemple />} />
         <Route path='/Guides/signup' element={<SignupGuide />} />
         <Route path='/temples/signup' element={<SignupTemple />} />
+
+        <Route path="/document/:tripId" element={<Document />} />
+        <Route path="/TripCancel" element={<TripCancel />} />
       </Route>
     </Routes>
   );

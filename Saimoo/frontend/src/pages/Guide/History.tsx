@@ -4,6 +4,7 @@ import axios from "axios";
 import PackageCard from "@/components/historyguidetrip/PackageCard";
 import { useAuth } from "@/context/AuthContext";
 import { Trip } from "@/models/Trip";
+import DataLoading from "@/components/DataLoading";
 
 
 const HistoryTrip: React.FC = () => {
@@ -91,7 +92,7 @@ const HistoryTrip: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center mt-10">กำลังโหลดข้อมูล...</div>;
+    return <DataLoading />
   }
 
   if (error) {
