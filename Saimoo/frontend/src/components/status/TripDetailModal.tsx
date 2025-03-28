@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import StatusClaimed from "./StatusClaimed";
 import StatusInProgress from "./StatusInProgress";
-import StatusPaid from "./StatusPaid";
 import api from "@/api";
 import { OrderResponse } from "@/models/Order";
 
