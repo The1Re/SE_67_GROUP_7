@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import { Trips } from '@/pages/user/Trips'
 import GuideLayout from "@/layouts/GuideLayout";
 import BrowseTempleWithGuest from "@/pages/temple/BrowseTempleWithGuest";
-
+import HistoryTrip from "@/pages/user/HistoryTrip";
 import Profile from "@/pages/user/Profile";
 import CreateTrip from "@/pages/CreateTrip";
 import History from "@/pages/Guide/History";
@@ -25,6 +25,7 @@ const GuideRoutes = () => {
       <Route path='/' element={<Navigate to="/trips" replace />}></Route>
       <Route path='/profile' element={<Profile />}></Route>
       <Route path='/wallet' element={<Wallet />} />
+      <Route path='/history-user' element={<HistoryTrip />} />
 
       <Route path='/trips' element={<Trips />}></Route>
       <Route path='/trips/:tripId' element={<TripDetail />} />
