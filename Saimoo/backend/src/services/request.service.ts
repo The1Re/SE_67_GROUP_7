@@ -58,16 +58,15 @@ export const rejectRequest = (requestId: number) => {
 export const approveRequestTemple = async (requestId: number) => {
     const request = await getRequestByIdWithPendingStatus(requestId);
     if (!request) {
-        return { message: "There is no request id to approved" };
+        return { message: "There is no request id to approved", status: false };
     }
-
     const temple = await prisma.location.findFirst({
         where: { name: request.templeName ?? "" },
         include: { Temple: true }
     })
 
     if (!temple) {
-        return { message: 'Failed to update temple account' };
+        return { message: 'no temple in database', status: false };
     }
 
     const newPassword = generatePassword(6);
@@ -102,9 +101,9 @@ export const approveRequestTemple = async (requestId: number) => {
             );
 
             await approveRequest(requestId);
-            return { message: 'Request approved' };
+            return { message: 'Request approved', status: true };
         } else {
-            return { message: 'Failed to update temple account' };
+            return { message: 'Failed to update temple account', status: false };
         }
     }
 
@@ -133,7 +132,7 @@ export const approveRequestTemple = async (requestId: number) => {
     );
 
     await approveRequest(requestId);
-    return { message: 'Request approved' };
+    return { message: 'Request approved', status: true };
 }
 
 export const approveRequestGuide = async (requestId: number) => {
