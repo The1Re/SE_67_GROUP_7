@@ -108,8 +108,8 @@ export const deleteTempleLikeController = async (req: Request, res: Response): P
 export const updateLocationController = async (req: Request, res: Response): Promise<any> => {
     try {
         const { locationId } = req.params;
-        const { name } = req.body;
-        const temple = await updateLocation(Number(locationId),{name});
+        const { name, latitude, longitude, provinceId } = req.body;
+        const temple = await updateLocation(Number(locationId),{name, latitude, longitude, provinceId});
         return res.status(200).json(temple);
     } catch (error) {
         logger.error(error);
