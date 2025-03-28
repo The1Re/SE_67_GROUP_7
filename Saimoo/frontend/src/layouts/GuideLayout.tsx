@@ -4,7 +4,7 @@ function GuideLayout() {
     return (
         <>
             <GuideTopbar />
-            <main className="h-dvh overflow-auto">
+            <main className="h-dvh overflow-auto hidescrollbar">
             <Outlet />
             </main>
         </>

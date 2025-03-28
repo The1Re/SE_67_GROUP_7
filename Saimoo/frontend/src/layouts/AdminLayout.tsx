@@ -6,7 +6,7 @@ function AdminLayout() {
   return (
     <div className="flex flex-row">
         <AdminSidebar />
-        <main className="p-6 flex-1"> {/* ✅ เลื่อนลงมาไม่ให้โดนทับ */}
+        <main className="p-6 flex-1 hidescrollbar"> {/* ✅ เลื่อนลงมาไม่ให้โดนทับ */}
           <Outlet />
         </main>
     </div>

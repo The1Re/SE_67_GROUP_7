@@ -5,7 +5,7 @@ function TempleLayout() {
     return (
         <>
          <TempleTopbar />
-            <main className="h-dvh overflow-auto">
+            <main className="h-dvh overflow-auto hidescrollbar">
                 <Outlet />
             </main>
         </>

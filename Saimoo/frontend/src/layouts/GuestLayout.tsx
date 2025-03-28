@@ -5,7 +5,7 @@ function GuestLayout() {
     return (
         <>
             <GuestTopbar />
-            <main className="h-dvh overflow-auto">
+            <main className="h-dvh overflow-auto hidescrollbar">
                 <Outlet />
             </main>
         </>

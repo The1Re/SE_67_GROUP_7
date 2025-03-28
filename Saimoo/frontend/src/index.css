@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+/* ซ่อน scrollbar สำหรับทุก browser */
+.hidescrollbar {
+    -ms-overflow-style: none;  /* IE และ Edge */
+    scrollbar-width: none;     /* Firefox */
+    overflow-y: scroll;        /* ยังให้ scroll ได้ */
+  }
+  
+  /* สำหรับ Webkit (Chrome, Safari) */
+  .hidescrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
