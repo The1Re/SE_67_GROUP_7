@@ -47,7 +47,7 @@ const UserRoutes = () => {
         <Route path='/temples/signup' element={<SignupTemple />} />
 
         <Route path="/document/:tripId" element={<Document />} />
-        <Route path="/TripCancel" element={<TripCancel />} />
+        <Route path="/TripCancel/:tripId" element={<TripCancel />} />
       </Route>
     </Routes>
   );

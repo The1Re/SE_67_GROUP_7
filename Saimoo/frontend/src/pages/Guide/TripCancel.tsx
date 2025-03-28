@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { X, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // Assuming React Router
+import { useNavigate, useParams } from 'react-router-dom'; // Assuming React Router
 import { ReasonCard } from '@/components/canceltrip/ReasonCard';
 import { CancellationModal } from '@/components/canceltrip/CancellationModal';
 import { CANCELLATION_REASONS } from '@/components/canceltrip/cancellationReasons';
+import toast from 'react-hot-toast';
+import api from '@/api';
 
 const TripCancellationPage: React.FC = () => {
   const navigate = useNavigate(); // React Router navigation hook
+  const { tripId } = useParams(); // Assuming you're using React Router
   const [selectedReason, setSelectedReason] = useState<any>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
@@ -18,9 +21,16 @@ const TripCancellationPage: React.FC = () => {
     setIsConfirmModalOpen(true);
   };
 
-  const handleConfirmCancellation = () => {
+  const handleConfirmCancellation = async () => {
     // Actual cancellation logic
-    alert(`ยกเลิกทริปด้วยเหตุผล: ${selectedReason.title}`);
+    await toast.promise(
+      api.put(`/trips/${tripId}/cancel`, {  }, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }),
+      {
+        loading: 'กำลังยกเลิกทริป...',
+        success: 'ยกเลิกทริปสำเร็จ ด้วยเหตุผล ' + selectedReason.title,
+        error: 'ยกเลิกทริปไม่สำเร็จ',
+      }
+    )
     setIsConfirmModalOpen(false);
     
     // Navigate to a specific route after cancellation

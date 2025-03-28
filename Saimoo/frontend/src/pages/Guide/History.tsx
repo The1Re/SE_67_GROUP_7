@@ -87,8 +87,8 @@ const HistoryTrip: React.FC = () => {
   };
 
   // ✅ ฟังก์ชันยกเลิกทริป
-  const handleCancelTrip = () => {
-    navigate("/TripCancel");
+  const handleCancelTrip = (tripId: number) => {
+    navigate(`/TripCancel/${tripId}`);
   };
 
   if (isLoading) {
@@ -122,7 +122,7 @@ const HistoryTrip: React.FC = () => {
               key={pkg.id}
               packageData={pkg}
               onViewTrip={() => handleViewTrip(pkg.id)}
-              onCancelTrip={handleCancelTrip}
+              onCancelTrip={() => handleCancelTrip(pkg.id)}
               onClone={() => handleCloneTrip(trip.find(v => v.id === pkg.id))} // ✅ คัดลอกทริปพร้อมข้อมูล
               onCreateTrip={handleCreateTrip}
             />

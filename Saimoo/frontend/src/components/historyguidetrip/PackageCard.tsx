@@ -26,6 +26,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
   onCreateTrip,
   
 }) => {
+  console.log(packageData)
   return (
     <div className="border rounded p-4 shadow-md bg-white">
       <img
@@ -36,8 +37,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
       <h2 className="text-xl font-semibold">{packageData.title}</h2>
       <p>สถานะ: {packageData.status}</p>
       {packageData.date && <p>วันที่เริ่ม: {packageData.date}</p>}
-      <p>ราคา: {packageData.subtitle || "ไม่ระบุ"} บาท</p>
-      <p>จำนวนผู้เข้าร่วม: {packageData.showDetails ? "เปิดเผย" : "ปิดเผย"} คน</p>
+      <p>ราคา: {packageData.subtitle || "ไม่ระบุ"}</p>
 
       <div className="mt-4 flex space-x-2">
         <button
@@ -52,13 +52,17 @@ const PackageCard: React.FC<PackageCardProps> = ({
         >
           คัดลอกทริป
         </button>
-        <button
-          onClick={onCancelTrip}
-          className="bg-red-500 text-white px-3 py-1 rounded"
-        >
-          ยกเลิกทริป
-        </button>
-       
+        {
+          packageData.status !== "cancel" && (
+            <button
+              onClick={onCancelTrip}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              ยกเลิกทริป
+            </button>
+          )
+        }
+      
       </div>
     </div>
   );
