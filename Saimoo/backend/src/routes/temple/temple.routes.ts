@@ -12,9 +12,10 @@ router.get('/', TempleController.getTempleController); //
 router.get('/:locationId',TempleController.getTempleByIdController); //ใช้ locationId
 router.put('/:templeId', TempleController.updateTempleController); //ใช้ templeId
 router.delete('/:locationId', TempleController.deleteTempleController); //
-router.put('/like/:templeId', TempleController.updateTempleLikeController); //ใช้ templeId บัคอยู่ +1 เรื่อยๆ
-router.get('/front/:templeId', TempleController.getTempleImagesFrontController); //ใช้ locationId
+router.put('/like/:templeId', TempleController.updateTempleLikeController); //ใช้ templeId  +1 
+router.put('/unlike/:templeId', TempleController.deleteTempleLikeController); //ใช้ templeId ลบ -1 
 router.put('/name/:locationId', TempleController.updateLocationController); //ใช้ locationId
+router.get('/province', TempleController.getAllProvinceCotroler); //
 
 router.use('/:locationId/charms', TempleCharmRoutes);
 router.use('/:locationId/activity', TempleActivityRoutes);

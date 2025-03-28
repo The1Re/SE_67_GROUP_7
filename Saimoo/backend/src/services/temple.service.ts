@@ -54,6 +54,17 @@ export const updateTempleLike = async (id: number) => {
     });
 };
 
+export const deleteTempleLike = async (id: number) => {
+    await prisma.temple.update({
+        where: { id },
+        data: {
+            likes: {
+                decrement: 1, // ลดค่า likes ลงทีละ 1
+            },
+        },
+    });
+};
+
 export const deleteTemple = async (id : number) => {
     logger.info("Deleting temple with id: ", id);
     await prisma.temple.deleteMany({
@@ -152,11 +163,5 @@ export const updateTempleActivity = async (id: number, activityData: Partial<Act
 export const deleteTempleActivity = async (id: number) => {
     return await prisma.activity.delete({
         where: { id },
-    });
-};
-
-export const getTempleImagesFront = async (templeId : number) => {
-    return await prisma.templeImage.findFirst({
-      where: { templeId },
     });
 };
