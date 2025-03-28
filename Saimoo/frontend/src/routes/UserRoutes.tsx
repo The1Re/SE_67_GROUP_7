@@ -11,9 +11,14 @@ import PaymentDetails from '@/pages/user/PaymentDetails';
 import ConfirmPayment from '@/pages/user/ConfirmPayment';
 import SignupGuide from '@/pages/Guide/SignupGuide';
 import ProfileTemple from '@/pages/temple/ProfileTemple';
-import HistoryTrip from '@/pages/user/HistoryTrip';
+
 import Wallet from '@/pages/user/Wallet';
 import CreateTrip from '@/pages/CreateTrip';
+import HistoryTrip from '@/pages/user/HistoryTrip';
+
+import History from '@/pages/Guide/History';
+import Document from "@/pages/Guide/Document"
+import TripCancel from "@/pages/Guide/TripCancel";
 
 
 const UserRoutes = () => {
@@ -31,7 +36,7 @@ const UserRoutes = () => {
         <Route path='/trips/:tripId/:orderId/confirm' element={<ConfirmPayment/>} /> 
         <Route path='/create-trip' element={<CreateTrip />} />
         <Route path='/history' element={<HistoryTrip />}></Route>
-
+        <Route path='/mytrip' element={<History />}></Route>
         <Route path='/temples' element={<BrowseTempleWithGuest />} />
         <Route path='/temple/profiletemple' element={<ProfileTemple />} />
         <Route path='/temples/:id' element={<TempleDetail />} /> {/* ✅ เพิ่มตรงนี้ */}
@@ -40,6 +45,9 @@ const UserRoutes = () => {
         <Route path='/temples/signup' element={<SignupTemple />} />
         <Route path='/Guides/signup' element={<SignupGuide />} />
         <Route path='/temples/signup' element={<SignupTemple />} />
+
+        <Route path="/document/:tripId" element={<Document />} />
+        <Route path="/TripCancel/:tripId" element={<TripCancel />} />
       </Route>
     </Routes>
   );

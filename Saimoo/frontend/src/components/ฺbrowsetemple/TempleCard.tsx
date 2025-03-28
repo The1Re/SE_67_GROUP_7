@@ -16,7 +16,7 @@ export type Temple = {
   usetempleId?: number;
 };
 
-const TempleCard = ({ isSelectMode = false }) => {
+const TempleCard = ({ isSelectMode = false, searchTerm, selectedFilter }) => {
   const [temples, setTemples] = useState<Temple[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -49,6 +49,31 @@ const TempleCard = ({ isSelectMode = false }) => {
     fetchData();
   }, []);
 
+  // Inside TempleCard.tsx
+  const filteredTemples = temples
+  .filter((temple) => {
+    // กรองตามชื่อวัด
+    if (
+      searchTerm &&
+      !temple.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return false;
+    }
+    return true;
+  })
+  .sort((a, b) => {
+    // ✅ เรียงลำดับตามยอดนิยม
+    if (selectedFilter === "ยอดนิยม") {
+      return b.like - a.like; // เรียงจากมากไปน้อย
+    }
+    // ✅ เรียงลำดับตามใหม่ล่าสุด
+    if (selectedFilter === "ใหม่ล่าสุด") {
+      return b.id! - a.id!;
+    }
+    return 0;
+  });
+
+// Then use filteredTemples instead of temples in your rendering
   const handleClick = (templeId: number) => {
     navigate(`/temples/${templeId}`, {
       state: isSelectMode ? { createMode: true } : undefined,
@@ -134,7 +159,7 @@ const TempleCard = ({ isSelectMode = false }) => {
         ))}
       </div>
     </div>
-  );
+  );  
 };
 
 export default TempleCard;

@@ -128,12 +128,15 @@ model Temple {
   description String?       @db.VarChar(45)
   likes       Int?
   locationId  Int
+  ownerId     Int?
   Activity    Activity[]
   Charm       Charm[]
   Location    Location      @relation(fields: [locationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_Temple_Location1")
+  User        User?         @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ownerId")
   TempleImage TempleImage[]
 
   @@index([locationId], map: "fk_Temple_Location1_idx")
+  @@index([ownerId], map: "fk_ownerId")
 }
 
 model TempleImage {
@@ -259,6 +262,7 @@ model User {
   Request                               Request[]
   ReviewGuide_ReviewGuide_userIdToUser  ReviewGuide[] @relation("ReviewGuide_userIdToUser")
   ReviewGuide_ReviewGuide_guideIdToUser ReviewGuide[] @relation("ReviewGuide_guideIdToUser")
+  Temple                                Temple[]
   Trip                                  Trip[]
   TripOrder                             TripOrder[]
   Wallet                                Wallet[]

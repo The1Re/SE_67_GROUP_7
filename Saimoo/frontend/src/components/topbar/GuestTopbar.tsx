@@ -87,6 +87,8 @@ export const GuestTopbar: React.FC = () => {
                 icon={<MdOutlineTempleBuddhist />}
                 onClick={() => { setIsSidebarOpen(false); navigate("/temples/signup"); }}
               />
+             
+              
             </motion.div>
 
             {/* Overlay Effect */}

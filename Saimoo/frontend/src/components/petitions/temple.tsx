@@ -14,26 +14,28 @@ export default function TemplePetitionDetail() {
     return <p className="text-center text-red-500 text-lg">ไม่พบข้อมูลตัวแทนวัด</p>;
   }
 
-  const handleApprove = () => {
-    api.patch('/requests/approve/temple', { requestId: representative.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }})
-    .then(() => {
-      toast.success(`อนุมัติตัวแทนวัด ID: ${representative.id}`);
-      navigate(-1);
-    })
-    .catch((err) => {
-      toast.error(`เกิดข้อผิดพลาด: ${err.response.data.message}`);
-    })
+  const handleApprove = async () => {
+    await toast.promise(
+      api.patch('/requests/approve/temple', { requestId: representative.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}),
+      {
+        loading: 'กำลังดำเนินการ...',
+        success: <b>อนุมัติสำเร็จ</b>,
+        error: <b>อนุมัติไม่สำเร็จ</b>,
+      }
+    )
+    navigate(-1);
   };
 
-  const handleReject = () => {
-    api.patch('/requests/reject', { requestId: representative.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }})
-    .then(() => {
-      toast.success(`ไม่อนุมัติตัวแทนวัด ID: ${representative.id}`);
-      navigate(-1);
-    })
-    .catch((err) => {
-      toast.error(`เกิดข้อผิดพลาด: ${err.response.data.message}`);
-    })
+  const handleReject = async () => {
+    await toast.promise(
+      api.patch('/requests/reject', { requestId: representative.id}, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}),
+      {
+        loading: 'กำลังดำเนินการ...',
+        success: <b>ปฏิเสธการอนุมัติสำเร็จ</b>,
+        error: <b>ปฏิเสธการอนุมัติไม่สำเร็จ</b>,
+      }
+    )
+    navigate(-1);
   };
 
   return (

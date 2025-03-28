@@ -226,7 +226,7 @@ const TempleTable = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">จัดการข้อมูลวัด</h2>
-        <button onClick={() => setShowForm(true)} className="cursor-pointer bg-blue-500 text-white px-3 py-1 rounded">
+        <button onClick={() => setShowForm(true)} className="cursor-pointer bg-teal-500 text-white px-3 py-1 rounded">
           + เพิ่มวัด
         </button>
       </div>
@@ -270,7 +270,7 @@ const TempleTable = () => {
             ))}
           </select>
           <div className="flex justify-center mt-2">
-            <button onClick={handleAddTemple} className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded mr-2">เพิ่มวัด</button>
+            <button onClick={handleAddTemple} className="cursor-pointer bg-teal-500 text-white px-4 py-2 rounded mr-2">เพิ่มวัด</button>
             <button onClick={() => setShowForm(false)} className="cursor-pointer bg-red-500 text-white px-4 py-2 rounded">ยกเลิก</button>
           </div>
         </div>

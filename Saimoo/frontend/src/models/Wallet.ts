@@ -6,13 +6,13 @@ export type WalletData = {
 
 export type Transaction = {
     id: string,
-    type: 'topup' | 'withdraw' | 'payment',
+    type: 'topup' | 'withdraw' | 'payment' | 'refund',
     amount: number,
     status: 'pending' | 'completed' | 'failed',
     createdAt: Date,
 }
 
-export type WithdrawRequest = {
-    amount: number; ///wallets/withdraw
-  }
-  
+export type PaymentRequest = {
+    orderId: number,
+    method: "wallet" | "qrcode",
+} 

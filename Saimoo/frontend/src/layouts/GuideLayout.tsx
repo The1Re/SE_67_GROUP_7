@@ -1,0 +1,13 @@
+import { Outlet } from "react-router-dom";
+import GuideTopbar from "@/components/topbar/GuideTopbar";
+function GuideLayout() {
+    return (
+        <>
+            <GuideTopbar />
+            <main className="h-dvh overflow-auto">
+            <Outlet />
+            </main>
+        </>
+    )
+}
+  export default GuideLayout;

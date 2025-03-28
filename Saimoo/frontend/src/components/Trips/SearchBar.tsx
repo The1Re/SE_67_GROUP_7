@@ -2,13 +2,13 @@ import { FaSearch, FaFilter } from "react-icons/fa";
 
 const SearchBar = ({ search, setSearch, selectedSort, setSelectedSort }) => {
   const sortOptions = [
-    { value: "recommended", label: "สำหรับคุณ" },
-    { value: "latest", label: "ใหม่ล่าสุด" },
-    { value: "popular", label: "ยอดนิยม" },
+    { value: "lastest", label: "ใหม่ล่าสุด" },
+    { value: "paid", label: "แบบเสียตัง" },
+    { value: "free", label: "แบบฟรี" },
   ];
 
   return (
-    <div className="flex items-center justify-between gap-4 p-4 w-full max-w-4xl mx-auto">
+    <div className="flex items-center justify-between gap-4 p-4 w-full max-w-4xl mx-auto ">
       {/* Search Input */}
       <div className="relative flex-1">
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
@@ -25,11 +25,11 @@ const SearchBar = ({ search, setSearch, selectedSort, setSelectedSort }) => {
       {/* Sort Dropdown */}
       <div className="relative">
         <button
-          className="flex items-center gap-2 p-3 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex items-center gap-2 p-3 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
           onClick={() => document.getElementById("sortDropdown").classList.toggle("hidden")}
         >
           <FaFilter className="text-gray-500" />
-          {sortOptions.find((opt) => opt.value === selectedSort)?.label || "เรียงลำดับ"}
+          {sortOptions.find((opt) => opt.value === selectedSort)?.label || "ใหม่ล่าสุด"}
         </button>
 
         {/* Dropdown Options */}
@@ -40,7 +40,7 @@ const SearchBar = ({ search, setSearch, selectedSort, setSelectedSort }) => {
           {sortOptions.map((option) => (
             <button
               key={option.value}
-              className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+              className="cursor-pointer block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
               onClick={() => {
                 setSelectedSort(option.value);
                 document.getElementById("sortDropdown").classList.add("hidden");

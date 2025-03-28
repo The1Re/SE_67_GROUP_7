@@ -6,7 +6,7 @@ interface QRModalProps {
     isOpen: boolean;
     onClose: () => void;
     amount: number;
-    type: 'topup' | 'withdraw';
+    type: 'topup' | 'withdraw' | 'payment' | 'refund';
     transactionId?: string;
 }
 
