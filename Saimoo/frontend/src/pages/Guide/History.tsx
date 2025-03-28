@@ -100,7 +100,7 @@ const HistoryTrip: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-5 bg-gray-100 min-h-screen">
+    <div className="max-w-5xl mx-auto p-5 min-h-screen">
       <header className="mb-6 text-center">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">ทริปของฉัน</h1>
         <div className="h-1 w-20 bg-teal-500 mx-auto"></div>
