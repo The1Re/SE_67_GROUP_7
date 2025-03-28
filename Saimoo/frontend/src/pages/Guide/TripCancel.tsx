@@ -34,7 +34,7 @@ const TripCancellationPage: React.FC = () => {
     setIsConfirmModalOpen(false);
     
     // Navigate to a specific route after cancellation
-    navigate('/trips'); // Adjust the route as needed
+    navigate('/mytrip'); // Adjust the route as needed
   };
 
   const handleGoBack = () => {
