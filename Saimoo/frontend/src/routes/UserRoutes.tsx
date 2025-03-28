@@ -18,6 +18,7 @@ import HistoryTrip from '@/pages/user/HistoryTrip';
 
 import History from '@/pages/user/History';
 
+
 const UserRoutes = () => {
   return (
     <Routes>
@@ -33,7 +34,7 @@ const UserRoutes = () => {
         <Route path='/trips/:tripId/:orderId/confirm' element={<ConfirmPayment/>} /> 
         <Route path='/create-trip' element={<CreateTrip />} />
         <Route path='/history' element={<HistoryTrip />}></Route>
-        <Route path='/history' element={<History />}></Route>
+        <Route path='/mytrip' element={<History />}></Route>
         <Route path='/temples' element={<BrowseTempleWithGuest />} />
         <Route path='/temple/profiletemple' element={<ProfileTemple />} />
         <Route path='/temples/:id' element={<TempleDetail />} /> {/* ✅ เพิ่มตรงนี้ */}

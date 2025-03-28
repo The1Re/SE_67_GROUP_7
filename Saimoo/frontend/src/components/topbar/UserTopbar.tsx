@@ -103,7 +103,7 @@ const UserTopbar: React.FC = () => {
                   text="โปรไฟล์" 
                   onClick={() => {setIsDropdownOpen(false); navigate("/profile")}}
                 />
-                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน"  onClick={() => {setIsDropdownOpen(false); navigate("/History")}} />
+                <DropdownItem icon={<FaSuitcaseRolling />} text="ทริปของฉัน"  onClick={() => {setIsDropdownOpen(false); navigate("/mytrip")}} />
                 <DropdownItem
                   icon={<MdAddCircleOutline />}
                   text="สร้างทริปของฉัน"
