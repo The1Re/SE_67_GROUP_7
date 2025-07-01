@@ -29,6 +29,7 @@ routes.post('/upload', uploads.single('file'), (req, res) => {
     res.json({ message: 'File uploaded successfully', file: req.file });
 });
 routes.use('/reviews', reviewRoutes);
+routes.use('/provinces', provinceRoutes);
 
 
 export default routes;

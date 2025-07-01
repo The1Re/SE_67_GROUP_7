@@ -14,7 +14,7 @@ function AdminRoutes() {
   return (
     <Routes>
       <Route element={<AdminLayout />}>
-        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/admin/manage-users" replace />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin/dashboard" element={<h1 className="text-2xl font-bold">Admin Dashboard</h1>} />
 

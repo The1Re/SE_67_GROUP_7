@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import ManageRoutes from "./routes/MangeRoutes";
 import { Toaster } from "react-hot-toast";
 
+
 function App() {
   return (
     <Router>

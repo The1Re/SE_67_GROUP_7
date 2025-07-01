@@ -55,9 +55,9 @@ function SignInForm({ setIsModalOpen }) {
                 type="password" 
                 value={formData.password}
                 onChange={handleChange} />
-            <p className="text-right text-sm text-gray-500 cursor-pointer hover:text-gray-700" onClick={() => setIsModalOpen("forgot")}>
+            {/* <p className="text-right text-sm text-gray-500 cursor-pointer hover:text-gray-700" onClick={() => setIsModalOpen("forgot")}>
                 Forgot password?
-            </p>
+            </p> */}
             <button type="submit" className="cursor-pointer w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 mt-2">Sign In</button>
         </form>
     );

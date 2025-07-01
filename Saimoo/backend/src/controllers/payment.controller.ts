@@ -28,6 +28,11 @@ export const createPayment = async (req: AuthRequest, res: Response): Promise<an
             status: 'pending',
             TripOrder: {
                 connect: { id: orderId }
+            },
+            Transaction: {
+                create: undefined,
+                connectOrCreate: undefined,
+                connect: undefined
             }
         }
 

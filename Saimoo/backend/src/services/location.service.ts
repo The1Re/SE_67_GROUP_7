@@ -1,5 +1,5 @@
 import prisma from '../models/prisma';
-import type { Temple,Location } from "@prisma/client";
+import type { Temple,Location,Province } from "@prisma/client";
 
 
 export const createLocation = async (locationData: Omit<Location, "id">) => {
