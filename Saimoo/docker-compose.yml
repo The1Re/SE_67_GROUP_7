@@ -16,6 +16,7 @@ services:
     restart: always
     environment:
       DATABASE_URL: mysql://root:p@ssword@db/mydb
+      JWT_SECRET: "jsonwebtokensecret"
     ports:
       - "3000:3000"
     depends_on:
@@ -25,7 +26,8 @@ services:
     build: ./frontend/
     restart: always
     environment:
-      API_URL: http://localhost:3000/
+      API_URL: http://localhost:3000
+      GOOGLE_MAP_API_KEY: your_google_map_api_key
     ports:
       - "8080:8080"
     depends_on:

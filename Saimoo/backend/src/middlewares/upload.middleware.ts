@@ -1,5 +1,4 @@
 import multer from 'multer';
-import path from 'path';
 import fs from 'fs';
 
 const storage = multer.diskStorage({
@@ -14,7 +13,7 @@ const storage = multer.diskStorage({
         fs.mkdirSync(folder, { recursive: true });
         cb(null, folder);
     },
-    filename: function (req, file, cb) {
+    filename: function (_, file, cb) {
         cb(null, `${Date.now()}-${file.originalname}`);
     },
 });

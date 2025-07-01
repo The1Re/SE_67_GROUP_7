@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "@/api";
 import PackageCard from "@/components/historyguidetrip/PackageCard";
 import { useAuth } from "@/context/AuthContext";
 import { Trip } from "@/models/Trip";
@@ -25,9 +25,7 @@ const HistoryTrip: React.FC = () => {
         return;
       }
 
-      const res = await axios.get(
-        "https://rkhgjh4q-3000.asse.devtunnels.ms/api/trips/"
-      );
+      const res = await axios.get("/trips");
 
       console.log("📚 ข้อมูลที่ได้จาก API:", res.data.data);
 

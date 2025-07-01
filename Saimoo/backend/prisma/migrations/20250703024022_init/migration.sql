@@ -1,23 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to alter the column `email` on the `User` table. The data in that column could be lost. The data in that column will be cast from `VarChar(191)` to `VarChar(45)`.
-  - You are about to alter the column `username` on the `User` table. The data in that column could be lost. The data in that column will be cast from `VarChar(191)` to `VarChar(45)`.
-  - You are about to alter the column `createdAt` on the `User` table. The data in that column could be lost. The data in that column will be cast from `DateTime(3)` to `DateTime(0)`.
-  - You are about to alter the column `updatedAt` on the `User` table. The data in that column could be lost. The data in that column will be cast from `DateTime(3)` to `DateTime(0)`.
-  - You are about to alter the column `role` on the `User` table. The data in that column could be lost. The data in that column will be cast from `VarChar(191)` to `Enum(EnumId(12))`.
-
-*/
--- AlterTable
-ALTER TABLE `User` ADD COLUMN `fullName` VARCHAR(64) NULL,
-    ADD COLUMN `phone` VARCHAR(45) NULL,
-    MODIFY `email` VARCHAR(45) NOT NULL,
-    MODIFY `username` VARCHAR(45) NOT NULL,
-    MODIFY `password` VARCHAR(255) NOT NULL,
-    MODIFY `createdAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-    MODIFY `updatedAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-    MODIFY `role` ENUM('admin', 'user', 'guide', 'temple') NOT NULL DEFAULT 'user';
-
 -- CreateTable
 CREATE TABLE `Activity` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
@@ -49,7 +29,7 @@ CREATE TABLE `Charm` (
 
 -- CreateTable
 CREATE TABLE `IdentityDocument` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `type` ENUM('Id verification', 'Guide Certification', 'Temple Document') NOT NULL,
     `filePath` VARCHAR(255) NULL,
     `uploadedDate` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
@@ -80,7 +60,7 @@ CREATE TABLE `Payment` (
     `amount` FLOAT NULL,
     `method` ENUM('qrcode', 'wallet') NOT NULL DEFAULT 'wallet',
     `createdAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-    `transactionId` INTEGER NOT NULL,
+    `transactionId` INTEGER NULL,
 
     INDEX `fk_Payment_Transaction1_idx`(`transactionId`),
     INDEX `fk_Payment_TripOrder1_idx`(`orderId`),
@@ -115,7 +95,11 @@ CREATE TABLE `Request` (
     `type` ENUM('Become Guide', 'Register as Temple') NOT NULL,
     `status` ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',
     `createdDate` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-    `userId` INTEGER NOT NULL,
+    `userId` INTEGER NULL,
+    `email` VARCHAR(45) NULL,
+    `fullName` VARCHAR(255) NULL,
+    `phone` VARCHAR(45) NULL,
+    `templeName` VARCHAR(255) NULL,
 
     INDEX `fk_request_user1_idx`(`userId`),
     PRIMARY KEY (`id`)
@@ -141,8 +125,10 @@ CREATE TABLE `Temple` (
     `description` VARCHAR(45) NULL,
     `likes` INTEGER NULL,
     `locationId` INTEGER NOT NULL,
+    `ownerId` INTEGER NULL,
 
     INDEX `fk_Temple_Location1_idx`(`locationId`),
+    INDEX `fk_ownerId`(`ownerId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -164,6 +150,7 @@ CREATE TABLE `Transaction` (
     `amount` FLOAT NOT NULL,
     `type` ENUM('topup', 'payment', 'refund', 'withdraw') NOT NULL,
     `createdAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `status` ENUM('pending', 'completed', 'fail') NOT NULL DEFAULT 'pending',
 
     INDEX `fk_transaction_wallet1_idx`(`walletId`),
     PRIMARY KEY (`id`)
@@ -236,7 +223,7 @@ CREATE TABLE `TripOrderDetail` (
     `phone` VARCHAR(45) NULL,
     `requirement` VARCHAR(255) NULL,
     `isChild` TINYINT NOT NULL DEFAULT 0,
-    `identityCode` VARCHAR(4) NOT NULL,
+    `identityCode` VARCHAR(4) NULL,
     `isJoined` TINYINT NOT NULL DEFAULT 0,
 
     INDEX `fk_UserInTripDetail_UserInTrip1_idx`(`orderId`),
@@ -250,6 +237,23 @@ CREATE TABLE `TripPicture` (
     `tripId` INTEGER NOT NULL,
 
     INDEX `fk_tripPicture_trip1_idx`(`tripId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(45) NOT NULL,
+    `username` VARCHAR(45) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `createdAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updatedAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `role` ENUM('admin', 'user', 'guide', 'temple') NOT NULL DEFAULT 'user',
+    `fullName` VARCHAR(64) NULL,
+    `phone` VARCHAR(45) NULL,
+
+    UNIQUE INDEX `email_UNIQUE`(`email`),
+    UNIQUE INDEX `username_UNIQUE`(`username`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -297,10 +301,13 @@ ALTER TABLE `ReviewGuide` ADD CONSTRAINT `fk_reviewGuide_user2` FOREIGN KEY (`gu
 ALTER TABLE `Temple` ADD CONSTRAINT `fk_Temple_Location1` FOREIGN KEY (`locationId`) REFERENCES `Location`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
+ALTER TABLE `Temple` ADD CONSTRAINT `fk_ownerId` FOREIGN KEY (`ownerId`) REFERENCES `User`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
 ALTER TABLE `TempleImage` ADD CONSTRAINT `fk_templeAlbum_temple1` FOREIGN KEY (`templeId`) REFERENCES `Temple`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `Transaction` ADD CONSTRAINT `fk_transaction_wallet1` FOREIGN KEY (`walletId`) REFERENCES `Wallet`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `Transaction` ADD CONSTRAINT `fk_transaction_wallet1` FOREIGN KEY (`walletId`) REFERENCES `Wallet`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `Trip` ADD CONSTRAINT `fk_Trip_User1` FOREIGN KEY (`ownerTripId`) REFERENCES `User`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -327,10 +334,4 @@ ALTER TABLE `TripOrderDetail` ADD CONSTRAINT `fk_UserInTripDetail_UserInTrip1` F
 ALTER TABLE `TripPicture` ADD CONSTRAINT `fk_tripPicture_trip1` FOREIGN KEY (`tripId`) REFERENCES `Trip`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `Wallet` ADD CONSTRAINT `fk_wallet_user1` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- RenameIndex
-ALTER TABLE `User` RENAME INDEX `User_email_key` TO `email_UNIQUE`;
-
--- RenameIndex
-ALTER TABLE `User` RENAME INDEX `User_username_key` TO `username_UNIQUE`;
+ALTER TABLE `Wallet` ADD CONSTRAINT `fk_wallet_user1` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;

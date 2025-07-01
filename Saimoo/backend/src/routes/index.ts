@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateUser, authorizeRoles } from '../middlewares'
+import { authenticateUser } from '../middlewares'
 import { uploads } from '../middlewares'
 
 import walletRoutes from './wallet.routes';
@@ -12,6 +12,7 @@ import reviewRoutes from './reviewGuide.routes';
 import orderRoutes from './order.routes';
 import paymentRoutes from './payment.routes';
 import refundRoutes from './refund.routes';
+import provinceRoutes from "./province.routes";
 
 const routes = Router();
 
