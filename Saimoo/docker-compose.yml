@@ -4,23 +4,40 @@ services:
     image: mysql:9.2
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: p@ssword
+      MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: mydb
     ports:
       - "3306:3306"
     volumes:
-      - ./db:/var/lib/mysql
+      - saimoo_db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: password
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
 
   backend:
     build: ./backend/
     restart: always
     environment:
-      DATABASE_URL: mysql://root:p@ssword@db/mydb
+      DATABASE_URL: mysql://root:password@db/mydb
       JWT_SECRET: "jsonwebtokensecret"
+      MAIL_HOST: your_gmail_host
+      MAIL_USER: your_gmail_user
+      MAIL_PASSWORD: your_gmail_password
     ports:
       - "3000:3000"
     depends_on:
       - db
+    volumes:
+      - saimoo_backend:/app
 
   frontend:
     build: ./frontend/
@@ -28,7 +45,12 @@ services:
     environment:
       API_URL: http://localhost:3000
       GOOGLE_MAP_API_KEY: your_google_map_api_key
+      QR_PHONE_NUMBER: your_phone_number
     ports:
       - "8080:8080"
     depends_on:
       - backend
+
+volumes:
+  saimoo_db:
+  saimoo_backend:
